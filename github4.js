@@ -1123,9 +1123,9 @@ function hideMJMessagesOnLoad() {
                     )
                 );
                 if ($(`#holopeek_${holoPeekOption.id}`).prop('checked')) {
-                    createCookie(opt.id, encodedValue, 365)
+                    createCookie(holoPeekOption.id, encodedValue, 365)
                 } else {
-                    eraseCookie(opt.id)
+                    eraseCookie(holoPeekOption.id)
                 }
             });
         }
@@ -1135,9 +1135,9 @@ function hideMJMessagesOnLoad() {
         id: 'resetButton',
         html: 'Reset<img width="24" height="24" alt="save" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAQAAABKfvVzAAAAPElEQVQ4y2NgGAJAgeE+w38ovA/k4QH/8UDqaCADkGw+WRqIERvVMNQ1PMKaMB7h1uDB8BhD+WOg6OAGADZZd6fzGEl6AAAAAElFTkSuQmCC">',
         click: () => {
-            holoPeekOptions.forEach(opt => {
-                eraseCookie(opt.id)
-                $(`#holopeek_${opt.id}`).prop('checked', false);
+            holoPeekOptions.forEach(holoPeekOption => {
+                eraseCookie(holoPeekOption.id)
+                $(`#holopeek_${holoPeekOption.id}`).prop('checked', false);
             });
         }
     }).appendTo(saveAndResetCookieButtonsDiv);
