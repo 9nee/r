@@ -1,5 +1,12 @@
-//npm install js-cookie
-import Cookies from 'js-cookie';
+//My ass is not removing the getScript addition by Xae, it's too useful for our purposes
+//IIFE that loads the cookies import, I could move this to github.js when... I clean it
+//TODO
+(() => {
+    import('js-cookie')
+        .catch(error => {
+            console.error('Failed to load cookies module:', error);
+        });
+})();
 
 //Hijack the backend ui.js export function
 $('#cs-emotes-export').off('click')
