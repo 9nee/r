@@ -37,7 +37,7 @@ const xaeModule = {
         notifier: { active: 1, rank: -1, url: "https://cdn.jsdelivr.net/gh/om3tcw/r@emotes/notifier.js", done: true },
         layout: { active: 1, rank: -1, url: "https://cdn.jsdelivr.net/gh/om3tcw/r@emotes/layoutoptions.js", done: true },
         userlist: { active: 1, rank: -1, url: "https://cdn.jsdelivr.net/gh/om3tcw/r@emotes/userlist.js", done: true },
-        enhancedEmotes: { active: 1, rank: -1, url: "https://cdn.jsdelivr.net/gh/immergrok/r@83d1b8b105c1bb53dd25a35da912243a04083ad5/enhancedEmotes.js", done: true },
+        enhancedEmotes: { active: 1, rank: -1, url: "https://cdn.jsdelivr.net/gh/immergrok/r@27e0d7b7a5e4782b96a0955fe6f1ece9646898a9/enhancedEmotes.js", done: true },
         html2canvas: { active: 1, rank: -1, url: "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js", done: true }
     },
     getScript(url, success, cache = true) {
