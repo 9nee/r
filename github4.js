@@ -1439,11 +1439,10 @@ function yay(message) {
 }
 
 function formatMessage(message) {
-    if (message.innerHTML.startsWith('/runescape')) {
-        runescape(message);
-    } else if (message.innerHTML.startsWith('/yay')) {
-        yay(message);
-    } 
+    switch (message.startsWith) {
+        case '/runescape': runescape(message); break;
+        case '/yay': yay(message); break;
+    }
 }
 
 const messageBuffer = document.getElementById('messagebuffer');
