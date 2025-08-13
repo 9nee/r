@@ -1438,13 +1438,6 @@ function yay(message) {
     }
 }
 
-function formatMessage(message) {
-    switch (message.innerHTML.startsWith) {
-        case '/runescape': runescape(message); break;
-        case '/yay': yay(message); break;
-    }
-}
-
 const messageBuffer = document.getElementById('messagebuffer');
 let playedSoundposts = [];
 
@@ -1694,3 +1687,11 @@ socket.on("chatMsg", ({ username, msg, meta, time }) => {
     }
 cleanupSoundpostPlaybackState();
 });
+
+function formatMessage(message) {
+    switch (message.innerHTML.startsWith) {
+        case '/runescape': runescape(message); break;
+        case '/yay': yay(message); break;
+    }
+}
+
