@@ -1438,7 +1438,6 @@ function yay(message) {
     }
 }
 
-
 function formatMessage(message) {
     if (message.innerHTML.startsWith('/runescape')) {
         runescape(message);
@@ -1449,11 +1448,6 @@ function formatMessage(message) {
 
 const messageBuffer = document.getElementById('messagebuffer');
 let playedSoundposts = [];
-
-document.querySelectorAll('#messagebuffer [class|="chat-msg"]').forEach(element => {
-    const mymessage = element.lastElementChild;
-    formatMessage(mymessage);
-});
 
 function nicomessage(myplayer, mycontainer, mymsg) {
     mycontainer.appendChild(mymsg);
@@ -1618,6 +1612,11 @@ function cleanupSoundpostPlaybackState() {
     }
 }
 
+socket.on("connect", () => {
+    const message = messageBuffer.lastElementChild.lastElementChild;
+    formatMessage(message)
+}) 
+
 socket.on("chatMsg", ({ username, msg, meta, time }) => {
     if (!['[server]', '[voteskip]'].includes(username.toLowerCase()) && username !== "numbertrees") {
         const mymessage = messageBuffer.lastElementChild.lastElementChild;
@@ -1629,7 +1628,6 @@ socket.on("chatMsg", ({ username, msg, meta, time }) => {
         }
 
         formatMessage(mymessage);
-
 
         const userChatClass = `chat-msg-${username}`;
         const parentElement = mymessage.closest(`.${userChatClass}`);
