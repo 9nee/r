@@ -37,6 +37,7 @@ const xaeModule = {
         notifier: { active: 1, rank: -1, url: "https://cdn.jsdelivr.net/gh/om3tcw/r@emotes/notifier.js", done: true },
         layout: { active: 1, rank: -1, url: "https://cdn.jsdelivr.net/gh/om3tcw/r@emotes/layoutoptions.js", done: true },
         userlist: { active: 1, rank: -1, url: "https://cdn.jsdelivr.net/gh/om3tcw/r@emotes/userlist.js", done: true },
+        enhancedEmotes: { active: 1, rank: -1, url: "https://cdn.jsdelivr.net/gh/immergrok/r@enhancedEmotes/enhancedEmotes.js", done: true },
         html2canvas: { active: 1, rank: -1, url: "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js", done: true }
     },
     getScript(url, success, cache = true) {
@@ -1286,21 +1287,10 @@ $('#messagebuffer').off('click').click(e => {
 });
 
 // Slav's Enhancements
-let soundposts;
 
 let html2canvasScript = document.createElement('script');
 html2canvasScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
 document.head.appendChild(html2canvasScript);
-
-fetch('https://raw.githubusercontent.com/om3tcw/r/emotes/soundposts/soundposts.json')
-    .then(response => response.json())
-    .then(data => {
-        soundposts = data;
-        console.log(soundposts);
-    })
-    .catch(error => {
-        console.error(error);
-    });
 
 function runescape(message) {
     const text = message.innerHTML.replace('/runescape', '');
@@ -1456,39 +1446,6 @@ document.querySelectorAll('#messagebuffer [class|="chat-msg"]').forEach(element 
     const mymessage = element.lastElementChild;
     formatMessage(mymessage);
 });
-
-function setCookie(name, value) {
-    document.cookie = `${name}=${value};expires=${new Date(Date.now() + 86400000).toUTCString()};path=/`;
-}
-
-function getCookie(name) {
-    const cookies = document.cookie.split(";").map((cookie) => cookie.trim());
-    for (const cookie of cookies) {
-        if (cookie.startsWith(`${name}=`)) {
-            return cookie.substring(name.length + 1);
-        }
-    }
-    return null;
-}
-
-
-let soundpostState = getCookie("soundpostState") === "true";
-
-const soundpostButton = document.createElement("button");
-soundpostButton.style.backgroundImage = soundpostState
-    ? "url('https://raw.githubusercontent.com/om3tcw/r/refs/heads/emotes/emotes/schizo.gif')"
-    : "url('https://raw.githubusercontent.com/om3tcw/r/refs/heads/emotes/emotes/medicated.png')";
-soundpostButton.style.backgroundSize = "cover";
-
-soundpostButton.addEventListener("click", () => {
-    soundpostState = !soundpostState;
-    setCookie("soundpostState", soundpostState);
-    soundpostButton.style.backgroundImage = soundpostState
-        ? "url('https://raw.githubusercontent.com/om3tcw/r/refs/heads/emotes/emotes/schizo.gif')"
-        : "url('https://raw.githubusercontent.com/om3tcw/r/refs/heads/emotes/emotes/medicated.png')";
-});
-const chatInputRow = document.getElementById("chatinputrow");
-chatInputRow.appendChild(soundpostButton);
 
 function nicomessage(myplayer, mycontainer, mymsg) {
     mycontainer.appendChild(mymsg);
