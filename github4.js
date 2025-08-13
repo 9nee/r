@@ -1616,6 +1616,9 @@ socket.on("connect", () => {
     formatMessage(message)
 }) 
 
+//move somewhere else
+let soundpostState = readCookie("soundpostState") === "true";
+
 socket.on("chatMsg", ({ username, msg, meta, time }) => {
     if (!['[server]', '[voteskip]'].includes(username.toLowerCase()) && username !== "numbertrees") {
         const mymessage = messageBuffer.lastElementChild.lastElementChild;

@@ -15,9 +15,6 @@ $("#cs-emotes-export").on('click', () => {
     $("#cs-emotes-exporttext").val(JSON.stringify(emoteObject));
 });
 
-let soundpostState = readCookie("soundpostState") === "true";
-console.log(soundpostState)
-
 const soundpostButton = document.createElement("button");
 soundpostButton.style.backgroundImage = soundpostState
     ? "url('https://raw.githubusercontent.com/om3tcw/r/refs/heads/emotes/emotes/schizo.gif')"
