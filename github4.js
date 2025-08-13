@@ -1615,7 +1615,7 @@ socket.on("chatMsg", ({ username, msg, meta, time }) => {
             myaudio.volume = defaultVolume;
             myaudio.play();
         }
-
+        console.log(chatMessage)
         formatMessage(chatMessage);
 
         const userChatClass = `chat-msg-${username}`;
