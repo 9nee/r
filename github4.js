@@ -1227,7 +1227,7 @@ function hideMJMessagesOnLoad() {
     #saveAndResetCookieButtonsDiv button img {
         margin-left: 4px;
     }
-    #fpOptContainer {
+    #holoPeekOptionsContainer {
         overflow-y: scroll;
         display: flex;
         flex-direction: column;
