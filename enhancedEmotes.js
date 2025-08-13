@@ -1,12 +1,5 @@
 //My ass is not removing the getScript addition by Xae, it's too useful for our purposes
-//IIFE that loads the cookies import, I could move this to github.js when... I clean it
-//TODO
-(() => {
-    import('js-cookie')
-        .catch(error => {
-            console.error('Failed to load cookies module:', error);
-        });
-})();
+
 
 //Hijack the backend ui.js export function
 $('#cs-emotes-export').off('click')
@@ -22,7 +15,7 @@ $("#cs-emotes-export").on('click', () => {
     $("#cs-emotes-exporttext").val(JSON.stringify(emoteObject));
 });
 
-let soundpostState = Cookies.get("soundpostState") === "true";
+let soundpostState = readCookie("soundpostState") === "true";
 console.log(soundpostState)
 
 const soundpostButton = document.createElement("button");

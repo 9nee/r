@@ -167,7 +167,6 @@ $(document).ready(function () {
     redoPollwrap();
 
     // oshieyes google
-  
 
     $('<div role="tabpanel" class="tab-pane" id="calendarTab"><iframe width="100%" height="600" frameborder="0" scrolling="auto"></iframe></div>').appendTo(tabContent);
     $('<li role="presentation"><a role="tab" data-toggle="tab" aria-expanded="false" href="#calendarTab">Oshi Eyes</a></li>').appendTo(tabList);
@@ -194,7 +193,6 @@ $(window).bind('keydown', function (event) {
     if (event.ctrlKey && !event.shiftKey) {
         switch (String.fromCharCode(event.which).toLowerCase()) {
             case 'a':
-                event.preventDefault();
                 if (!keyHeld) {
                     keyHeld = true;
                     inputBox.focus();
@@ -439,24 +437,24 @@ $("#messagebuffer a").parent().parent().each(function () {
     holoButton.classList = 'holoAnim';
     holoButton.onclick = () => {
         document.getElementById('holopeek').classList.toggle('holoAnim');
-        const bubble = document.getElementById('holoBubble');
+        const bubble = document.getElementById('holoPeekBubble');
         bubble.style.display = bubble.style.display === 'none' ? 'flex' : 'none';
-        const tail = document.getElementById('holoTail');
+        const tail = document.getElementById('holoPeekBubbleTail');
         tail.style.display = tail.style.display === 'none' ? 'block' : 'none';
     };
     document.body.append(holoButton);
 
 
-    const holoTail = document.createElement('div');
-    holoTail.id = 'holoTail';
-    holoTail.style.display = 'none';
-    document.body.append(holoTail);
+    const holoPeekBubbleTail = document.createElement('div');
+    holoPeekBubbleTail.id = 'holoPeekBubbleTail';
+    holoPeekBubbleTail.style.display = 'none';
+    document.body.append(holoPeekBubbleTail);
 
 
-    const holoBubble = document.createElement('div');
-    holoBubble.id = 'holoBubble';
-    holoBubble.style.display = 'none';
-    document.body.append(holoBubble);
+    const holoPeekBubble = document.createElement('div');
+    holoPeekBubble.id = 'holoPeekBubble';
+    holoPeekBubble.style.display = 'none';
+    document.body.append(holoPeekBubble);
 
 
     // User's Guide
@@ -465,14 +463,14 @@ $("#messagebuffer a").parent().parent().each(function () {
     userGuide.target = "_blank";
     userGuide.innerHTML = "User's guide";
     userGuide.style.cssText = "color: #888; font-size: small; text-align: end;";
-    holoBubble.append(userGuide);
+    holoPeekBubble.append(userGuide);
 
 
     // Checkbox Options
     let hiddenMJMessages = [];
 
 
-    const options = [
+    const holoPeekOptions = [
         {
             id: 'background',
             desc: 'Change Background',
@@ -1004,44 +1002,48 @@ function hideMJMessagesOnLoad() {
         hideMJMessagesOnLoad();
     }
 
-    const fplegend = document.createElement('p');
-    fplegend.innerHTML = 'Options';
-    fplegend.style.textAlign = 'center';
-    holoBubble.appendChild(fplegend);
+///* Holopeek block
 
+//* Holopeek style
+    const optionsLegendParagraph = document.createElement('p');
+    optionsLegendParagraph.innerHTML = 'Options';
+    optionsLegendParagraph.style.textAlign = 'center';
+    holoPeekBubble.appendChild(optionsLegendParagraph);
 
-    const fpOptContainer = document.createElement('div');
-    fpOptContainer.id = 'fpOptContainer';
-    holoBubble.append(fpOptContainer);
+    const holoPeekOptionsContainer = document.createElement('div');
+    holoPeekOptionsContainer.id = 'holoPeekOptionsContainer';
+    holoPeekBubble.append(holoPeekOptionsContainer);
 
+    holoPeekOptions.forEach(holoPeekOption => {
+        const div = $('<div>').appendTo(holoPeekOptionsContainer);
 
-    options.forEach(opt => {
-        const div = $('<div>').appendTo(fpOptContainer);
-
-        const optId = `holopeek_${opt.id}`;
+        const optId = `holopeek_${holoPeekOption.id}`;
         const checkboxElem = $('<input>', {
             id: optId,
             type: 'checkbox',
             click: () => {
-                if (opt.func) opt.func(opt);
+                if (holoPeekOption.func) holoPeekOption.func(holoPeekOption);
                 $(`#${optId}_style`).remove();
-                if (opt.css && checkboxElem.prop('checked')) {
+                if (holoPeekOption.css && checkboxElem.prop('checked')) {
                     $('<style>', {
                         id: `${optId}_style`,
-                        text: opt.css
+                        text: holoPeekOption.css
                     }).appendTo('head');
                 }
             }
         }).appendTo(div);
 
         // Load cookie option
-        const cookie = `; ${document.cookie}`.split(`; ${opt.id}=`).length === 2 ? `; ${document.cookie}`.split(`; ${opt.id}=`).pop().split(';').shift() : null;
+        let cookie = readCookie(holoPeekOption.id)
         if (cookie) {
-            const value = decodeURIComponent(escape(window.atob(cookie)));
-            const valueElem = opt.textarea ? 'textarea' : opt.range ? 'range' : opt.text ? 'text' : null;
-            if (valueElem) opt[valueElem].value = value;
+            const value = new TextDecoder().decode(
+                Uint8Array.from(window.atob(cookie), char => char.charCodeAt(0))
+            )
+            const valueElem = holoPeekOption.textarea ? 'textarea' : holoPeekOption.range ? 'range' : holoPeekOption.text ? 'text' : null;
+            if (valueElem) holoPeekOption[valueElem].value = value;
             checkboxElem.prop('checked', true);
             const interval = setInterval(() => {
+                //TODO: What the fuck is all this
                 if ($(".userlist_item").length) {
                     clearInterval(interval);
                     checkboxElem.triggerHandler('click');
@@ -1051,88 +1053,94 @@ function hideMJMessagesOnLoad() {
 
         const label = $('<label>', {
             id: `${optId}_label`,
-            text: opt.desc,
-            title: opt.id,
+            text: holoPeekOption.desc,
+            title: holoPeekOption.id,
             for: optId
         }).appendTo(div);
 
-        if (opt.textarea) {
+        if (holoPeekOption.textarea) {
             const textareaElem = $('<textarea>', {
                 id: `${optId}_textarea`,
-                val: opt.textarea.value,
+                val: holoPeekOption.textarea.value,
                 on: {
                     input: () => {
                         checkboxElem.prop('checked', false);
-                        opt.textarea.value = textareaElem.val();
+                        holoPeekOption.textarea.value = textareaElem.val();
                     }
                 }
-            }).appendTo(fpOptContainer);
+            }).appendTo(holoPeekOptionsContainer);
         }
 
-        if (opt.range) {
+        if (holoPeekOption.range) {
             const rangeElem = $('<input>', {
                 id: `${optId}_range`,
                 type: 'range',
                 css: { display: 'inline-block' },
-                min: opt.range.min,
-                max: opt.range.max,
-                step: opt.range.step,
-                val: opt.range.value,
+                min: holoPeekOption.range.min,
+                max: holoPeekOption.range.max,
+                step: holoPeekOption.range.step,
+                val: holoPeekOption.range.value,
                 on: {
                     input: () => {
                         checkboxElem.prop('checked', false);
-                        opt.range.value = rangeElem.val();
+                        holoPeekOption.range.value = rangeElem.val();
                     }
                 }
-            }).appendTo(fpOptContainer);
+            }).appendTo(holoPeekOptionsContainer);
         }
 
-        if (opt.text) {
+        if (holoPeekOption.text) {
             const textElem = $('<input>', {
                 id: `${optId}_text`,
                 type: 'text',
-                val: opt.text.value,
+                val: holoPeekOption.text.value,
                 on: {
                     input: () => {
                         checkboxElem.prop('checked', false);
-                        opt.text.value = textElem.val();
+                        holoPeekOption.text.value = textElem.val();
                     }
                 }
-            }).appendTo(fpOptContainer);
+            }).appendTo(holoPeekOptionsContainer);
         }
 
-        if (opt.setupFunc) opt.setupFunc(opt);
+        if (holoPeekOption.setupFunc) holoPeekOption.setupFunc(holoPeekOption);
     });
 
-    // Cookie buttons
-    const cookieDiv = $('<div>', {
-        id: 'cookieDiv'
-    }).appendTo(holoBubble);
+    const saveAndResetCookieButtonsDiv = $('<div>', {
+        id: 'saveAndResetCookieButtonsDiv'
+    }).appendTo(holoPeekBubble);
 
     const saveButton = $('<button>', {
         id: 'saveButton',
         html: 'Save<img width="24" height="24" alt="save" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAQAAABKfvVzAAAAbUlEQVQ4y2NgGLTAk+Exw38csB6bhkc4lePQAhLGDsIZfmPTAtGAaTZOLfg0gLRguAC/BgaqacANqKuBjaGd4RkQtgNZRGnogPuggzgNT+EantJIA8lOItnTRAUr/uQNgo+Iz0Ag+JjBY9BmfgAjpbf/V5agRgAAAABJRU5ErkJggg==">',
         click: () => {
-            options.forEach(opt => {
-                const valueElem = opt.textarea ? 'textarea' : opt.range ? 'range' : opt.text ? 'text' : null;
-                const value = valueElem ? opt[valueElem].value : $(`#holopeek_${opt.id}`).prop('checked') ? 1 : 0;
-                document.cookie = $(`#holopeek_${opt.id}`).prop('checked')
-                    ? `${opt.id}=${window.btoa(unescape(encodeURIComponent(value)))};path=/;expires=${new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 365).toGMTString()};`
-                    : `${opt.id}=;path=/;expires=Thu, 01 Jan 1970 00:00:01 GMT;`;
+            holoPeekOptions.forEach(holoPeekOption => {
+                const valueElem = holoPeekOption.textarea ? 'textarea' : holoPeekOption.range ? 'range' : holoPeekOption.text ? 'text' : null;
+                const value = valueElem ? holoPeekOption[valueElem].value : $(`#holopeek_${holoPeekOption.id}`).prop('checked') ? 1 : 0;
+                const encodedValue = window.btoa(
+                    new TextEncoder().encode(value).reduce(
+                        (data, byte) => data + String.fromCharCode(byte), ''
+                    )
+                );
+                if ($(`#holopeek_${holoPeekOption.id}`).prop('checked')) {
+                    createCookie(opt.id, encodedValue, 365)
+                } else {
+                    eraseCookie(opt.id)
+                }
             });
         }
-    }).appendTo(cookieDiv);
+    }).appendTo(saveAndResetCookieButtonsDiv);
 
     const resetButton = $('<button>', {
         id: 'resetButton',
         html: 'Reset<img width="24" height="24" alt="save" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAQAAABKfvVzAAAAPElEQVQ4y2NgGAJAgeE+w38ovA/k4QH/8UDqaCADkGw+WRqIERvVMNQ1PMKaMB7h1uDB8BhD+WOg6OAGADZZd6fzGEl6AAAAAElFTkSuQmCC">',
         click: () => {
-            options.forEach(opt => {
-                document.cookie = `${opt.id}=;path=/;expires=Thu, 01 Jan 1970 00:00:01 GMT;`;
+            holoPeekOptions.forEach(opt => {
+                eraseCookie(opt.id)
                 $(`#holopeek_${opt.id}`).prop('checked', false);
             });
         }
-    }).appendTo(cookieDiv);
+    }).appendTo(saveAndResetCookieButtonsDiv);
 
     // Holopeek CSS
     const css = `
@@ -1165,7 +1173,7 @@ function hideMJMessagesOnLoad() {
         from { background-position: 0px 0; }
         to { background-position: 0px 60px; }
     }
-    #holoBubble {
+    #holoPeekBubble {
         flex-grow: 0;
         flex-direction: column;
         padding: 12px 16px;
@@ -1177,26 +1185,26 @@ function hideMJMessagesOnLoad() {
         border-radius: 8px;
         max-height: 50%;
     }
-    #holoBubble button {
+    #holoPeekBubble button {
         color: #000;
     }
-    #holoBubble textarea {
+    #holoPeekBubble textarea {
         width: 100%;
         min-height: 128px;
         margin-bottom: 5px;
         resize: both;
     }
-    #holoBubble label {
+    #holoPeekBubble label {
         color: #888;
     }
-    #holoBubble input[type=checkbox] {
+    #holoPeekBubble input[type=checkbox] {
         margin-right: 8px;
     }
-    #holoBubble input[type=range] {
+    #holoPeekBubble input[type=range] {
         display: inline-block;
         margin-bottom: 5px;
     }
-    #holoTail {
+    #holoPeekBubbleTail {
         width: 50px;
         height: 25px;
         z-index: 2147483647;
@@ -1206,17 +1214,17 @@ function hideMJMessagesOnLoad() {
         background: #fff;
         transform: skew(15deg, 15deg);
     }
-    #cookieDiv {
+    #saveAndResetCookieButtonsDiv {
         margin-top: 12px;
         display: flex;
     }
-    #cookieDiv button {
+    #saveAndResetCookieButtonsDiv button {
         width: 100%;
         display: flex;
         justify-content: center;
         align-items: center;
     }
-    #cookieDiv button img {
+    #saveAndResetCookieButtonsDiv button img {
         margin-left: 4px;
     }
     #fpOptContainer {
