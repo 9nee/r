@@ -1439,7 +1439,7 @@ function yay(message) {
 }
 
 function formatMessage(message) {
-    switch (message.startsWith) {
+    switch (message.innerHTML.startsWith) {
         case '/runescape': runescape(message); break;
         case '/yay': yay(message); break;
     }
@@ -1611,29 +1611,23 @@ function cleanupSoundpostPlaybackState() {
     }
 }
 
-socket.on("connect", () => {
-    const message = messageBuffer.lastElementChild.lastElementChild;
-    formatMessage(message)
-}) 
-
-//move somewhere else
+//TODO move somewhere else
 let soundpostState = readCookie("soundpostState") === "true";
 
 socket.on("chatMsg", ({ username, msg, meta, time }) => {
+    const chatMessage = messageBuffer.lastElementChild.lastElementChild;
     if (!['[server]', '[voteskip]'].includes(username.toLowerCase()) && username !== "numbertrees") {
-        const mymessage = messageBuffer.lastElementChild.lastElementChild;
-
-        if (mymessage.innerHTML.startsWith('/yay') && soundpostState) {
+        if (chatMessage.innerHTML.startsWith('/yay') && soundpostState) {
             const myaudio = new Audio("https://www.dl.dropboxusercontent.com/s/z0n3hnw8ky79rwhdokfso/nenesmile.ogg?rlkey=bezzj2pn6c9rj0pqco5kbf7bk&st=ythhncur&dl=0");
             myaudio.volume = defaultVolume;
             myaudio.play();
         }
 
-        formatMessage(mymessage);
+        formatMessage(chatMessage);
 
         const userChatClass = `chat-msg-${username}`;
-        const parentElement = mymessage.closest(`.${userChatClass}`);
-        const isMJMessage = mymessage.innerHTML.startsWith('MJ:');
+        const parentElement = chatMessage.closest(`.${userChatClass}`);
+        const isMJMessage = chatMessage.innerHTML.startsWith('MJ:');
         const offTopicEnabled = document.getElementById('holopeek_WatchalongOfftopic').checked ||
             document.getElementById('holopeek_WatchalongOfftopic2').checked;
 
@@ -1645,7 +1639,7 @@ socket.on("chatMsg", ({ username, msg, meta, time }) => {
                 parentElement.style.display = 'block';
                 const timestampElem = parentElement?.querySelector('.timestamp');
                 timestampElem.style.backgroundImage = "url('https://raw.githubusercontent.com/om3tcw/r/refs/heads/emotes/eyes/nyagger.png')";
-                mymessage.innerHTML = mymessage.innerHTML.replace(/^MJ: /, '');
+                chatMessage.innerHTML = chatMessage.innerHTML.replace(/^MJ: /, '');
             }
         } else {
             parentElement.style.display = 'block';
@@ -1656,15 +1650,15 @@ socket.on("chatMsg", ({ username, msg, meta, time }) => {
         Object.keys(emoteMap).forEach(emote => {
             const escapedEmote = emote.replace(/[-\/\\^$.*+?()[\]{}|]/g, '\\$&');
             if (offTopicEnabled) {
-                mymessage.innerHTML = mymessage.innerHTML.replace(new RegExp(escapedEmote, 'g'),
+                chatMessage.innerHTML = chatMessage.innerHTML.replace(new RegExp(escapedEmote, 'g'),
                     `<img class="channel-emote" title="${emote}" src="${emoteMap[emote]}">`);
             } else {
-                mymessage.innerHTML = mymessage.innerHTML.replace(new RegExp(escapedEmote, 'g'), '');
+                chatMessage.innerHTML = chatMessage.innerHTML.replace(new RegExp(escapedEmote, 'g'), '');
             }
         });
 
         if (soundpostState) {
-            const emotes = mymessage.querySelectorAll('.channel-emote[title]');
+            const emotes = chatMessage.querySelectorAll('.channel-emote[title]');
             emotes.forEach((emote) => {
                 const emoteTitle = emote.title;
                 const soundpost = soundposts[emoteTitle];
@@ -1690,7 +1684,7 @@ socket.on("chatMsg", ({ username, msg, meta, time }) => {
 
     
             
-            if (mymessage.innerHTML.startsWith('boo') && soundpostState) {
+            if (chatMessage.innerHTML.startsWith('boo') && soundpostState) {
                 const myaudio = new Audio("https://cdn.jsdelivr.net/gh/om3tcw/r@emotes/soundposts/sounds/boo.ogg");
                 myaudio.volume = defaultVolume;
                 myaudio.play();
