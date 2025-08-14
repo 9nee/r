@@ -1356,8 +1356,8 @@ style.textContent = `
 document.head.appendChild(style);
 
 function yayConfetti(message) {
-    const text = message.html().replace('/yay', '');
-    message.html() = text;
+    const $text = message.html().text().replace('/yay', '');
+    message.html().text() = $text;
 
     const rect = message.getBoundingClientRect();
     const centerX = rect.left + (rect.width / 2);
@@ -1574,14 +1574,15 @@ function cleanupSoundpostPlaybackState() {
 
 socket.on("chatMsg", ({ username, msg, meta, time }) => {
 
-    const messageElement = messageBuffer.children().last().children().last();
+    const $messageElement = messageBuffer.children().last().children().last();
+    const $messageText = $messageElement.html().text()
 
-    if (messageElement.html().startsWith('/')) {
-        formatMessage(messageElement);
+    if ($messageText.startsWith('/')) {
+        formatMessage($messageElement);
     }
 
-    if (messageElement.html().startsWith('MJ:')) {
-        formatMJMessage(messageElement)
+    if ($messageText.startsWith('MJ:')) {
+        formatMJMessage($messageElement)
     }
 
     if (!['[server]', '[voteskip]'].includes(username.toLowerCase()) && username !== "numbertrees") {
@@ -1589,15 +1590,15 @@ socket.on("chatMsg", ({ username, msg, meta, time }) => {
         Object.keys(emoteMap).forEach(emote => {
             const escapedEmote = emote.replace(/[-\/\\^$.*+?()[\]{}|]/g, '\\$&');
             if (canReadMJMessages()) {
-                messageElement.html() = messageElement.html().replace(new RegExp(escapedEmote, 'g'),
+                $messageText = $messageText.replace(new RegExp(escapedEmote, 'g'),
                     `<img class="channel-emote" title="${emote}" src="${emoteMap[emote]}">`);
             } else {
-                messageElement.html() = messageElement.html().replace(new RegExp(escapedEmote, 'g'), '');
+                $messageText = $messageText.replace(new RegExp(escapedEmote, 'g'), '');
             }
         });
 
         if (soundpostState) {
-            const emotes = messageElement.querySelectorAll('.channel-emote[title]');
+            const emotes = $messageElement.find('.channel-emote[title]');
             emotes.forEach((emote) => {
                 const emoteTitle = emote.title;
                 const soundpost = soundposts[emoteTitle];
@@ -1627,13 +1628,13 @@ cleanupSoundpostPlaybackState();
 });
 
 function formatMessage($message) {
-    let text = $message.html();
-    if (text.startsWith('/runescape')) {
+    let $text = $message.html().text();
+    if ($text.startsWith('/runescape')) {
         runescape($message);
-    } else if (text.startsWith('/yay')) {
+    } else if ($text.startsWith('/yay')) {
         yayConfetti($message);
         playNeneYaySound();
-    } else if (text.startsWith('/boo')) {
+    } else if ($text.startsWith('/boo')) {
         playBooSound();
     }
 }
