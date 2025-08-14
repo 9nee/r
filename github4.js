@@ -936,10 +936,9 @@ $(document).ready(() => {
     document.querySelectorAll('#messagebuffer [class|="chat-msg"]').forEach(element => {
         const messageElement = element.lastElementChild;
         formatMessage(messageElement);
-    })
-    document.querySelectorAll('#messagebuffer [class|="MahjonGMessage').forEach(element => {
-        const messageElement = element.lastElementChild;
-        formatMJMessage(messageElement);
+        if (messageElement.innerHTML.startsWith('MJ:')) {
+            formatMJMessage(messageElement)
+        }
     })
     toggleMJMessages();
 });
