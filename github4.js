@@ -1269,7 +1269,7 @@ html2canvasScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.
 document.head.appendChild(html2canvasScript);
 
 function runescape(message) {
-    const text = message.innerHTML.replace('/runescape', '');
+    const text = message.html().replace('/runescape', '');
     let html = '';
     let mynumber = 0;
 
@@ -1356,8 +1356,8 @@ style.textContent = `
 document.head.appendChild(style);
 
 function yayConfetti(message) {
-    const text = message.innerHTML.replace('/yay', '');
-    message.innerHTML = text;
+    const text = message.html().replace('/yay', '');
+    message.html() = text;
 
     const rect = message.getBoundingClientRect();
     const centerX = rect.left + (rect.width / 2);
@@ -1626,12 +1626,12 @@ socket.on("chatMsg", ({ username, msg, meta, time }) => {
 cleanupSoundpostPlaybackState();
 });
 
-function formatMessage(message) {
-    let text = message.innerHTML;
+function formatMessage($message) {
+    let text = $message.html();
     if (text.startsWith('/runescape')) {
-        runescape(message);
+        runescape($message);
     } else if (text.startsWith('/yay')) {
-        yayConfetti(message);
+        yayConfetti($message);
         playNeneYaySound();
     } else if (text.startsWith('/boo')) {
         playBooSound();
