@@ -491,14 +491,14 @@ const holoPeekOptions = [
             const checkboxElem = document.getElementById('holopeek_MahjongMode');
             const username = document.getElementById('welcome').innerText.replace('Welcome, ', '');
             prependMessagesWithMJ(username, checkboxElem.checked);
-            toggleHiddenMJMessages();
+            toggleMJMessages();
         }
     },
     {
         id: 'MahjongLurk',
         desc: 'Mahjong Lurk',
         func: self => {
-            toggleHiddenMJMessages();
+            toggleMJMessages();
         }
     },
     {
@@ -928,7 +928,16 @@ const holoPeekOptions = [
     }
 ];
 
-// Game Mode Prepend
+
+$(document).ready(() => {
+    soundpostState = readCookie("soundpostState") === "true";
+    document.querySelectorAll('#messagebuffer [class|="chat-msg"]').forEach(element => {
+        const messageElement = element.lastElementChild;
+        formatMessage(messageElement);
+        toggleMJMessages();
+    })
+});
+
 function prependMessagesWithMJ() {
     const chatInput = document.getElementById('chatline');
 
@@ -950,8 +959,7 @@ function prependMessagesWithMJ() {
     chatInput.addEventListener('focus', updateChatInput);
 }
 
-
-function toggleHiddenMJMessages() {
+function toggleMJMessages() {
     let mahjongModeCookie = readCookie("MahjongMode");
     let mahjongLurkCookie = readCookie("MahjongLurk");
 
@@ -1000,13 +1008,10 @@ function toggleHiddenMJMessages() {
         }).appendTo(div);
 
         // Load cookie option
-        let cookie = readCookie(holoPeekOption.id)
-        if (cookie) {
-            const value = new TextDecoder().decode(
-                Uint8Array.from(window.atob(cookie), char => char.charCodeAt(0))
-            )
+        let cookieValue = readCookie(holoPeekOption.id)
+        if (cookieValue) {
             const valueElem = holoPeekOption.textarea ? 'textarea' : holoPeekOption.range ? 'range' : holoPeekOption.text ? 'text' : null;
-            if (valueElem) holoPeekOption[valueElem].value = value;
+            if (valueElem) holoPeekOption[valueElem].value = cookieValue;
             checkboxElem.prop('checked', true);
             const interval = setInterval(() => {
                 //TODO: What the fuck is all this
@@ -1083,13 +1088,8 @@ function toggleHiddenMJMessages() {
             holoPeekOptions.forEach(holoPeekOption => {
                 const valueElem = holoPeekOption.textarea ? 'textarea' : holoPeekOption.range ? 'range' : holoPeekOption.text ? 'text' : null;
                 const value = valueElem ? holoPeekOption[valueElem].value : $(`#holopeek_${holoPeekOption.id}`).prop('checked') ? 1 : 0;
-                const encodedValue = window.btoa(
-                    new TextEncoder().encode(value).reduce(
-                        (data, byte) => data + String.fromCharCode(byte), ''
-                    )
-                );
                 if ($(`#holopeek_${holoPeekOption.id}`).prop('checked')) {
-                    createCookie(holoPeekOption.id, encodedValue, 365)
+                    createCookie(holoPeekOption.id, value, 365)
                 } else {
                     eraseCookie(holoPeekOption.id)
                 }
@@ -1655,15 +1655,6 @@ function playBooSound() {
         myaudio.play();
     }
 }
-
-$(document).ready(() => {
-    soundpostState = readCookie("soundpostState") === "true";
-    document.querySelectorAll('#messagebuffer [class|="chat-msg"]').forEach(element => {
-        const messageElement = element.lastElementChild;
-        formatMessage(messageElement);
-        toggleHiddenMJMessages();
-    })
-});
 
 function formatMJMessage(messageElement) {
     let timestampElement = messageElement.querySelector('.timestamp')
