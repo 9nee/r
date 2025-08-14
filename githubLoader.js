@@ -508,8 +508,9 @@ let html2canvasScript = document.createElement('script');
 html2canvasScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
 document.head.appendChild(html2canvasScript);
 
-function runescape(message) {
-    const text = message.html().replace('/runescape', '');
+function runescape($message) {
+
+    const text = $message.text().replace('/runescape', '');
     let html = '';
     let mynumber = 0;
 
@@ -532,7 +533,7 @@ function runescape(message) {
         }
     });
 
-    message.innerHTML = html;
+    $message.html(html);
 }
 
 // CSS Animations
@@ -596,6 +597,7 @@ style.textContent = `
 document.head.appendChild(style);
 
 function yayConfetti($message) {
+    
     const $text = $message.text().replace('/yay', '');
     $message.text($text);
 

@@ -1,4 +1,4 @@
-//600+ lines IIFE :D
+//700+ lines IIFE :D
 (() => {
     const $holoPeekbutton = $('<button>', {
         id: 'holopeek',
