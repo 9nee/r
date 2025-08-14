@@ -996,12 +996,14 @@ function hideMJMessagesOnLoad() {
     });
 }
 
+
 document.addEventListener('DOMContentLoaded', hideMJMessagesOnLoad);
 document.addEventListener('DOMContentLoaded', () => {
-console.log("succ")
-document.querySelectorAll('#messagebuffer [class|="chat-msg"]').forEach(element => {
-const mymessage = element.lastElementChild;
-formatMessage(mymessage);
+    console.log("succ")
+    document.querySelectorAll('#messagebuffer [class|="chat-msg"]').forEach(element => {
+    const mymessage = element.lastElementChild;
+    formatMessage(mymessage);
+    })
 });
 
 ///* Holopeek block
