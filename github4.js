@@ -1681,31 +1681,22 @@ function playBooSound() {
     }
 }
 
-$(document).ready(
-    function hideMJMessagesOnLoad() {
-        if (!hiddenMJMessages) {
-            return
-        }
-        let hidden = hiddenMJMessages.filter(parentElement => document.body.contains(parentElement));
-        document.querySelectorAll('[class^="chat-msg-"]').forEach(parentElement => {
-            parentElement.querySelectorAll('span').forEach(span => {
-                if (span.innerHTML.includes('MJ:')) {
-                    parentElement.style.display = 'none';
-                    if (!hidden.includes(parentElement)) {
-                        hidden.push(parentElement);
-                    }
-                }
-            });
-        });
-});
-
 $(document).ready(() => {
     soundpostState = readCookie("soundpostState") === "true";
     console.log("soundpoststate", soundpostState)
     document.querySelectorAll('#messagebuffer [class|="chat-msg"]').forEach(element => {
-    const mymessage = element.lastElementChild;
-    formatMessage(mymessage);
+        const messageElement = element.lastElementChild;
+        formatMessage(messageElement);
     })
 });
+
+function hideMJMessagesOnLoad(messageElement) {
+    if (messageElement.innerHTML.includes('MJ:')) {
+        parentElement.style.display = 'none';
+        if (!hidden.includes(parentElement)) {
+            hidden.push(parentElement);
+        }
+    }
+}
 
 
