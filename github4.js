@@ -1706,11 +1706,10 @@ function playBooSound() {
     }
 }
 
-socket.once("connect", data => {
-    if (data.success) {
+document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('#messagebuffer [class|="chat-msg"]').forEach(element => {
         const mymessage = element.lastElementChild;
         formatMessage(mymessage);
     });
-}})
+})
 
