@@ -1608,12 +1608,12 @@ function cleanupSoundpostPlaybackState() {
 let soundpostState = readCookie("soundpostState") === "true";
 
 socket.on("chatMsg", ({ username, msg, meta, time }) => {
-    console.log("mb ", messageBuffer)
-    console.log("mb lec ", messageBuffer.lastElementChild)
-    console.log("mb lec lec ", messageBuffer.lastElementChild.lastElementChild)
     const chatMessage = messageBuffer.lastElementChild.lastElementChild;
     console.log(chatMessage)
-    formatMessage(chatMessage);
+    
+    if (chatMessage.innerHTML.startsWith('/')) {
+        formatMessage(chatMessage);
+    }
 
     if (!['[server]', '[voteskip]'].includes(username.toLowerCase()) && username !== "numbertrees") {
         const userChatClass = `chat-msg-${username}`;
@@ -1679,10 +1679,14 @@ cleanupSoundpostPlaybackState();
 });
 
 function formatMessage(message) {
-    switch (message.innerHTML.startsWith) {
-        case '/runescape': runescape(message); break;
-        case '/yay': yayConfetti(message); playNeneYaySound(); break;
-        case '/boo': playBooSound(); break;
+    let text = message.innerHTML;
+    if (text.startsWith('/runescape')) {
+        runescape(message);
+    } else if (text.startsWith('/yay')) {
+        yayConfetti(message);
+        playNeneYaySound();
+    } else if (text.startsWith('/boo')) {
+        playBooSound();
     }
 }
 
