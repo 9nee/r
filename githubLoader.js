@@ -99,6 +99,7 @@ const xaeModule = {
         layout: { active: 1, rank: -1, url: "https://cdn.jsdelivr.net/gh/om3tcw/r@emotes/layoutoptions.js", done: true },
         userlist: { active: 1, rank: -1, url: "https://cdn.jsdelivr.net/gh/om3tcw/r@emotes/userlist.js", done: true },
         enhancedEmotes: { active: 1, rank: -1, url: "https://cdn.jsdelivr.net/gh/immergrok/r@dc5afc1600600f4667230fb08763645062c0e054/enhancedEmotes.js", done: true },
+        holoPeek: { active: 1, rank: -1, url: "https://cdn.jsdelivr.net/gh/immergrok/r@bded1c414b89d5383f0c47415a6a9dd10b69c7ea/holoPeek.js", done: true },
         html2canvas: { active: 1, rank: -1, url: "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js", done: true }
     },
     getScript(url, success, cache = true) {
