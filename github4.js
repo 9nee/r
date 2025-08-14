@@ -442,9 +442,9 @@ $("#messagebuffer a").parent().parent().each(function () {
     holoButton.onclick = () => {
         $('#holopeek').toggleClass('holoAnim');
         const bubble = $('#holoPeekBubble');
-        bubble.style.display = bubble.style.display === 'none' ? 'flex' : 'none';
+        bubble.toggle()
         const tail = $('#holoPeekBubbleTail');
-        tail.style.display = tail.style.display === 'none' ? 'block' : 'none';
+        tail.toggle()
     };
     document.body.append(holoButton);
 
