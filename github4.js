@@ -1406,7 +1406,6 @@ function yayConfetti(message) {
     }
 }
 
-const messageBuffer = $('#messagebuffer');
 let playedSoundposts = [];
 
 function nicomessage(myplayer, mycontainer, mymsg) {
@@ -1574,7 +1573,7 @@ function cleanupSoundpostPlaybackState() {
 
 socket.on("chatMsg", ({ username, msg, meta, time }) => {
 
-    const $messageElement = messageBuffer.children().last().children().last();
+    const $messageElement = $('#messagebuffer').children().last().children().last();
     const $messageText = $messageElement.html().text()
 
     if ($messageText.startsWith('/')) {
