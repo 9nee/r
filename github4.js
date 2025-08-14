@@ -950,7 +950,7 @@ function prependMessagesWithMJ() {
     const updateChatInput = () => {
         if (shouldPrependMessage) {
             if (chatInput.val() && !chatInput.val().startsWith('MJ: ')) {
-                chatInput.val() = 'MJ: ' + chatInput.val();
+                chatInput.val('MJ: ' + chatInput.val());
             }
         } else {
             chatInput.val() = chatInput.val().replace(/^MJ: /, '');
