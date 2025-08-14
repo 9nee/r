@@ -17,7 +17,40 @@ let soundpostState = "false";
 let soundpostPlaybackState = {};
 const defaultVolume = 0.1;
 const defaultAdditionalPlayTime = 3;
-const CONFETTI_CSS_CDN_FILE = "https://cdn.jsdelivr.net/gh/immergrok/r@af15825247fd77ce84318ea2fdf203a1ce38ea45/confetti-styles.js"
+
+const CONFETTI_STYLE_CSS = "confetti-styles.js";
+
+const CUSTOM_SETTINGS_MODAL = "customsettingsmodal.js";
+const PLAYLIST_ENHANCEMENT = "playlistenhancement2.js";
+const PM_ENHANCEMENT = "pmenhancement.js";
+const SOUND_NOTIFICATIONS = "notifier.js";
+const MORE_LAYOUT_OPTIONS = "layoutoptions.js";
+const USERLIST_ENHANCEMENT = "userlist.js";
+const ENHANCED_EMOTES = "enhancedEmotes.js";
+
+const CURRENT_COMMIT = "37889849fb28717747828d795c9e5af24fa01f34"
+const CURRENT_REPO = "immergrok"
+//Change to om3tcw on live
+
+function makeLiveCDNLink(customFork, fileName) {
+    //customFork should be immergrok, om3tcw or whatever fork is owned
+    return "https://cdn.jsdelivr.net/gh/" + 
+            customFork +
+            "/r@" +
+            CURRENT_COMMIT +
+            "/" +
+            fileName
+}
+
+function makeLiveCDNLink(fileName) {
+    return "https://cdn.jsdelivr.net/gh/" + 
+            CURRENT_REPO +
+            "/r@" +
+            CURRENT_COMMIT +
+            "/" +
+            fileName
+}
+
 
 $(document).ready(() => {
     soundpostState = readCookie("soundpostState") === "true";
@@ -38,12 +71,12 @@ $(document).ready(() => {
 
 
 function fetchConfettiStyle() {
+    makeLiveCDNLink()
     $.getScript(CONFETTI_CSS_CDN_FILE)
         .done(() => {
-            console.log("done fetching script")
             injectConfettiStyles();
         })
-        .fail(function(jqXHR, textStatus, errorThrown) {
+        .fail((_, textStatus, errorThrown) => {
             console.error("Failed to load confetti-styles.js:", textStatus, errorThrown);
         });
 }
@@ -107,13 +140,13 @@ const xaeModule = {
         various: { notepad: true, emoteToggle: false }
     },
     modules: {
-        settings: { active: 1, rank: -1, url: "https://cdn.jsdelivr.net/gh/om3tcw/r/customsettingsmodal.js", done: true },
-        playlist: { active: 1, rank: -1, url: "https://cdn.jsdelivr.net/gh/om3tcw/r/playlistenhancement2.js", done: true },
-        privmsg: { active: 1, rank: 1, url: "https://cdn.jsdelivr.net/gh/om3tcw/r/pmenhancement.js", done: true },
-        notifier: { active: 1, rank: -1, url: "https://cdn.jsdelivr.net/gh/om3tcw/r@emotes/notifier.js", done: true },
-        layout: { active: 1, rank: -1, url: "https://cdn.jsdelivr.net/gh/om3tcw/r@emotes/layoutoptions.js", done: true },
-        userlist: { active: 1, rank: -1, url: "https://cdn.jsdelivr.net/gh/om3tcw/r@emotes/userlist.js", done: true },
-        enhancedEmotes: { active: 1, rank: -1, url: "https://cdn.jsdelivr.net/gh/immergrok/r@dc5afc1600600f4667230fb08763645062c0e054/enhancedEmotes.js", done: true },
+        customSettings: { active: 1, rank: -1, url: makeLiveCDNLink(CUSTOM_SETTINGS_MODAL), done: true },
+        playlistEnhancement: { active: 1, rank: -1, url: makeLiveCDNLink(PLAYLIST_ENHANCEMENT), done: true },
+        pmEnhancement: { active: 1, rank: 1, url: makeLiveCDNLink(PM_ENHANCEMENT), done: true },
+        soundNotifications: { active: 1, rank: -1, url: makeLiveCDNLink(SOUND_NOTIFICATIONS), done: true },
+        moreLayoutOptions: { active: 1, rank: -1, url: makeLiveCDNLink(MORE_LAYOUT_OPTIONS), done: true },
+        userlistEnhancement: { active: 1, rank: -1, url: makeLiveCDNLink(USERLIST_ENHANCEMENT), done: true },
+        enhancedEmotes: { active: 1, rank: -1, url: makeLiveCDNLink(ENHANCED_EMOTES), done: true },
         holoPeek: { active: 1, rank: -1, url: "https://cdn.jsdelivr.net/gh/immergrok/r@bded1c414b89d5383f0c47415a6a9dd10b69c7ea/holoPeek.js", done: true },
         html2canvas: { active: 1, rank: -1, url: "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js", done: true }
     },
