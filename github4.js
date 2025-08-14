@@ -931,8 +931,8 @@ const holoPeekOptions = [
 
 $(document).ready(() => {
     soundpostState = readCookie("soundpostState") === "true";
-    $('#messagebuffer [class|="chat-msg"]').each(() => {
-        const $element = $(this);
+    $('#messagebuffer [class|="chat-msg"]').each(function() {
+        const $element = $(this); 
         const $messageElement = $element.children().last();
         formatMessage($messageElement);
 
