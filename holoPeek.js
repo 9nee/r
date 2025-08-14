@@ -55,7 +55,13 @@
             id: 'MahjongMode',
             desc: 'Mahjong Mode',
             func: () => {
-                prependMessagesWithMJ();
+
+                const chatInput = $('#chatline');
+                if ($(`#holopeek_${self.id}`).is(':checked')) {
+                    chatInput.on('input', prependMessagesWithMJ())
+                } else {
+                    chatInput.off('input', prependMessagesWithMJ())
+                }
                 toggleMJMessages();
             }
         },

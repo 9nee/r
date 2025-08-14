@@ -84,19 +84,9 @@ function fetchConfettiStyle() {
 
 function prependMessagesWithMJ() {
     const chatInput = $('#chatline');
-
-    let mahjongModeCookie = readCookie("MahjongMode");
-    let shouldPrependMessage = mahjongModeCookie || $('#holopeek_MahjongMode').is(':checked')
-
-    const updateChatInput = () => {
-        if (shouldPrependMessage) {
-            if (chatInput.val() && !chatInput.val().startsWith('MJ: ')) {
-                chatInput.val('MJ: ' + chatInput.val());
-            }
-        }
-    };
-    chatInput.on('input', updateChatInput);
-    chatInput.on('focus', updateChatInput);
+    if (chatInput.val() && !chatInput.val().startsWith('MJ: ')) {
+        chatInput.val('MJ: ' + chatInput.val());
+    }
 }
 
 function canReadMJMessages() {
