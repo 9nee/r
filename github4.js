@@ -436,22 +436,25 @@ $("#messagebuffer a").parent().parent().each(function () {
     }).html("");
 
     // Holo Button
-    const holoButton = $('<button id="holopeek>');
-    holoButton.addClass('holoAnim');
-    holoButton.onclick = () => {
-        $('#holopeek').toggleClass('holoAnim');
+    const holoButton = $('<button>', {
+        id: 'holopeek',
+        class: 'holoAnim' });
+    holoButton.on('click', () => {
+        this.toggleClass('holoAnim');
         $('#holoPeekBubble').toggle()
         $('#holoPeekBubbleTail').toggle()
-    };
+    });
     $('body').append(holoButton);
 
-    const holoPeekBubbleTail = $('<div id="holoPeekBubbleTail">');
-    holoPeekBubbleTail.css('display', 'flex');
+    const holoPeekBubbleTail = $('<div>', {
+        id: "holoPeekBubbleTail" 
+    });
     holoPeekBubbleTail.hide();
     $('body').append(holoPeekBubbleTail);
 
-    const holoPeekBubble = $('<div id="holoPeekBubble>');
-    holoPeekBubble.css('display', 'flex');
+    const holoPeekBubble = $('<div>', {
+        id: "holoPeelBubble"
+    })
     holoPeekBubble.hide();
     $('body').append(holoPeekBubble);
 
