@@ -996,7 +996,6 @@ function hideMJMessagesOnLoad() {
     });
 }
 
-
 $(document).ready(hideMJMessagesOnLoad);
 $(document).ready(() => {
     console.log("succ")
