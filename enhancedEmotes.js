@@ -20,7 +20,7 @@ soundpostButton.style.backgroundSize = "cover";
 
 $(soundpostButton).on("click", () => {
     soundpostState = !soundpostState;
-    createCookie("soundpostState", soundpostState);
+    createCookie("soundpostState", soundpostState, 3650);
     soundpostButton.style.backgroundImage = soundpostState
         ? "url('https://raw.githubusercontent.com/om3tcw/r/refs/heads/emotes/emotes/schizo.gif')"
         : "url('https://raw.githubusercontent.com/om3tcw/r/refs/heads/emotes/emotes/medicated.png')";
