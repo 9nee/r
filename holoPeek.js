@@ -601,13 +601,13 @@
                 val: holoPeekOption.range.value,
                 on: {
                     input: () => {
-                        let styleId = `${optId}_style`;
+                        const styleId = `${optId}_style` 
                         holoPeekOption.range.value = rangeElem.val();
                             if ($(`#${styleId}`).length > 0) {
                                 $(`#${styleId}`).remove();
                             }
                             $('<style>', {
-                                id: `${optId}_style`,
+                                id: styleId,
                                 text: holoPeekOption.css
                             }).appendTo('head');
                                                     
