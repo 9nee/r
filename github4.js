@@ -1357,7 +1357,7 @@ document.head.appendChild(style);
 
 function yayConfetti(message) {
     const $text = message.text().replace('/yay', '');
-    message.text() = $text;
+    message.text($text);
 
     const rect = message.getBoundingClientRect();
     const centerX = rect.left + (rect.width / 2);
