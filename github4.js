@@ -966,15 +966,15 @@ function toggleMJMessages() {
     let mahjongModeCookie = readCookie("MahjongMode");
     let mahjongLurkCookie = readCookie("MahjongLurk");
 
-    let canReadMJMessages = mahjongLurkCookie === "true" || mahjongModeCookie === "true"
+    let canReadMJMessages = mahjongLurkCookie || mahjongModeCookie
 
     document.querySelectorAll('#messagebuffer [class|="chat-msg"]').forEach(element => {
         const messageText = element.lastElementChild.innerHTML;
         if (messageText.startsWith("MJ:")) {
-            if (!canReadMJMessages) {
-                element.style.display = 'none';
-            } else {
+            if (canReadMJMessages) {
                 element.style.display = 'block';
+            } else {
+                element.style.display = 'none';
             }
         } 
     })
@@ -1657,7 +1657,7 @@ function playBooSound() {
 }
 
 function formatMJMessage(messageElement) {
-    let timestampElement = messageElement.querySelector('.timestamp')
+    let timestampElement = messageElement.parentElement.querySelector('.timestamp')
     timestampElement.style.backgroundImage = "url('https://raw.githubusercontent.com/om3tcw/r/refs/heads/emotes/eyes/nyagger.png')";
     messageElement.innerHTML = messageElement.innerHTML.replace(/^MJ: /, '');
 } 
