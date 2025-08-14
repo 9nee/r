@@ -1577,7 +1577,7 @@ socket.on("chatMsg", ({ username, msg, meta, time }) => {
     const messageElement = messageBuffer.lastElementChild.lastElementChild;
     
     if (messageElement.innerHTML.startsWith('/')) {
-        formatMessage(messageElement);
+        formatMessage(messageElemenchit);
     }
 
     if (messageElement.innerHTML.startsWith('MJ:')) {
@@ -1661,12 +1661,13 @@ $(document).ready(() => {
     document.querySelectorAll('#messagebuffer [class|="chat-msg"]').forEach(element => {
         const messageElement = element.lastElementChild;
         formatMessage(messageElement);
-        toggleHiddenMJMessages(messageElement);
+        toggleHiddenMJMessages();
     })
 });
 
 function formatMJMessage(messageElement) {
-    timestampElem.style.backgroundImage = "url('https://raw.githubusercontent.com/om3tcw/r/refs/heads/emotes/eyes/nyagger.png')";
+    let timestampElement = messageElement.querySelector('.timestamp')
+    timestampElement.style.backgroundImage = "url('https://raw.githubusercontent.com/om3tcw/r/refs/heads/emotes/eyes/nyagger.png')";
     messageElement.innerHTML = messageElement.innerHTML.replace(/^MJ: /, '');
 } 
 
