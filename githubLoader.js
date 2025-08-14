@@ -72,7 +72,7 @@ $(document).ready(() => {
 
 function fetchConfettiStyle() {
     makeLiveCDNLink()
-    $.getScript(CONFETTI_CSS_CDN_FILE)
+    $.getScript(makeLiveCDNLink(CONFETTI_STYLE_CSS))
         .done(() => {
             injectConfettiStyles();
         })
