@@ -1355,11 +1355,11 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-function yayConfetti(message) {
-    const $text = message.text().replace('/yay', '');
-    message.text($text);
+function yayConfetti($message) {
+    const $text = $message.text().replace('/yay', '');
+    $message.text($text);
 
-    const rect = message.getBoundingClientRect();
+    const rect = $message[0].getBoundingClientRect();
     const centerX = rect.left + (rect.width / 2);
     const centerY = rect.top + (rect.height / 2);
 
