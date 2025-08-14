@@ -30,7 +30,7 @@ const ENHANCED_EMOTES = "enhancedEmotes.js";
 const HOLOPEEK = "holoPeek.js"
 
 //b76cb09adcddbcb9dd1d9c904d24718c5be59e13 revert
-const CURRENT_COMMIT = "ced61706640152a28a3f6a4a3310ab81f5a73c34"
+const CURRENT_COMMIT = "59848fc61fe6286a1241ae82f4a34fe0a5c1495c"
 const CURRENT_REPO = "immergrok"
 //Change to om3tcw on live
 
