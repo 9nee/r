@@ -931,10 +931,12 @@ const holoPeekOptions = [
 
 $(document).ready(() => {
     soundpostState = readCookie("soundpostState") === "true";
-    document.querySelectorAll('#messagebuffer [class|="chat-msg"]').forEach(element => {
-        const messageElement = element.lastElementChild;
+    $('#messagebuffer [class|="chat-msg"]').each(() => {
+        const $element = $(this);
+        const $messageElement = $element.children().last();
         formatMessage(messageElement);
-        if (messageElement.innerHTML.startsWith('MJ:')) {
+
+        if (messageElement.html().startsWith('MJ:')) {
             formatMJMessage(messageElement)
         }
     })
