@@ -981,21 +981,6 @@ function toggleHiddenMJMessages() {
     }
 }
 
-//TODO make it so they look like they're in offtopic mode and not show MJ
-function hideMJMessagesOnLoad() {
-    hiddenMJMessages = hiddenMJMessages.filter(parentElement => document.body.contains(parentElement));
-    document.querySelectorAll('[class^="chat-msg-"]').forEach(parentElement => {
-        parentElement.querySelectorAll('span').forEach(span => {
-            if (span.innerHTML.includes('MJ:')) {
-                parentElement.style.display = 'none';
-                if (!hiddenMJMessages.includes(parentElement)) {
-                    hiddenMJMessages.push(parentElement);
-                }
-            }
-        });
-    });
-}
-
 ///* Holopeek block
 //* Holopeek style
     const optionsLegendParagraph = document.createElement('p');
@@ -1699,7 +1684,21 @@ function playBooSound() {
     }
 }
 
-$(document).ready(hideMJMessagesOnLoad());
+$(document).ready(
+    function hideMJMessagesOnLoad() {
+        hiddenMJMessages = hiddenMJMessages.filter(parentElement => document.body.contains(parentElement));
+        document.querySelectorAll('[class^="chat-msg-"]').forEach(parentElement => {
+            parentElement.querySelectorAll('span').forEach(span => {
+                if (span.innerHTML.includes('MJ:')) {
+                    parentElement.style.display = 'none';
+                    if (!hiddenMJMessages.includes(parentElement)) {
+                        hiddenMJMessages.push(parentElement);
+                    }
+                }
+            });
+        });
+});
+
 $(document).ready(() => {
     soundpostState = readCookie("soundpostState") === "true";
     document.querySelectorAll('#messagebuffer [class|="chat-msg"]').forEach(element => {
