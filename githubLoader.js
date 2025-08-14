@@ -17,6 +17,7 @@ let soundpostState = "false";
 let soundpostPlaybackState = {};
 const defaultVolume = 0.1;
 const defaultAdditionalPlayTime = 3;
+const CONFETTI_CSS_CDN_FILE = "https://cdn.jsdelivr.net/gh/immergrok/r@af15825247fd77ce84318ea2fdf203a1ce38ea45/confetti-styles.js"
 
 $(document).ready(() => {
     soundpostState = readCookie("soundpostState") === "true";
@@ -37,7 +38,7 @@ $(document).ready(() => {
 
 
 function fetchConfettiStyle() {
-    $.getScript('./confetti-styles.js')
+    $.getScript(CONFETTI_CSS_CDN_FILE)
         .done(() => {
             console.log("done fetching script")
             injectConfettiStyles();
