@@ -18,5 +18,11 @@
     "image": "https://raw.githubusercontent.com/om3tcw/r/e64bfc5c2519a8fce902f84283531b6902355474/emotes/squeeb.png",
     "meta": ["ceres fauna"],
     "soundpost": "https://www.dl.dropboxusercontent.com/s/ivnrcxhetqhzn7t/squeeb.ogg?dl=0"
+  },
+  {
+    "name": ":mambo:",
+    "image": "https://raw.githubusercontent.com/om3tcw/r/3b40c03d84e2a5d0920c71319295f4cb96d23e78/emotes/mambo.gif",
+    "meta": ["horse", "uma musume", "matikanetannhauser"],
+    "soundpost": "https://cdn.jsdelivr.net/gh/om3tcw/r@emotes/soundposts/sounds/mambo.ogg"
   }
 ]

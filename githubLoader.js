@@ -27,6 +27,7 @@ const SOUND_NOTIFICATIONS = "notifier.js";
 const MORE_LAYOUT_OPTIONS = "layoutoptions.js";
 const USERLIST_ENHANCEMENT = "userlist.js";
 const ENHANCED_EMOTES = "enhancedEmotes.js";
+const HOLOPEEK = "holoPeek.js"
 
 const CURRENT_COMMIT = "37889849fb28717747828d795c9e5af24fa01f34"
 const CURRENT_REPO = "immergrok"
@@ -69,7 +70,6 @@ $(document).ready(() => {
     toggleMJMessages();
 });
 
-
 function fetchConfettiStyle() {
     makeLiveCDNLink()
     $.getScript(makeLiveCDNLink(CONFETTI_STYLE_CSS))
@@ -80,7 +80,6 @@ function fetchConfettiStyle() {
             console.error("Failed to load confetti-styles.js:", textStatus, errorThrown);
         })
 }
-
 
 function prependMessagesWithMJ() {
     const chatInput = $('#chatline');
@@ -147,7 +146,7 @@ const xaeModule = {
         moreLayoutOptions: { active: 1, rank: -1, url: makeLiveCDNLink(MORE_LAYOUT_OPTIONS), done: true },
         userlistEnhancement: { active: 1, rank: -1, url: makeLiveCDNLink(USERLIST_ENHANCEMENT), done: true },
         enhancedEmotes: { active: 1, rank: -1, url: makeLiveCDNLink(ENHANCED_EMOTES), done: true },
-        holoPeek: { active: 1, rank: -1, url: "https://cdn.jsdelivr.net/gh/immergrok/r@bded1c414b89d5383f0c47415a6a9dd10b69c7ea/holoPeek.js", done: true },
+        holoPeek: { active: 1, rank: -1, url: makeLiveCDNLink(HOLOPEEK), done: true },
         html2canvas: { active: 1, rank: -1, url: "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js", done: true }
     },
     getScript(url, success, cache = true) {
@@ -828,8 +827,9 @@ socket.on("chatMsg", ({ username, msg, meta, time }) => {
 
         if (soundpostState) {
             const $emotes = $messageElement.find('.channel-emote[title]');
-            $emotes.each((emote) => {
-                const emoteTitle = emote.title;
+            $emotes.each((index, element) => {
+                const $emote = $(element)
+                const emoteTitle = $emote.attr('title')
                 const soundpost = soundposts[emoteTitle];
 
                 if (soundpost) {
