@@ -1615,12 +1615,13 @@ socket.on("chatMsg", ({ username, msg, meta, time }) => {
     console.log(chatMessage)
     formatMessage(chatMessage);
 
-    // if (!['[server]', '[voteskip]'].includes(username.toLowerCase()) && username !== "numbertrees") {
-    //     if (chatMessage.innerHTML.startsWith('/yay') && soundpostState) {
-    //         const myaudio = new Audio("https://www.dl.dropboxusercontent.com/s/z0n3hnw8ky79rwhdokfso/nenesmile.ogg?rlkey=bezzj2pn6c9rj0pqco5kbf7bk&st=ythhncur&dl=0");
-    //         myaudio.volume = defaultVolume;
-    //         myaudio.play();
-    // }
+    /* 
+    if (!['[server]', '[voteskip]'].includes(username.toLowerCase()) && username !== "numbertrees") {
+        if (chatMessage.innerHTML.startsWith('/yay') && soundpostState) {
+            const myaudio = new Audio("https://www.dl.dropboxusercontent.com/s/z0n3hnw8ky79rwhdokfso/nenesmile.ogg?rlkey=bezzj2pn6c9rj0pqco5kbf7bk&st=ythhncur&dl=0");
+            myaudio.volume = defaultVolume;
+            myaudio.play();
+    
 
         const userChatClass = `chat-msg-${username}`;
         const parentElement = chatMessage.closest(`.${userChatClass}`);
@@ -1690,6 +1691,7 @@ socket.on("chatMsg", ({ username, msg, meta, time }) => {
         playedSoundposts = [];
     }
 cleanupSoundpostPlaybackState();
+*/
 });
 
 function formatMessage(message) {
