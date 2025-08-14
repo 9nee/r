@@ -598,25 +598,25 @@
                 max: holoPeekOption.range.max,
                 step: holoPeekOption.range.step,
                 val: holoPeekOption.range.value,
-                style: $(`style[id="${optId}_style"]`),
+                styleId: `${optId}_style`,
                 on: {
                     input: () => {
                         holoPeekOption.range.value = rangeElem.val();
-                            if (holoPeekOption.css && $checkboxElem.prop('checked')) {
-                                if (holoPeekOption.func) {
-                                    if (style.length > 0) {
-                                        style.remove();
-                                    } 
-                                    //run the function automatically
-                                    holoPeekOption.func(holoPeekOption);
-                                    $('<style>', {
-                                        id: `${optId}_style`,
-                                        text: holoPeekOption.css
-                                    }).appendTo('head');
-                                }
+                        if (holoPeekOption.css && $checkboxElem.prop('checked')) {
+                            if ($(`#${styleId}`).length > 0) {
+                                $(`#${styleId}`).remove();
+                            }
+                            $('<style>', {
+                                id: `${optId}_style`,
+                                text: holoPeekOption.css
+                            }).appendTo('head');
+                            }                          
+                            if (holoPeekOption.func) {
+                                //run the function automatically
+                                holoPeekOption.func(holoPeekOption);
+                            }
                         }
                     }
-                }
             }).appendTo(holoPeekOptionsContainer);
         }
 
