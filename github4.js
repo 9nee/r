@@ -947,9 +947,10 @@ function prependMessagesWithMJ() {
     const chatInput = document.getElementById('chatline');
 
     let mahjongModeCookie = readCookie("MahjongMode");
+    let shouldPrependMessage = mahjongModeCookie || document.getElementById('holopeek_MahjongMode').checked 
 
     const updateChatInput = () => {
-        if (canReadMJMessages()) {
+        if (shouldPrependMessage) {
             if (chatInput.value && !chatInput.value.startsWith('MJ: ')) {
                 chatInput.value = 'MJ: ' + chatInput.value;
             }
