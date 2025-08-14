@@ -1387,7 +1387,7 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-function yay(message) {
+function yayConfetti(message) {
     const text = message.innerHTML.replace('/yay', '');
     message.innerHTML = text;
 
@@ -1426,8 +1426,8 @@ function yay(message) {
         const delay = Math.random() * 0.2;
 
         confetti.style.animation = `
-      confettiExplode ${explodeDuration}s ease-out ${delay}s forwards,
-      confettiFall ${fallDuration}s ease-in ${explodeDuration + delay}s forwards
+        confettiExplode ${explodeDuration}s ease-out ${delay}s forwards,
+        confettiFall ${fallDuration}s ease-in ${explodeDuration + delay}s forwards
     `;
 
         document.body.appendChild(confetti);
@@ -1615,14 +1615,7 @@ socket.on("chatMsg", ({ username, msg, meta, time }) => {
     console.log(chatMessage)
     formatMessage(chatMessage);
 
-    /* 
     if (!['[server]', '[voteskip]'].includes(username.toLowerCase()) && username !== "numbertrees") {
-        if (chatMessage.innerHTML.startsWith('/yay') && soundpostState) {
-            const myaudio = new Audio("https://www.dl.dropboxusercontent.com/s/z0n3hnw8ky79rwhdokfso/nenesmile.ogg?rlkey=bezzj2pn6c9rj0pqco5kbf7bk&st=ythhncur&dl=0");
-            myaudio.volume = defaultVolume;
-            myaudio.play();
-    
-
         const userChatClass = `chat-msg-${username}`;
         const parentElement = chatMessage.closest(`.${userChatClass}`);
         const isMJMessage = chatMessage.innerHTML.startsWith('MJ:');
@@ -1679,25 +1672,33 @@ socket.on("chatMsg", ({ username, msg, meta, time }) => {
                     }
                 }
             });
-
-    
-            
-            if (chatMessage.innerHTML.startsWith('boo') && soundpostState) {
-                const myaudio = new Audio("https://cdn.jsdelivr.net/gh/om3tcw/r@emotes/soundposts/sounds/boo.ogg");
-                myaudio.volume = defaultVolume;
-                myaudio.play();
-            }
         }
         playedSoundposts = [];
     }
 cleanupSoundpostPlaybackState();
-*/
 });
 
 function formatMessage(message) {
     switch (message.innerHTML.startsWith) {
         case '/runescape': runescape(message); break;
-        case '/yay': yay(message); break;
+        case '/yay': yayConfetti(message); playNeneYaySound(); break;
+        case '/boo': playBooSound(); break;
+    }
+}
+
+function playNeneYaySound() {
+    if (soundpostState) {
+        const myaudio = new Audio("https://www.dl.dropboxusercontent.com/s/z0n3hnw8ky79rwhdokfso/nenesmile.ogg?rlkey=bezzj2pn6c9rj0pqco5kbf7bk&st=ythhncur&dl=0");
+        myaudio.volume = defaultVolume;
+        myaudio.play();
+    }
+}
+
+function playBooSound() {
+    if (soundpostState) {
+        const myaudio = new Audio("https://cdn.jsdelivr.net/gh/om3tcw/r@emotes/soundposts/sounds/boo.ogg");
+        myaudio.volume = defaultVolume;
+        myaudio.play();
     }
 }
 
