@@ -113,8 +113,9 @@
                 max: 100,
                 step: 1,
                 inputEvent: self => {
-                    self.func(self)
-                    self.range.value = $(`#holopeek_${self.id}_range`).val();
+                    //Testing, I don't think this condition ever gets executed
+                //     self.func(self)
+                //     self.range.value = $(`#holopeek_${self.id}_range`).val();
                 }
             }
         },
@@ -602,7 +603,6 @@
                 on: {
                     input: () => {
                         holoPeekOption.range.value = rangeElem.val();
-                        if (holoPeekOption.css && $checkboxElem.prop('checked')) {
                             if ($(`#${styleId}`).length > 0) {
                                 $(`#${styleId}`).remove();
                             }
@@ -610,9 +610,8 @@
                                 id: `${optId}_style`,
                                 text: holoPeekOption.css
                             }).appendTo('head');
-                            }                          
+                                                    
                             if (holoPeekOption.func) {
-                                //run the function automatically
                                 holoPeekOption.func(holoPeekOption);
                             }
                         }
