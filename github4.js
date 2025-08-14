@@ -968,16 +968,15 @@ function toggleMJMessages() {
 
     let canReadMJMessages = mahjongLurkCookie || mahjongModeCookie
 
-    document.querySelectorAll('#messagebuffer [class|="chat-msg"]').forEach(element => {
+    document.querySelectorAll('#messagebuffer [class|="MahjongMessage"]').forEach(element => {
         const messageText = element.lastElementChild.innerHTML;
-        if (messageText.startsWith("MJ:")) {
             if (canReadMJMessages) {
                 element.style.display = 'block';
             } else {
                 element.style.display = 'none';
             }
         } 
-    })
+    )
 }
 
 ///* Holopeek block
@@ -1577,10 +1576,11 @@ socket.on("chatMsg", ({ username, msg, meta, time }) => {
     const messageElement = messageBuffer.lastElementChild.lastElementChild;
     
     if (messageElement.innerHTML.startsWith('/')) {
-        formatMessage(messageElemenchit);
+        formatMessage(messageElement);
     }
 
     if (messageElement.innerHTML.startsWith('MJ:')) {
+        $(messageElement).addClass("MahjongMessage")
         formatMJMessage(messageElement)
     }
 
