@@ -393,6 +393,7 @@ $(window).bind('keydown', function (event) {
 // Image Hover
 const ImageHoverEnable = false;
 
+//TODO: broken for like 4 years now
 function createHoverImage(jqChatMessage) {
     jqChatMessage.find("a").bind("mouseenter", function () {
         if (ImageHoverEnable) {

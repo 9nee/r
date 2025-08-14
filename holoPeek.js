@@ -37,16 +37,19 @@
             id: 'background',
             desc: 'Change Background',
             func: self => {
-                const checkboxElem = $(`holopeek_${self.id}`);
-                const textElem = $(`holopeek_${self.id}_text`);
-                if (checkboxElem && textElem) {
-                    self.css = checkboxElem.checked && textElem.value ? `body { background-image: url(${textElem.value}); }` : null;
+                const $checkboxElem = $(`#holopeek_${self.id}`);
+                const $textElem = $(`#holopeek_${self.id}_text`);
+                if ($checkboxElem.is(':checked')) {
+                    self.css = `body { background-image: url(${$textElem.val()}); }`
+                } else {
+                    self.css = null; 
                 }
+                
             },
             text: {
                 value: 'https://raw.githubusercontent.com/om3tcw/r/emotes/holopeek/black.png',
                 inputEvent: self => {
-                    $(`holopeek_${self.id}`).checked = false;
+                    $(`#holopeek_${self.id}`).is(':checked') = false;
                     self.text.value = $(`holopeek_${self.id}_text`).value;
                 }
             }
@@ -79,8 +82,8 @@
             }
         },
         {
-            id: 'image_hower',
-            desc: 'Enable image on link hover',
+            id: 'image_hover',
+            desc: '<s>Enable image on link hover</s>',
             func: () => ImageHoverEnable = !ImageHoverEnable
         },
         {
@@ -109,7 +112,6 @@
                 max: 100,
                 step: 1,
                 inputEvent: self => {
-                    //$(`holopeek_${self.id}`).is(':checked') = false;
                     self.func(self)
                     self.range.value = $(`#holopeek_${self.id}_range`).val();
                 }
