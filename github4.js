@@ -12,7 +12,12 @@ if (!this[CHANNEL.name].favicon) {
         .appendTo("head");
 }
 
+//Defining some top level variables
 let soundpostState = "false";
+let soundpostPlaybackState = {};
+const defaultVolume = 0.1;
+const defaultAdditionalPlayTime = 3;
+
 
 const xaeModule = {
     options: {
@@ -1500,9 +1505,6 @@ $('.embed-responsive').prepend($('<div/>', {
     'class': 'videochatContainer'
 }));
 
-let soundpostPlaybackState = {};
-const defaultVolume = 0.1;
-const defaultAdditionalPlayTime = 3;
 
 function initializeSoundpost(emote, soundurl, preload = false) {
     if (!soundpostPlaybackState[emote]) {
