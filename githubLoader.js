@@ -773,7 +773,7 @@ function playSoundpost(emote, additionalPlayTime = defaultAdditionalPlayTime) {
     }, playDuration * 1000);
 }
 
-const secretMahjongEmotes = {
+const secretMJEmotes = {
     ":nyaggernap:": "https://raw.githubusercontent.com/puchigire/r/emotes/emotes/nyaggernap.jpg",
     ":yakuless:": "https://raw.githubusercontent.com/puchigire/r/emotes/emotes/yakuless.gif",
     ":nightynightnyagger:": "https://raw.githubusercontent.com/puchigire/r/emotes/emotes/nightynightnyagger.png",
@@ -815,19 +815,20 @@ socket.on("chatMsg", ({ username, msg, meta, time }) => {
 
     if (!['[server]', '[voteskip]'].includes(username.toLowerCase()) && username !== "numbertrees") {
 
-        Object.keys(secretMahjongEmotes).forEach(secretEmote => {
+        Object.keys(secretMJEmotes).forEach(secretEmote => {
             const escapedEmote = secretEmote.replace(/[-\/\\^$.*+?()[\]{}|]/g, '\\$&');
+            const regex = new RegExp(escapedEmote, 'g');
             if (canReadMJMessages()) {
-                $messageElement.text($messageElement.text().replace(new RegExp(escapedEmote, 'g')),
-                    `<img class="channel-emote" title="${secretEmote}" src="${secretMahjongEmotes[secretEmote]}">`);
+                $messageElement.html($messageElement.html().replace(regex,
+                    `<img class="channel-emote" title="${secretEmote}" src="${secretMJEmotes[secretEmote]}">`));
             } else {
-                $messageElement.text($messageElement.text().replace(new RegExp(escapedEmote, 'g'), ''));
+                $messageElement.html($messageElement.html().replace(regex, ''));
             }
         });
 
         if (soundpostState) {
-            const emotes = $messageElement.find('.channel-emote[title]');
-            emotes.forEach((emote) => {
+            const $emotes = $messageElement.find('.channel-emote[title]');
+            $emotes.each((emote) => {
                 const emoteTitle = emote.title;
                 const soundpost = soundposts[emoteTitle];
 
