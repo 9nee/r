@@ -966,13 +966,12 @@ function canReadMJMessages() {
 
 function toggleMJMessages() {
     document.querySelectorAll('#messagebuffer [class|="MahjongMessage"]').forEach(element => {
-            if (canReadMJMessages()) {
-                element.style.display = 'block';
-            } else {
-                element.style.display = 'none';
-            }
-        } 
-    )
+        if (canReadMJMessages()) {
+            element.parentElement.style.display = 'block';
+        } else {
+            element.parentElement.style.display = 'none';
+        }
+    })
 }
 
 ///* Holopeek block
