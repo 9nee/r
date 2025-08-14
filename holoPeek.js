@@ -82,12 +82,13 @@
             func: self => {
                 const $checkboxElem = $(`#holopeek_${self.id}`);
                 const $rangeElem = $(`#holopeek_${self.id}_range`);
-                if ($checkboxElem && $rangeElem) {
-                    self.css = $checkboxElem.is(':checked') ? `
-                #videowrap { width: ${100 - $rangeElem.val()}% !important; }
-                #videowrap-header { display: none; }
-                #chatwrap { width: ${$rangeElem.val()}% !important; }
-            ` : null;
+                if ($checkboxElem.is(':checked')) {
+                    self.css = 
+                        `#videowrap { width: ${100 - $rangeElem.val()}% !important; }
+                        #videowrap-header { display: none; }
+                        #chatwrap { width: ${$rangeElem.val()}% !important; }}` 
+                    } else {
+                    self.css = null;
                 }
             },
             range: {
@@ -96,9 +97,9 @@
                 max: 100,
                 step: 1,
                 inputEvent: self => {
-                    //$(`holopeek_${self.id}`).checked = false;
-                    self.func()
-                    self.range.value = $(`holopeek_${self.id}_range`).value;
+                    //$(`holopeek_${self.id}`).is(':checked') = false;
+                    self.func(self)
+                    self.range.value = $(`holopeek_${self.id}_range`).val();
                 }
             }
         },
@@ -508,13 +509,17 @@
         const div = $('<div>').appendTo(holoPeekOptionsContainer);
 
         const optId = `holopeek_${holoPeekOption.id}`;
-        const checkboxElem = $('<input>', {
+        const $checkboxElem = $('<input>', {
             id: optId,
             type: 'checkbox',
             click: () => {
-                if (holoPeekOption.func) holoPeekOption.func(holoPeekOption);
+                if (holoPeekOption.func) {
+                    holoPeekOption.func(holoPeekOption);
+                } 
+
                 $(`#${optId}_style`).remove();
-                if (holoPeekOption.css && checkboxElem.prop('checked')) {
+                
+                if (holoPeekOption.css && $checkboxElem.prop('checked')) {
                     $('<style>', {
                         id: `${optId}_style`,
                         text: holoPeekOption.css
@@ -528,12 +533,12 @@
         if (cookieValue) {
             const valueElem = holoPeekOption.textarea ? 'textarea' : holoPeekOption.range ? 'range' : holoPeekOption.text ? 'text' : null;
             if (valueElem) holoPeekOption[valueElem].value = cookieValue;
-            checkboxElem.prop('checked', true);
+            $checkboxElem.prop('checked', true);
             const interval = setInterval(() => {
                 //TODO: What the fuck is all this
                 if ($(".userlist_item").length) {
                     clearInterval(interval);
-                    checkboxElem.triggerHandler('click');
+                    $checkboxElem.triggerHandler('click');
                 }
             }, 100);
         }
@@ -551,7 +556,7 @@
                 val: holoPeekOption.textarea.value,
                 on: {
                     input: () => {
-                        checkboxElem.prop('checked', false);
+                        $checkboxElem.prop('checked', false);
                         holoPeekOption.textarea.value = textareaElem.val();
                     }
                 }
@@ -569,7 +574,6 @@
                 val: holoPeekOption.range.value,
                 on: {
                     input: () => {
-                        checkboxElem.prop('checked', false);
                         holoPeekOption.range.value = rangeElem.val();
                     }
                 }
@@ -583,7 +587,7 @@
                 val: holoPeekOption.text.value,
                 on: {
                     input: () => {
-                        checkboxElem.prop('checked', false);
+                        $checkboxElem.prop('checked', false);
                         holoPeekOption.text.value = textElem.val();
                     }
                 }
