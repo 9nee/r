@@ -39,6 +39,7 @@ $(document).ready(() => {
 function fetchConfettiStyle() {
     $.getScript('./confetti-styles.js')
         .done(() => {
+            console.log("done fetching script")
             injectConfettiStyles();
         })
         .fail(function(jqXHR, textStatus, errorThrown) {
