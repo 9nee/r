@@ -57,7 +57,7 @@
             func: () => {
 
                 const $chatInput = $('#chatline');
-                if ($(`#holopeek_${self.id}`).is(':checked')) {
+                if ($(`#holopeek_MahjongMode`).is(':checked')) {
                     $chatInput.on('input', prependMessagesWithMJ)
                     $chatInput.on('focus', prependMessagesWithMJ)
                 } else {
