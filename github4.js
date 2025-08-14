@@ -1699,7 +1699,7 @@ function playBooSound() {
     }
 }
 
-$(document).ready(hideMJMessagesOnLoad);
+$(document).ready(hideMJMessagesOnLoad());
 $(document).ready(() => {
     soundpostState = readCookie("soundpostState") === "true";
     document.querySelectorAll('#messagebuffer [class|="chat-msg"]').forEach(element => {
