@@ -84,7 +84,7 @@
         },
         {
             id: 'image_hover',
-            desc: '<s>Enable image on link hover</s>',
+            desc: 'Enable image on link hover',
             func: () => ImageHoverEnable = !ImageHoverEnable
         },
         {
@@ -264,7 +264,14 @@
         {
             id: 'invert_chat_position',
             desc: 'Invert chat position',
-            css: `#main { flex-direction: row-reverse !important; }`
+            func: self => {
+                const $checkboxElem = $(`#holopeek_${self.id}`);
+                if ($checkboxElem.is(':checked')) {
+                    self.css = `#main { flex-direction: row-reverse !important; }`
+                } else {
+                    self.css = null;
+                }
+            }
         },
         {
             id: 'hide_playlist',
@@ -662,7 +669,7 @@
         id: 'resetButton',
         html: 'Reset<img width="24" height="24" alt="save" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAQAAABKfvVzAAAAPElEQVQ4y2NgGAJAgeE+w38ovA/k4QH/8UDqaCADkGw+WRqIERvVMNQ1PMKaMB7h1uDB8BhD+WOg6OAGADZZd6fzGEl6AAAAAElFTkSuQmCC">',
         click: () => {
-            if (confirm("Are you sure you want to reset all the options and cookies")) {
+            if (confirm("Are you sure you want to reset all the options to their defaults? THIS WILL RELOAD THE PAGE")) {
                 holoPeekOptions.forEach(holoPeekOption => {
                     const optionName = holoPeekOption.id;
                     const $jqSelector = $(`#holopeek_${optionName}`)
@@ -812,7 +819,7 @@
     }
 `;
 
-    const style = document.createElement('style');
+const style = document.createElement('style');
     if (style.styleSheet)
         style.styleSheet.cssText = css;
     else
@@ -820,3 +827,9 @@
     document.getElementsByTagName('head')[0].appendChild(style);
 
 })();
+
+(function strikeBrokenHolopeekOptions() {
+    let hoverOption = $('#holopeek_image_hover_label')
+    hoverOption.html(`<s>${hoverOption.html()}</s>`)
+
+})
