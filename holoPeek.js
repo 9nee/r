@@ -532,7 +532,7 @@
     holoPeekOptions.forEach(holoPeekOption => {
         const div = $('<div>').appendTo(holoPeekOptionsContainer);
 
-        const optId = `holopeek_${holoPeekOption.id}`;
+        const optId = `$holopeek_${holoPeekOption.id}`;
         const $checkboxElem = $('<input>', {
             id: optId,
             type: 'checkbox',
@@ -541,9 +541,10 @@
                     holoPeekOption.func(holoPeekOption);
                 } 
 
-                $(`#${optId}_style`).remove();
+                $(`style[id="${optId}_style"]`).remove()
                 
                 if (holoPeekOption.css && $checkboxElem.prop('checked')) {
+                    
                     $('<style>', {
                         id: `${optId}_style`,
                         text: holoPeekOption.css
