@@ -39,6 +39,7 @@
             func: self => {
                 const $checkboxElem = $(`#holopeek_${self.id}`);
                 const $textElem = $(`#holopeek_${self.id}_text`);
+
                 if ($checkboxElem.is(':checked')) {
                     self.css = `body { background-image: url(${$textElem.val()}); }`
                 } else {
@@ -661,12 +662,16 @@
         id: 'resetButton',
         html: 'Reset<img width="24" height="24" alt="save" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAQAAABKfvVzAAAAPElEQVQ4y2NgGAJAgeE+w38ovA/k4QH/8UDqaCADkGw+WRqIERvVMNQ1PMKaMB7h1uDB8BhD+WOg6OAGADZZd6fzGEl6AAAAAElFTkSuQmCC">',
         click: () => {
-            holoPeekOptions.forEach(holoPeekOption => {
-                const optionName = holoPeekOption.id;
-                const $jqSelector = $(`#holopeek_${optionName}`)
-                eraseCookie(optionName)
-                $jqSelector.prop('checked', false);
-            });
+            if (confirm("Are you sure you want to reset all the options and cookies")) {
+                holoPeekOptions.forEach(holoPeekOption => {
+                    const optionName = holoPeekOption.id;
+                    const $jqSelector = $(`#holopeek_${optionName}`)
+                    eraseCookie(optionName)
+                    $jqSelector.prop('checked', false);
+                    location.reload();
+                });
+            }
+
         }
     }).appendTo(saveAndResetCookieButtonsDiv);
 
