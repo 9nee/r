@@ -489,18 +489,18 @@ const holoPeekOptions = [
         }
     },
     {
-        id: 'WatchalongOfftopic',
-        desc: 'Offtopic Mode',
+        id: 'MahjongMode',
+        desc: 'Mahjong Mode',
         func: self => {
-            const checkboxElem = document.getElementById('holopeek_WatchalongOfftopic');
+            const checkboxElem = document.getElementById('holopeek_MahjongMode');
             const username = document.getElementById('welcome').innerText.replace('Welcome, ', '');
             prependMessagesWithMJ(username, checkboxElem.checked);
             toggleHiddenMJMessages();
         }
     },
     {
-        id: 'WatchalongOfftopic2',
-        desc: 'Offtopic Lurk',
+        id: 'MahjongLurk',
+        desc: 'Mahjong Lurk',
         func: self => {
             toggleHiddenMJMessages();
         }
@@ -936,10 +936,9 @@ const holoPeekOptions = [
 function prependMessagesWithMJ() {
     const chatInput = document.getElementById('chatline');
 
-
     const updateChatInput = () => {
-        const offTopicEnabled = document.getElementById('holopeek_WatchalongOfftopic').checked ||
-            document.getElementById('holopeek_WatchalongOfftopic2').checked;
+        const offTopicEnabled = document.getElementById('holopeek_MahjongMode').checked ||
+            document.getElementById('holopeek_MahjongLurk').checked;
 
 
         if (offTopicEnabled) {
@@ -951,32 +950,24 @@ function prependMessagesWithMJ() {
         }
     };
 
-
     chatInput.addEventListener('input', updateChatInput);
     chatInput.addEventListener('focus', updateChatInput);
 }
 
 
 function toggleHiddenMJMessages() {
-    hiddenMJMessages = hiddenMJMessages.filter(message => document.body.contains(message));
-    const offTopicEnabled = document.getElementById('holopeek_WatchalongOfftopic').checked ||
-        document.getElementById('holopeek_WatchalongOfftopic2').checked;
+    let mahjongModeCookie = readCookie("MahjongMode");
+    let mahjongLurkCookie = readCookie("MahjongLurk");
 
-    if (offTopicEnabled) {
-        hiddenMJMessages.forEach(message => {
-            message.style.display = 'block';
-        });
-        hiddenMJMessages = [];
-    } else {
-        document.querySelectorAll('[class^="chat-msg-"]').forEach(message => {
-            if (message.innerText.startsWith('MJ:')) {
+    let canReadMJMessages = mahjongLurkCookie === "true" || mahjongModeCookie === "true"
+
+    document.querySelectorAll('#messagebuffer [class|="chat-msg"]').forEach(element => {
+        if (element.startsWith("MJ:")) {
+            if (!canReadMJMessages) {
                 message.style.display = 'none';
-                if (!hiddenMJMessages.includes(message)) {
-                    hiddenMJMessages.push(message);
-                }
             }
-        });
-    }
+        }
+    })
 }
 
 ///* Holopeek block
@@ -1594,8 +1585,7 @@ socket.on("chatMsg", ({ username, msg, meta, time }) => {
         const userChatClass = `chat-msg-${username}`;
         const parentElement = chatMessage.closest(`.${userChatClass}`);
         const isMJMessage = chatMessage.innerHTML.startsWith('MJ:');
-        const offTopicEnabled = document.getElementById('holopeek_WatchalongOfftopic').checked ||
-            document.getElementById('holopeek_WatchalongOfftopic2').checked;
+        let MahjongMode = readCookie("MahjongMode")
 
         if (isMJMessage) {
             if (!offTopicEnabled) {
@@ -1693,7 +1683,6 @@ $(document).ready(() => {
 //Kusa wants the MJ messages to not show up on a reload 
 function hideMJMessagesOnLoad(messageElement) {
     if (messageElement.innerHTML.startsWith('MJ:')) {
-        console.log("The message did in fact start with MJ: ")
         messageElement.parentElement.style.display = 'none';
         if (!hidden.includes(parentElement)) {
             hidden.push(parentElement);
