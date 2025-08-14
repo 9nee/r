@@ -1684,9 +1684,6 @@ $(document).ready(() => {
 function hideMJMessagesOnLoad(messageElement) {
     if (messageElement.innerHTML.startsWith('MJ:')) {
         messageElement.parentElement.style.display = 'none';
-        if (!hidden.includes(parentElement)) {
-            hidden.push(parentElement);
-        }
     }
 }
 
