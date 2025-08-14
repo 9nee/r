@@ -575,6 +575,9 @@
                 on: {
                     input: () => {
                         holoPeekOption.range.value = rangeElem.val();
+                        if (holoPeekOption.func) {
+                            holoPeekOption.func(holoPeekOption);
+                        }
                     }
                 }
             }).appendTo(holoPeekOptionsContainer);
