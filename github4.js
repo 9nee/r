@@ -440,8 +440,8 @@ $("#messagebuffer a").parent().parent().each(function () {
     holoButton.addClass('holoAnim');
     holoButton.onclick = () => {
         $('#holopeek').toggleClass('holoAnim');
-        $('#holoPeekBubble').toggle();
-        $('#holoPeekBubbleTail').toggle();
+        $('#holoPeekBubble').css('display') === 'none' ? 'flex' : 'none';
+        $('#holoPeekBubbleTail').css('display') === 'none' ? 'flex' : 'none';
     };
     $('body').append(holoButton);
 
