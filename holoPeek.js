@@ -577,6 +577,12 @@
                         holoPeekOption.range.value = rangeElem.val();
                         if (holoPeekOption.func) {
                             holoPeekOption.func(holoPeekOption);
+                            if (holoPeekOption.css && $checkboxElem.prop('checked')) {
+                                $('<style>', {
+                                    id: `${optId}_style`,
+                                    text: holoPeekOption.css
+                                }).appendTo('head');
+                            }
                         }
                     }
                 }
