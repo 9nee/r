@@ -489,10 +489,8 @@ const holoPeekOptions = [
     {
         id: 'MahjongMode',
         desc: 'Mahjong Mode',
-        func: self => {
-            const checkboxElem = $('#holopeek_MahjongMode');
-            const username = $('#welcome').innerText.replace('Welcome, ', '');
-            prependMessagesWithMJ(username, checkboxElem.checked);
+        func: () => {
+            prependMessagesWithMJ();
             toggleMJMessages();
         }
     },
@@ -946,7 +944,7 @@ function prependMessagesWithMJ() {
     const chatInput = $('#chatline');
 
     let mahjongModeCookie = readCookie("MahjongMode");
-    let shouldPrependMessage = mahjongModeCookie || $('#holopeek_MahjongMode').checked 
+    let shouldPrependMessage = mahjongModeCookie || $('#holopeek_MahjongMode').is(':checked')
 
     const updateChatInput = () => {
         if (shouldPrependMessage) {
