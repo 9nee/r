@@ -981,6 +981,7 @@ function toggleHiddenMJMessages() {
     }
 }
 
+//TODO make it so they look like they're in offtopic mode and not show MJ
 function hideMJMessagesOnLoad() {
     hiddenMJMessages = hiddenMJMessages.filter(parentElement => document.body.contains(parentElement));
     document.querySelectorAll('[class^="chat-msg-"]').forEach(parentElement => {
@@ -995,20 +996,13 @@ function hideMJMessagesOnLoad() {
     });
 }
 
-
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', hideMJMessagesOnLoad);
-        document.addEventListener('DOMContentLoaded', () => {
-        console.log("succ")
-        document.querySelectorAll('#messagebuffer [class|="chat-msg"]').forEach(element => {
-        const mymessage = element.lastElementChild;
-        formatMessage(mymessage);
-        });
-    })
-
-    } else {
-        hideMJMessagesOnLoad();
-    }
+document.addEventListener('DOMContentLoaded', hideMJMessagesOnLoad);
+document.addEventListener('DOMContentLoaded', () => {
+console.log("succ")
+document.querySelectorAll('#messagebuffer [class|="chat-msg"]').forEach(element => {
+const mymessage = element.lastElementChild;
+formatMessage(mymessage);
+});
 
 ///* Holopeek block
 
