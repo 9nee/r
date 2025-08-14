@@ -801,7 +801,6 @@ function cleanupSoundpostPlaybackState() {
 
 socket.on("chatMsg", ({ username, msg, meta, time }) => {
 
-    console.log(canReadMJMessages())
     const $messageElement = $('#messagebuffer').children().last().children().last();
     const $messageText = $messageElement.text()
 
@@ -890,5 +889,9 @@ function formatMJMessage($messageElement) {
     $($messageElement).addClass("MahjongMessage")
     $timestampElement.css("backgroundImage", "url('https://raw.githubusercontent.com/om3tcw/r/refs/heads/emotes/eyes/nyagger.png')")
     $messageElement.text($messageElement.text().replace(/^MJ: /, ''));
+
+    if (!canReadMJMessages()) {
+        $messageElement.parent().css('display','none')
+    }
 } 
 
