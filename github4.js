@@ -437,7 +437,7 @@ $("#messagebuffer a").parent().parent().each(function () {
 
     // Holo Button
     const holoButton = $('<button id="holopeek>');
-    holoButton.classList = 'holoAnim';
+    holoButton.addClass('holoAnim');
     holoButton.onclick = () => {
         $('#holopeek').toggleClass('holoAnim');
         $('#holoPeekBubble').toggle();
