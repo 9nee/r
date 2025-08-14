@@ -95,6 +95,7 @@ const xaeModule = {
 
 xaeModule.initialize();
 
+//TODO: move to the other ready function?  
 $(document).ready(function () {
     const watermark = 'om3tcw is cuter than usual';
     $('#chatwrap').attr('placeholder', watermark);
@@ -191,7 +192,7 @@ $(document).ready(function () {
 let keyHeld = false;
 $(window).bind('keyup', function () { keyHeld = false; });
 $(window).bind('keydown', function (event) {
-    const inputBox = document.getElementById("chatline");
+    const inputBox = $("chatline");
     const inputVal = inputBox.value;
     if (event.ctrlKey && !event.shiftKey) {
         switch (String.fromCharCode(event.which).toLowerCase()) {
@@ -281,13 +282,13 @@ $(window).bind('keydown', function (event) {
             const playerSrc = newSource === "YT"
                 ? `https://www.youtube.com/embed/${newId}?autohide=1&autoplay=1&controls=1&iv_load_policy=3&rel=0&wmode=opaque&enablejsapi=1&origin=https%3A%2F%2Fom3tcw.com&widgetid=2`
                 : `https://player.twitch.tv?channel=${newId}&parent=om3tcw.com&referrer=location.host`;
-            document.getElementById("ytapiplayer").src = playerSrc;
+            $("ytapiplayer").src = playerSrc;
         }
     });
 
     $('#refreshbutton').click(function () {
         document.body.classList.remove('chatOnly');
-        document.getElementById("mediarefresh").click();
+        $("mediarefresh").click();
         socket.emit("restoreVideo");
         CLIENT.videoRemoved = false;
     });
@@ -439,10 +440,10 @@ $("#messagebuffer a").parent().parent().each(function () {
     holoButton.id = 'holopeek';
     holoButton.classList = 'holoAnim';
     holoButton.onclick = () => {
-        document.getElementById('holopeek').classList.toggle('holoAnim');
-        const bubble = document.getElementById('holoPeekBubble');
+        $('#holopeek').classList.toggle('holoAnim');
+        const bubble = $('#holoPeekBubble');
         bubble.style.display = bubble.style.display === 'none' ? 'flex' : 'none';
-        const tail = document.getElementById('holoPeekBubbleTail');
+        const tail = $('#holoPeekBubbleTail');
         tail.style.display = tail.style.display === 'none' ? 'block' : 'none';
     };
     document.body.append(holoButton);
@@ -473,8 +474,8 @@ const holoPeekOptions = [
         id: 'background',
         desc: 'Change Background',
         func: self => {
-            const checkboxElem = document.getElementById(`holopeek_${self.id}`);
-            const textElem = document.getElementById(`holopeek_${self.id}_text`);
+            const checkboxElem = $(`holopeek_${self.id}`);
+            const textElem = $(`holopeek_${self.id}_text`);
             if (checkboxElem && textElem) {
                 self.css = checkboxElem.checked && textElem.value ? `body { background-image: url(${textElem.value}); }` : null;
             }
@@ -482,8 +483,8 @@ const holoPeekOptions = [
         text: {
             value: 'https://raw.githubusercontent.com/om3tcw/r/emotes/holopeek/black.png',
             inputEvent: self => {
-                document.getElementById(`holopeek_${self.id}`).checked = false;
-                self.text.value = document.getElementById(`holopeek_${self.id}_text`).value;
+                $(`holopeek_${self.id}`).checked = false;
+                self.text.value = $(`holopeek_${self.id}_text`).value;
             }
         }
     },
@@ -491,8 +492,8 @@ const holoPeekOptions = [
         id: 'MahjongMode',
         desc: 'Mahjong Mode',
         func: self => {
-            const checkboxElem = document.getElementById('holopeek_MahjongMode');
-            const username = document.getElementById('welcome').innerText.replace('Welcome, ', '');
+            const checkboxElem = $('#holopeek_MahjongMode');
+            const username = $('#welcome').innerText.replace('Welcome, ', '');
             prependMessagesWithMJ(username, checkboxElem.checked);
             toggleMJMessages();
         }
@@ -518,8 +519,8 @@ const holoPeekOptions = [
         id: 'chat_video_ratio',
         desc: '>chat:video ratio',
         func: self => {
-            const checkboxElem = document.getElementById(`holopeek_${self.id}`);
-            const rangeElem = document.getElementById(`holopeek_${self.id}_range`);
+            const checkboxElem = $(`holopeek_${self.id}`);
+            const rangeElem = $(`holopeek_${self.id}_range`);
             if (checkboxElem && rangeElem) {
                 self.css = checkboxElem.checked ? `
             #videowrap { width: ${100 - rangeElem.value}% !important; }
@@ -534,8 +535,8 @@ const holoPeekOptions = [
             max: 100,
             step: 1,
             inputEvent: self => {
-                document.getElementById(`holopeek_${self.id}`).checked = false;
-                self.range.value = document.getElementById(`holopeek_${self.id}_range`).value;
+                $(`holopeek_${self.id}`).checked = false;
+                self.range.value = $(`holopeek_${self.id}_range`).value;
             }
         }
     },
@@ -543,8 +544,8 @@ const holoPeekOptions = [
         id: 'chat_transparency',
         desc: 'Chat Transparency',
         func: self => {
-            const checkboxElem = document.getElementById(`holopeek_${self.id}`);
-            const rangeElem = document.getElementById(`holopeek_${self.id}_range`);
+            const checkboxElem = $(`holopeek_${self.id}`);
+            const rangeElem = $(`holopeek_${self.id}_range`);
             if (checkboxElem && rangeElem) {
                 const alpha = 1 - rangeElem.value;
                 const bgColor = `rgba(0, 0, 0, ${alpha})`;
@@ -560,8 +561,8 @@ const holoPeekOptions = [
             max: 1,
             step: 0.05,
             inputEvent: self => {
-                document.getElementById(`holopeek_${self.id}`).checked = false;
-                self.range.value = document.getElementById(`holopeek_${self.id}_range`).value;
+                $(`holopeek_${self.id}`).checked = false;
+                self.range.value = $(`holopeek_${self.id}_range`).value;
             }
         }
     },
@@ -572,7 +573,7 @@ const holoPeekOptions = [
             const lunaButton = document.createElement('button');
             lunaButton.id = 'lunaButton';
             lunaButton.onclick = () => {
-                const chatwrap = document.getElementById('chatwrap');
+                const chatwrap = $('chatwrap');
                 chatwrap.style.pointerEvents = chatwrap.style.pointerEvents === 'none' ? 'all' : 'none';
                 chatwrap.style.opacity = chatwrap.style.pointerEvents === 'none' ? 0.25 : 1;
             };
@@ -710,8 +711,8 @@ const holoPeekOptions = [
         id: 'custom_CSS',
         desc: 'Custom CSS',
         func: self => {
-            const checkboxElem = document.getElementById(`holopeek_${self.id}`);
-            const textAreaElem = document.getElementById(`holopeek_${self.id}_textarea`);
+            const checkboxElem = $(`holopeek_${self.id}`);
+            const textAreaElem = $(`holopeek_${self.id}_textarea`);
             if (checkboxElem && textAreaElem) {
                 self.css = checkboxElem.checked ? textAreaElem.value : null;
             }
@@ -845,8 +846,8 @@ const holoPeekOptions = [
             #messagebuffer { padding: 0px; }
         `,
             inputEvent: self => {
-                document.getElementById(`holopeek_${self.id}`).checked = false;
-                self.textarea.value = document.getElementById(`holopeek_${self.id}_textarea`).value;
+                $(`holopeek_${self.id}`).checked = false;
+                self.textarea.value = $(`holopeek_${self.id}_textarea`).value;
             }
         }
     },
@@ -854,7 +855,7 @@ const holoPeekOptions = [
         id: 'Potato',
         desc: 'SmartFridgeOwner',
         func: self => {
-            const checkboxElem = document.getElementById(`holopeek_${self.id}`);
+            const checkboxElem = $(`holopeek_${self.id}`);
             if (checkboxElem && checkboxElem.checked) {
                 self.css = `
             .videolist { background: none !important; }
@@ -944,10 +945,10 @@ $(document).ready(() => {
 });
 
 function prependMessagesWithMJ() {
-    const chatInput = document.getElementById('chatline');
+    const chatInput = $('#chatline');
 
     let mahjongModeCookie = readCookie("MahjongMode");
-    let shouldPrependMessage = mahjongModeCookie || document.getElementById('holopeek_MahjongMode').checked 
+    let shouldPrependMessage = mahjongModeCookie || $('#holopeek_MahjongMode').checked 
 
     const updateChatInput = () => {
         if (shouldPrependMessage) {
@@ -968,8 +969,8 @@ function canReadMJMessages() {
     let mahjongLurkCookie = readCookie("MahjongLurk");
     return  mahjongLurkCookie || 
             mahjongModeCookie || 
-            document.getElementById('holopeek_MahjongMode').checked ||
-            document.getElementById('holopeek_MahjongLurk').checked;
+            $('#holopeek_MahjongMode').checked ||
+            $('#holopeek_MahjongLurk').checked;
 }
 
 function toggleMJMessages() {
@@ -1409,7 +1410,7 @@ function yayConfetti(message) {
     }
 }
 
-const messageBuffer = document.getElementById('messagebuffer');
+const messageBuffer = $('#messagebuffer');
 let playedSoundposts = [];
 
 function nicomessage(myplayer, mycontainer, mymsg) {
@@ -1439,7 +1440,7 @@ function nicomessage(myplayer, mycontainer, mymsg) {
 
 function nicoprocess(mymsg, myclass) {
     const container = document.getElementsByClassName("videochatContainer")[0];
-    const player = document.getElementById("ytapiplayer");
+    const player = $("ytapiplayer");
     if (!container || !player) return;
 
     if (mymsg.innerHTML.trim()) {
