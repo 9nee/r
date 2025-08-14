@@ -998,6 +998,14 @@ function hideMJMessagesOnLoad() {
 
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', hideMJMessagesOnLoad);
+        document.addEventListener('DOMContentLoaded', () => {
+        console.log("succ")
+        document.querySelectorAll('#messagebuffer [class|="chat-msg"]').forEach(element => {
+        const mymessage = element.lastElementChild;
+        formatMessage(mymessage);
+        });
+    })
+
     } else {
         hideMJMessagesOnLoad();
     }
@@ -1706,10 +1714,4 @@ function playBooSound() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-        document.querySelectorAll('#messagebuffer [class|="chat-msg"]').forEach(element => {
-        const mymessage = element.lastElementChild;
-        formatMessage(mymessage);
-    });
-})
 
