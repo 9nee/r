@@ -1700,7 +1700,7 @@ $(document).ready(
 
 $(document).ready(() => {
     soundpostState = readCookie("soundpostState") === "true";
-    console.log()
+    console.log("soundpoststate", soundpostState)
     document.querySelectorAll('#messagebuffer [class|="chat-msg"]').forEach(element => {
     const mymessage = element.lastElementChild;
     formatMessage(mymessage);
