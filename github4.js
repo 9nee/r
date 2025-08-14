@@ -1573,8 +1573,8 @@ function cleanupSoundpostPlaybackState() {
 
 socket.on("chatMsg", ({ username, msg, meta, time }) => {
 
-    const $messageElement = $('#messagebuffer').children().last();
-    const $messageText = $messageElement.html().text()
+    const $messageElement = $('#messagebuffer').children().last().children().last();
+    const $messageText = $messageElement.text()
 
     if ($messageText.startsWith('/')) {
         formatMessage($messageElement);
@@ -1627,7 +1627,7 @@ cleanupSoundpostPlaybackState();
 });
 
 function formatMessage($message) {
-    let $text = $message.html().text();
+    let $text = $message.text();
     if ($text.startsWith('/runescape')) {
         runescape($message);
     } else if ($text.startsWith('/yay')) {
