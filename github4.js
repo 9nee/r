@@ -996,17 +996,7 @@ function hideMJMessagesOnLoad() {
     });
 }
 
-$(document).ready(hideMJMessagesOnLoad);
-$(document).ready(() => {
-    console.log("succ")
-    document.querySelectorAll('#messagebuffer [class|="chat-msg"]').forEach(element => {
-    const mymessage = element.lastElementChild;
-    formatMessage(mymessage);
-    })
-});
-
 ///* Holopeek block
-
 //* Holopeek style
     const optionsLegendParagraph = document.createElement('p');
     optionsLegendParagraph.innerHTML = 'Options';
@@ -1608,7 +1598,7 @@ function cleanupSoundpostPlaybackState() {
 }
 
 //TODO move somewhere else
-let soundpostState = readCookie("soundpostState") === "true";
+let soundpostState = "false";
 
 socket.on("chatMsg", ({ username, msg, meta, time }) => {
     const chatMessage = messageBuffer.lastElementChild.lastElementChild;
@@ -1708,5 +1698,14 @@ function playBooSound() {
         myaudio.play();
     }
 }
+
+$(document).ready(hideMJMessagesOnLoad);
+$(document).ready(() => {
+    soundpostState = readCookie("soundpostState") === "true";
+    document.querySelectorAll('#messagebuffer [class|="chat-msg"]').forEach(element => {
+    const mymessage = element.lastElementChild;
+    formatMessage(mymessage);
+    })
+});
 
 
