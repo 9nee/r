@@ -1653,7 +1653,7 @@ function playBooSound() {
 }
 
 function formatMJMessage(messageElement) {
-    let timestampElement = messageElement.parentElement.querySelector('.timestamp')
+    let timestampElement = messageElement.parent().find('.timestamp')
     $(messageElement).addClass("MahjongMessage")
     timestampElement.style.backgroundImage = "url('https://raw.githubusercontent.com/om3tcw/r/refs/heads/emotes/eyes/nyagger.png')";
     messageElement.innerHTML = messageElement.innerHTML.replace(/^MJ: /, '');
