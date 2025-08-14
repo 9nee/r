@@ -1571,7 +1571,7 @@ function cleanupSoundpostPlaybackState() {
 
 socket.on("chatMsg", ({ username, msg, meta, time }) => {
 
-    const messageElement = messageBuffer.children.last().children.last();
+    const messageElement = messageBuffer.children().last().children().last();
 
     if (messageElement.innerHTML.startsWith('/')) {
         formatMessage(messageElement);
