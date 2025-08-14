@@ -59,8 +59,14 @@
                 const chatInput = $('#chatline');
                 if ($(`#holopeek_${self.id}`).is(':checked')) {
                     chatInput.on('input', prependMessagesWithMJ())
+                    chatInput.on('focus', prependMessagesWithMJ())
                 } else {
                     chatInput.off('input', prependMessagesWithMJ())
+                    chatInput.off('focus', prependMessagesWithMJ())
+                    if (chatInput.val().startsWith('MJ:')) {
+                        chatInput.val(chatInput.val().replace(/^MJ: /, ''));
+                    }
+
                 }
                 toggleMJMessages();
             }
