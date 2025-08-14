@@ -581,6 +581,7 @@
                 val: holoPeekOption.textarea.value,
                 on: {
                     input: () => {
+                        $(`style[id="${optId}_style"]`).remove()
                         $checkboxElem.prop('checked', false);
                         holoPeekOption.textarea.value = textareaElem.val();
                     }
@@ -601,6 +602,7 @@
                     input: () => {
                         holoPeekOption.range.value = rangeElem.val();
                         if (holoPeekOption.func) {
+                            $(`style[id="${optId}_style"]`).remove()
                             holoPeekOption.func(holoPeekOption);
                             if (holoPeekOption.css && $checkboxElem.prop('checked')) {
                                 $('<style>', {
@@ -621,6 +623,7 @@
                 val: holoPeekOption.text.value,
                 on: {
                     input: () => {
+                        $(`style[id="${optId}_style"]`).remove()
                         $checkboxElem.prop('checked', false);
                         holoPeekOption.text.value = textElem.val();
                     }
