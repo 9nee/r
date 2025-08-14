@@ -1150,7 +1150,7 @@ function toggleMJMessages() {
         right: 90px;
         background: #fff;
         border-radius: 8px;
-        max-height: 50%;
+        height: 50%;
     }
     #holoPeekBubble button {
         color: #000;
@@ -1198,6 +1198,7 @@ function toggleMJMessages() {
         overflow-y: scroll;
         display: flex;
         flex-direction: column;
+        max-height: 75%;
     }
     #resetButton {
         margin-left: 16px;
