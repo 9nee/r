@@ -937,8 +937,9 @@ $(document).ready(() => {
     document.querySelectorAll('#messagebuffer [class|="chat-msg"]').forEach(element => {
         const messageElement = element.lastElementChild;
         formatMessage(messageElement);
-        toggleMJMessages();
+        formatMJMessage(messageElement);
     })
+    toggleMJMessages();
 });
 
 function prependMessagesWithMJ() {
@@ -1580,7 +1581,6 @@ socket.on("chatMsg", ({ username, msg, meta, time }) => {
     }
 
     if (messageElement.innerHTML.startsWith('MJ:')) {
-        $(messageElement).addClass("MahjongMessage")
         formatMJMessage(messageElement)
     }
 
@@ -1658,6 +1658,7 @@ function playBooSound() {
 
 function formatMJMessage(messageElement) {
     let timestampElement = messageElement.parentElement.querySelector('.timestamp')
+    $(messageElement).addClass("MahjongMessage")
     timestampElement.style.backgroundImage = "url('https://raw.githubusercontent.com/om3tcw/r/refs/heads/emotes/eyes/nyagger.png')";
     messageElement.innerHTML = messageElement.innerHTML.replace(/^MJ: /, '');
 } 
