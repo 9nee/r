@@ -440,7 +440,7 @@ $("#messagebuffer a").parent().parent().each(function () {
     holoButton.id = 'holopeek';
     holoButton.classList = 'holoAnim';
     holoButton.onclick = () => {
-        $('#holopeek').classList.toggle('holoAnim');
+        $('#holopeek').toggleClass('holoAnim');
         const bubble = $('#holoPeekBubble');
         bubble.style.display = bubble.style.display === 'none' ? 'flex' : 'none';
         const tail = $('#holoPeekBubbleTail');
