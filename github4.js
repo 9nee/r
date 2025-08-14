@@ -962,9 +962,10 @@ function toggleHiddenMJMessages() {
     let canReadMJMessages = mahjongLurkCookie === "true" || mahjongModeCookie === "true"
 
     document.querySelectorAll('#messagebuffer [class|="chat-msg"]').forEach(element => {
-        if (element.startsWith("MJ:")) {
+        const messageText = element.lastElementChild.innerHTML;
+        if (messageText.startsWith("MJ:")) {
             if (!canReadMJMessages) {
-                message.style.display = 'none';
+                element.style.display = 'none';
             }
         }
     })
