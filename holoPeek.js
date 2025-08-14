@@ -99,7 +99,7 @@
                 inputEvent: self => {
                     //$(`holopeek_${self.id}`).is(':checked') = false;
                     self.func(self)
-                    self.range.value = $(`holopeek_${self.id}_range`).val();
+                    self.range.value = $(`#holopeek_${self.id}_range`).val();
                 }
             }
         },
@@ -107,15 +107,17 @@
             id: 'chat_transparency',
             desc: 'Chat Transparency',
             func: self => {
-                const checkboxElem = $(`holopeek_${self.id}`);
-                const rangeElem = $(`holopeek_${self.id}_range`);
-                if (checkboxElem && rangeElem) {
-                    const alpha = 1 - rangeElem.value;
+                const $checkboxElem = $(`#holopeek_${self.id}`);
+                const $rangeElem = $(`#holopeek_${self.id}_range`);
+                if ($checkboxElem && $rangeElem) {
+                    const alpha = 1 - $rangeElem.val();
                     const bgColor = `rgba(0, 0, 0, ${alpha})`;
-                    self.css = checkboxElem.checked ? `
-                #userlist, #messagebuffer { background-color: ${bgColor} !important; }
-                .linewrap { background-color: ${bgColor}; }
-            ` : null;
+                    if ($checkboxElem.is(':checked')) {
+                        self.css = `#userlist, #messagebuffer { background-color: ${bgColor} !important; }
+                                    .linewrap { background-color: ${bgColor}; }`
+                    } else {
+                        self.css = null;
+                    }
                 }
             },
             range: {
@@ -124,8 +126,8 @@
                 max: 1,
                 step: 0.05,
                 inputEvent: self => {
-                    $(`holopeek_${self.id}`).checked = false;
-                    self.range.value = $(`holopeek_${self.id}_range`).value;
+                    self.func(self)
+                    self.range.value = $(`#holopeek_${self.id}_range`).val();
                 }
             }
         },
