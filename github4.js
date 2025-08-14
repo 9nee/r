@@ -983,13 +983,10 @@ function toggleMJMessages() {
 
 ///* Holopeek block
 //* Holopeek style
-    const optionsLegendParagraph = document.createElement('p');
-    optionsLegendParagraph.innerHTML = 'Options';
-    optionsLegendParagraph.style.textAlign = 'center';
+    const optionsLegendParagraph = $('<p>').html('Options').css('text-align', 'center');
     holoPeekBubble.append(optionsLegendParagraph);
 
-    const holoPeekOptionsContainer = document.createElement('div');
-    holoPeekOptionsContainer.id = 'holoPeekOptionsContainer';
+    const holoPeekOptionsContainer = $('<div>').attr('id', 'holoPeekOptionsContainer');
     holoPeekBubble.append(holoPeekOptionsContainer);
 
     holoPeekOptions.forEach(holoPeekOption => {
