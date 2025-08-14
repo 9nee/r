@@ -29,7 +29,8 @@ const USERLIST_ENHANCEMENT = "userlist.js";
 const ENHANCED_EMOTES = "enhancedEmotes.js";
 const HOLOPEEK = "holoPeek.js"
 
-const CURRENT_COMMIT = "b76cb09adcddbcb9dd1d9c904d24718c5be59e13"
+//b76cb09adcddbcb9dd1d9c904d24718c5be59e13 revert
+const CURRENT_COMMIT = "8cb93e00ae83c72c580c81788d7d140a30fcb3bf"
 const CURRENT_REPO = "immergrok"
 //Change to om3tcw on live
 
