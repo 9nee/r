@@ -631,12 +631,27 @@
         html: 'Save<img width="24" height="24" alt="save" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAQAAABKfvVzAAAAbUlEQVQ4y2NgGLTAk+Exw38csB6bhkc4lePQAhLGDsIZfmPTAtGAaTZOLfg0gLRguAC/BgaqacANqKuBjaGd4RkQtgNZRGnogPuggzgNT+EantJIA8lOItnTRAUr/uQNgo+Iz0Ag+JjBY9BmfgAjpbf/V5agRgAAAABJRU5ErkJggg==">',
         click: () => {
             holoPeekOptions.forEach(holoPeekOption => {
-                const valueElem = holoPeekOption.textarea ? 'textarea' : holoPeekOption.range ? 'range' : holoPeekOption.text ? 'text' : null;
-                const value = valueElem ? holoPeekOption[valueElem].value : $(`#holopeek_${holoPeekOption.id}`).prop('checked') ? 1 : 0;
-                if ($(`#holopeek_${holoPeekOption.id}`).prop('checked')) {
-                    createCookie(holoPeekOption.id, value, 365)
+                const optionName = holoPeekOption.id;
+                const $jqSelector = $(`#holopeek_${optionName}`)
+                const validValues = ['textarea', 'range', 'text'];
+                let valueElem = null;
+                for (const type of validValues) {
+                    if (holoPeekOption[type]) {
+                        valueElem = type;
+                        break;
+                    }
+                }
+                let value = 0;
+                if (valueElem) {
+                    value = holoPeekOption[valueElem].value
+                } else if ($jqSelector.is(':checked')) {
+                    value = 1;
+                }
+                
+                if ($jqSelector.prop('checked')) {
+                    createCookie(optionName, value, 365)
                 } else {
-                    eraseCookie(holoPeekOption.id)
+                    eraseCookie(optionName)
                 }
             });
         }
@@ -647,8 +662,10 @@
         html: 'Reset<img width="24" height="24" alt="save" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAQAAABKfvVzAAAAPElEQVQ4y2NgGAJAgeE+w38ovA/k4QH/8UDqaCADkGw+WRqIERvVMNQ1PMKaMB7h1uDB8BhD+WOg6OAGADZZd6fzGEl6AAAAAElFTkSuQmCC">',
         click: () => {
             holoPeekOptions.forEach(holoPeekOption => {
-                eraseCookie(holoPeekOption.id)
-                $(`#holopeek_${holoPeekOption.id}`).prop('checked', false);
+                const optionName = holoPeekOption.id;
+                const $jqSelector = $(`#holopeek_${optionName}`)
+                eraseCookie(optionName)
+                $jqSelector.prop('checked', false);
             });
         }
     }).appendTo(saveAndResetCookieButtonsDiv);
