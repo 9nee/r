@@ -1,6 +1,7 @@
 if (!this[CHANNEL.name]) {
     this[CHANNEL.name] = {};
 }
+
 if (!this[CHANNEL.name].favicon) {
     this[CHANNEL.name].favicon = $("<link/>")
         .prop("id", "favicon")
@@ -10,6 +11,8 @@ if (!this[CHANNEL.name].favicon) {
         .attr("href", "https://raw.githubusercontent.com/om3tcw/r/emotes/emotes/ogey.png")
         .appendTo("head");
 }
+
+let soundpostState = "false";
 
 const xaeModule = {
     options: {
@@ -1569,9 +1572,6 @@ function cleanupSoundpostPlaybackState() {
         });
     }
 }
-
-//TODO move somewhere else
-let soundpostState = "false";
 
 socket.on("chatMsg", ({ username, msg, meta, time }) => {
     const messageElement = messageBuffer.lastElementChild.lastElementChild;
