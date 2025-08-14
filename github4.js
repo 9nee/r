@@ -1686,9 +1686,11 @@ $(document).ready(() => {
     document.querySelectorAll('#messagebuffer [class|="chat-msg"]').forEach(element => {
         const messageElement = element.lastElementChild;
         formatMessage(messageElement);
+        hideMJMessagesOnLoad(messageElement);
     })
 });
 
+//Kusa wants the MJ messages to not show up on a reload 
 function hideMJMessagesOnLoad(messageElement) {
     if (messageElement.innerHTML.startsWith('MJ:')) {
         console.log("The message did in fact start with MJ: ")
