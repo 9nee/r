@@ -966,7 +966,6 @@ function canReadMJMessages() {
 
 function toggleMJMessages() {
     document.querySelectorAll('#messagebuffer [class|="MahjongMessage"]').forEach(element => {
-        const messageText = element.lastElementChild.innerHTML;
             if (canReadMJMessages()) {
                 element.style.display = 'block';
             } else {
