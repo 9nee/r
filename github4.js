@@ -1587,7 +1587,6 @@ let soundpostState = "false";
 
 socket.on("chatMsg", ({ username, msg, meta, time }) => {
     const chatMessage = messageBuffer.lastElementChild.lastElementChild;
-    console.log(chatMessage)
     
     if (chatMessage.innerHTML.startsWith('/')) {
         formatMessage(chatMessage);
@@ -1701,6 +1700,7 @@ $(document).ready(
 
 $(document).ready(() => {
     soundpostState = readCookie("soundpostState") === "true";
+    console.log()
     document.querySelectorAll('#messagebuffer [class|="chat-msg"]').forEach(element => {
     const mymessage = element.lastElementChild;
     formatMessage(mymessage);
