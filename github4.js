@@ -961,14 +961,13 @@ function prependMessagesWithMJ() {
     chatInput.addEventListener('focus', updateChatInput);
 }
 
-
 function canReadMJMessages() {
     let mahjongModeCookie = readCookie("MahjongMode");
     let mahjongLurkCookie = readCookie("MahjongLurk");
     return  mahjongLurkCookie || 
             mahjongModeCookie || 
-            $('#holopeek_MahjongMode').checked ||
-            $('#holopeek_MahjongLurk').checked;
+            $('#holopeek_MahjongMode').is(':checked') ||
+            $('#holopeek_MahjongLurk').is(':checked');
 }
 
 function toggleMJMessages() {
