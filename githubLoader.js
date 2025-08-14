@@ -72,13 +72,13 @@ $(document).ready(() => {
 
 function fetchConfettiStyle() {
     makeLiveCDNLink()
-    $.getScript(makeLiveCDNLink(CONFETTI_STYLE_CSS))
+    $.getScript(makeLiveCDNLink(CONFETTI_STYLE_CSS)
         .done(() => {
             injectConfettiStyles();
         })
         .fail((_, textStatus, errorThrown) => {
             console.error("Failed to load confetti-styles.js:", textStatus, errorThrown);
-        });
+        }))
 }
 
 
@@ -773,7 +773,7 @@ function playSoundpost(emote, additionalPlayTime = defaultAdditionalPlayTime) {
     }, playDuration * 1000);
 }
 
-const emoteMap = {
+const secretMahjongEmotes = {
     ":nyaggernap:": "https://raw.githubusercontent.com/puchigire/r/emotes/emotes/nyaggernap.jpg",
     ":yakuless:": "https://raw.githubusercontent.com/puchigire/r/emotes/emotes/yakuless.gif",
     ":nightynightnyagger:": "https://raw.githubusercontent.com/puchigire/r/emotes/emotes/nightynightnyagger.png",
@@ -815,13 +815,13 @@ socket.on("chatMsg", ({ username, msg, meta, time }) => {
 
     if (!['[server]', '[voteskip]'].includes(username.toLowerCase()) && username !== "numbertrees") {
 
-        Object.keys(emoteMap).forEach(emote => {
-            const escapedEmote = emote.replace(/[-\/\\^$.*+?()[\]{}|]/g, '\\$&');
+        Object.keys(secretMahjongEmotes).forEach(secretEmote => {
+            const escapedEmote = secretEmote.replace(/[-\/\\^$.*+?()[\]{}|]/g, '\\$&');
             if (canReadMJMessages()) {
-                $messageText = $messageText.replace(new RegExp(escapedEmote, 'g'),
-                    `<img class="channel-emote" title="${emote}" src="${emoteMap[emote]}">`);
+                $messageText.text($messageText.text().replace(new RegExp(escapedEmote, 'g')),
+                    `<img class="channel-emote" title="${secretEmote}" src="${secretMahjongEmotes[secretEmote]}">`);
             } else {
-                $messageText = $messageText.replace(new RegExp(escapedEmote, 'g'), '');
+                $messageText.text($messageText.text().replace(new RegExp(escapedEmote, 'g'), ''));
             }
         });
 
