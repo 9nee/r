@@ -1608,15 +1608,19 @@ function cleanupSoundpostPlaybackState() {
 let soundpostState = readCookie("soundpostState") === "true";
 
 socket.on("chatMsg", ({ username, msg, meta, time }) => {
+    console.log("mb ", messageBuffer)
+    console.log("mb lec ", messageBuffer.lastElementChild)
+    console.log("mb lec lec ", messageBuffer.lastElementChild.lastElementChild)
     const chatMessage = messageBuffer.lastElementChild.lastElementChild;
-    if (!['[server]', '[voteskip]'].includes(username.toLowerCase()) && username !== "numbertrees") {
-        if (chatMessage.innerHTML.startsWith('/yay') && soundpostState) {
-            const myaudio = new Audio("https://www.dl.dropboxusercontent.com/s/z0n3hnw8ky79rwhdokfso/nenesmile.ogg?rlkey=bezzj2pn6c9rj0pqco5kbf7bk&st=ythhncur&dl=0");
-            myaudio.volume = defaultVolume;
-            myaudio.play();
-        }
-        console.log(chatMessage)
-        formatMessage(chatMessage);
+    console.log(chatMessage)
+    formatMessage(chatMessage);
+
+    // if (!['[server]', '[voteskip]'].includes(username.toLowerCase()) && username !== "numbertrees") {
+    //     if (chatMessage.innerHTML.startsWith('/yay') && soundpostState) {
+    //         const myaudio = new Audio("https://www.dl.dropboxusercontent.com/s/z0n3hnw8ky79rwhdokfso/nenesmile.ogg?rlkey=bezzj2pn6c9rj0pqco5kbf7bk&st=ythhncur&dl=0");
+    //         myaudio.volume = defaultVolume;
+    //         myaudio.play();
+    // }
 
         const userChatClass = `chat-msg-${username}`;
         const parentElement = chatMessage.closest(`.${userChatClass}`);
