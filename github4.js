@@ -981,7 +981,7 @@ function toggleMJMessages() {
     const optionsLegendParagraph = document.createElement('p');
     optionsLegendParagraph.innerHTML = 'Options';
     optionsLegendParagraph.style.textAlign = 'center';
-    holoPeekBubble.appendChild(optionsLegendParagraph);
+    holoPeekBubble.append(optionsLegendParagraph);
 
     const holoPeekOptionsContainer = document.createElement('div');
     holoPeekOptionsContainer.id = 'holoPeekOptionsContainer';
