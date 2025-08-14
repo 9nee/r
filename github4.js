@@ -997,8 +997,8 @@ function hideMJMessagesOnLoad() {
 }
 
 
-document.addEventListener('DOMContentLoaded', hideMJMessagesOnLoad);
-document.addEventListener('DOMContentLoaded', () => {
+$(document).ready(hideMJMessagesOnLoad);
+$(document).ready(() => {
     console.log("succ")
     document.querySelectorAll('#messagebuffer [class|="chat-msg"]').forEach(element => {
     const mymessage = element.lastElementChild;
