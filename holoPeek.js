@@ -599,9 +599,9 @@
                 max: holoPeekOption.range.max,
                 step: holoPeekOption.range.step,
                 val: holoPeekOption.range.value,
-                styleId: `${optId}_style`,
                 on: {
                     input: () => {
+                        let styleId = `${optId}_style`;
                         holoPeekOption.range.value = rangeElem.val();
                             if ($(`#${styleId}`).length > 0) {
                                 $(`#${styleId}`).remove();
