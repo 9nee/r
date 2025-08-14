@@ -80,13 +80,13 @@
             id: 'chat_video_ratio',
             desc: '>chat:video ratio',
             func: self => {
-                const checkboxElem = $(`holopeek_${self.id}`);
-                const rangeElem = $(`holopeek_${self.id}_range`);
-                if (checkboxElem && rangeElem) {
-                    self.css = checkboxElem.checked ? `
-                #videowrap { width: ${100 - rangeElem.value}% !important; }
+                const $checkboxElem = $(`#holopeek_${self.id}`);
+                const $rangeElem = $(`#holopeek_${self.id}_range`);
+                if ($checkboxElem && $rangeElem) {
+                    self.css = $checkboxElem.is(':checked') ? `
+                #videowrap { width: ${100 - $rangeElem.val()}% !important; }
                 #videowrap-header { display: none; }
-                #chatwrap { width: ${rangeElem.value}% !important; }
+                #chatwrap { width: ${$rangeElem.val()}% !important; }
             ` : null;
                 }
             },
@@ -501,6 +501,8 @@
     const holoPeekOptionsContainer = $('<div>').attr('id', 'holoPeekOptionsContainer');
     $holoPeekBubble.append(holoPeekOptionsContainer);
 
+
+    //* HoloPeek prototype-esque definition
     holoPeekOptions.forEach(holoPeekOption => {
         const div = $('<div>').appendTo(holoPeekOptionsContainer);
 
