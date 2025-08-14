@@ -1575,6 +1575,7 @@ function cleanupSoundpostPlaybackState() {
 
 socket.on("chatMsg", ({ username, msg, meta, time }) => {
 
+    console.log(canReadMJMessages())
     const $messageElement = $('#messagebuffer').children().last().children().last();
     const $messageText = $messageElement.text()
 
