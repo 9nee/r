@@ -57,7 +57,7 @@ function injectConfettiStyles() {
     `;
   const $styleElement = $('<style>');
 
-  $styleElement.text(cssContent);
+  $styleElement.text(cssConfetti);
 
   $('head').append($styleElement);
 }
