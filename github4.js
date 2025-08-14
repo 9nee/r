@@ -453,7 +453,7 @@ $("#messagebuffer a").parent().parent().each(function () {
     $('body').append(holoPeekBubbleTail);
 
     const holoPeekBubble = $('<div>', {
-        id: "holoPeelBubble"
+        id: "holoPeekBubble"
     })
     holoPeekBubble.hide();
     $('body').append(holoPeekBubble);
