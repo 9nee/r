@@ -931,12 +931,14 @@ const holoPeekOptions = [
     }
 ];
 
-
 $(document).ready(() => {
     soundpostState = readCookie("soundpostState") === "true";
     document.querySelectorAll('#messagebuffer [class|="chat-msg"]').forEach(element => {
         const messageElement = element.lastElementChild;
         formatMessage(messageElement);
+    })
+    document.querySelectorAll('#messagebuffer [class|="MahjonGMessage').forEach(element => {
+        const messageElement = element.lastElementChild;
         formatMJMessage(messageElement);
     })
     toggleMJMessages();
@@ -944,13 +946,8 @@ $(document).ready(() => {
 
 function prependMessagesWithMJ() {
     const chatInput = document.getElementById('chatline');
-
     const updateChatInput = () => {
-        const offTopicEnabled = document.getElementById('holopeek_MahjongMode').checked ||
-            document.getElementById('holopeek_MahjongLurk').checked;
-
-
-        if (offTopicEnabled) {
+        if (canReadMJMessages()) {
             if (chatInput.value && !chatInput.value.startsWith('MJ: ')) {
                 chatInput.value = 'MJ: ' + chatInput.value;
             }
@@ -958,20 +955,20 @@ function prependMessagesWithMJ() {
             chatInput.value = chatInput.value.replace(/^MJ: /, '');
         }
     };
-
     chatInput.addEventListener('input', updateChatInput);
     chatInput.addEventListener('focus', updateChatInput);
 }
 
-function toggleMJMessages() {
+function canReadMJMessages() {
     let mahjongModeCookie = readCookie("MahjongMode");
     let mahjongLurkCookie = readCookie("MahjongLurk");
+    return mahjongLurkCookie || mahjongModeCookie
+}
 
-    let canReadMJMessages = mahjongLurkCookie || mahjongModeCookie
-
+function toggleMJMessages() {
     document.querySelectorAll('#messagebuffer [class|="MahjongMessage"]').forEach(element => {
         const messageText = element.lastElementChild.innerHTML;
-            if (canReadMJMessages) {
+            if (canReadMJMessages()) {
                 element.style.display = 'block';
             } else {
                 element.style.display = 'none';
@@ -1590,7 +1587,7 @@ socket.on("chatMsg", ({ username, msg, meta, time }) => {
 
         Object.keys(emoteMap).forEach(emote => {
             const escapedEmote = emote.replace(/[-\/\\^$.*+?()[\]{}|]/g, '\\$&');
-            if (offTopicEnabled) {
+            if (canReadMJMessages()) {
                 messageElement.innerHTML = messageElement.innerHTML.replace(new RegExp(escapedEmote, 'g'),
                     `<img class="channel-emote" title="${emote}" src="${emoteMap[emote]}">`);
             } else {
