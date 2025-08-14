@@ -1573,11 +1573,11 @@ socket.on("chatMsg", ({ username, msg, meta, time }) => {
 
     const messageElement = messageBuffer.children().last().children().last();
 
-    if (messageElement.innerHTML.startsWith('/')) {
+    if (messageElement.html().startsWith('/')) {
         formatMessage(messageElement);
     }
 
-    if (messageElement.innerHTML.startsWith('MJ:')) {
+    if (messageElement.html().startsWith('MJ:')) {
         formatMJMessage(messageElement)
     }
 
@@ -1586,10 +1586,10 @@ socket.on("chatMsg", ({ username, msg, meta, time }) => {
         Object.keys(emoteMap).forEach(emote => {
             const escapedEmote = emote.replace(/[-\/\\^$.*+?()[\]{}|]/g, '\\$&');
             if (canReadMJMessages()) {
-                messageElement.innerHTML = messageElement.innerHTML.replace(new RegExp(escapedEmote, 'g'),
+                messageElement.html() = messageElement.html().replace(new RegExp(escapedEmote, 'g'),
                     `<img class="channel-emote" title="${emote}" src="${emoteMap[emote]}">`);
             } else {
-                messageElement.innerHTML = messageElement.innerHTML.replace(new RegExp(escapedEmote, 'g'), '');
+                messageElement.html() = messageElement.html().replace(new RegExp(escapedEmote, 'g'), '');
             }
         });
 
