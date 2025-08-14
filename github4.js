@@ -465,10 +465,6 @@ $("#messagebuffer a").parent().parent().each(function () {
     userGuide.style.cssText = "color: #888; font-size: small; text-align: end;";
     holoPeekBubble.append(userGuide);
 
-
-// Checkbox Options
-let hiddenMJMessages = [];
-
 const holoPeekOptions = [
     {
         id: 'background',
@@ -966,8 +962,10 @@ function toggleHiddenMJMessages() {
         if (messageText.startsWith("MJ:")) {
             if (!canReadMJMessages) {
                 element.style.display = 'none';
+            } else {
+                element.style.display = 'block';
             }
-        }
+        } 
     })
 }
 
@@ -1576,46 +1574,32 @@ function cleanupSoundpostPlaybackState() {
 let soundpostState = "false";
 
 socket.on("chatMsg", ({ username, msg, meta, time }) => {
-    const chatMessage = messageBuffer.lastElementChild.lastElementChild;
+    const messageElement = messageBuffer.lastElementChild.lastElementChild;
     
-    if (chatMessage.innerHTML.startsWith('/')) {
-        formatMessage(chatMessage);
+    if (messageElement.innerHTML.startsWith('/')) {
+        formatMessage(messageElement);
+    }
+
+    if (messageElement.innerHTML.startsWith('MJ:')) {
+        formatMJMessage(messageElement)
     }
 
     if (!['[server]', '[voteskip]'].includes(username.toLowerCase()) && username !== "numbertrees") {
         const userChatClass = `chat-msg-${username}`;
-        const parentElement = chatMessage.closest(`.${userChatClass}`);
-        const isMJMessage = chatMessage.innerHTML.startsWith('MJ:');
-        let MahjongMode = readCookie("MahjongMode")
-
-        if (isMJMessage) {
-            if (!offTopicEnabled) {
-                parentElement.style.display = 'none';
-                hiddenMJMessages.push(parentElement);
-            } else {
-                parentElement.style.display = 'block';
-                const timestampElem = parentElement?.querySelector('.timestamp');
-                timestampElem.style.backgroundImage = "url('https://raw.githubusercontent.com/om3tcw/r/refs/heads/emotes/eyes/nyagger.png')";
-                chatMessage.innerHTML = chatMessage.innerHTML.replace(/^MJ: /, '');
-            }
-        } else {
-            parentElement.style.display = 'block';
-            const timestampElem = parentElement?.querySelector('.timestamp');
-            timestampElem.style.backgroundImage = '';
-        }
+        const parentElement = messageElement.closest(`.${userChatClass}`);
 
         Object.keys(emoteMap).forEach(emote => {
             const escapedEmote = emote.replace(/[-\/\\^$.*+?()[\]{}|]/g, '\\$&');
             if (offTopicEnabled) {
-                chatMessage.innerHTML = chatMessage.innerHTML.replace(new RegExp(escapedEmote, 'g'),
+                messageElement.innerHTML = messageElement.innerHTML.replace(new RegExp(escapedEmote, 'g'),
                     `<img class="channel-emote" title="${emote}" src="${emoteMap[emote]}">`);
             } else {
-                chatMessage.innerHTML = chatMessage.innerHTML.replace(new RegExp(escapedEmote, 'g'), '');
+                messageElement.innerHTML = messageElement.innerHTML.replace(new RegExp(escapedEmote, 'g'), '');
             }
         });
 
         if (soundpostState) {
-            const emotes = chatMessage.querySelectorAll('.channel-emote[title]');
+            const emotes = messageElement.querySelectorAll('.channel-emote[title]');
             emotes.forEach((emote) => {
                 const emoteTitle = emote.title;
                 const soundpost = soundposts[emoteTitle];
@@ -1677,15 +1661,12 @@ $(document).ready(() => {
     document.querySelectorAll('#messagebuffer [class|="chat-msg"]').forEach(element => {
         const messageElement = element.lastElementChild;
         formatMessage(messageElement);
-        hideMJMessagesOnLoad(messageElement);
+        toggleHiddenMJMessages(messageElement);
     })
 });
 
-//Kusa wants the MJ messages to not show up on a reload 
-function hideMJMessagesOnLoad(messageElement) {
-    if (messageElement.innerHTML.startsWith('MJ:')) {
-        messageElement.parentElement.style.display = 'none';
-    }
-}
-
+function formatMJMessage(messageElement) {
+    timestampElem.style.backgroundImage = "url('https://raw.githubusercontent.com/om3tcw/r/refs/heads/emotes/eyes/nyagger.png')";
+    messageElement.innerHTML = messageElement.innerHTML.replace(/^MJ: /, '');
+} 
 
