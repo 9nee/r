@@ -20,7 +20,9 @@ const defaultAdditionalPlayTime = 3;
 
 $(document).ready(() => {
     soundpostState = readCookie("soundpostState") === "true";
-    injectConfettiStyles();
+
+    fetchConfettiStyle();
+
     $('#messagebuffer [class|="chat-msg"]').each(function() {
         const $element = $(this); 
         const $messageElement = $element.children().last();
@@ -32,6 +34,18 @@ $(document).ready(() => {
     })
     toggleMJMessages();
 });
+
+
+function fetchConfettiStyle() {
+    $.getScript('./confetti-styles.js')
+        .done(() => {
+            injectConfettiStyles();
+        })
+        .fail(function(jqXHR, textStatus, errorThrown) {
+            console.error("Failed to load confetti-styles.js:", textStatus, errorThrown);
+        });
+}
+
 
 function prependMessagesWithMJ() {
     const chatInput = $('#chatline');
