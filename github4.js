@@ -934,10 +934,10 @@ $(document).ready(() => {
     $('#messagebuffer [class|="chat-msg"]').each(() => {
         const $element = $(this);
         const $messageElement = $element.children().last();
-        formatMessage(messageElement);
+        formatMessage($messageElement);
 
-        if (messageElement.html().startsWith('MJ:')) {
-            formatMJMessage(messageElement)
+        if ($messageElement.html().startsWith('MJ:')) {
+            formatMJMessage($messageElement)
         }
     })
     toggleMJMessages();
