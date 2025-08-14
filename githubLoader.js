@@ -72,13 +72,13 @@ $(document).ready(() => {
 
 function fetchConfettiStyle() {
     makeLiveCDNLink()
-    $.getScript(makeLiveCDNLink(CONFETTI_STYLE_CSS)
+    $.getScript(makeLiveCDNLink(CONFETTI_STYLE_CSS))
         .done(() => {
             injectConfettiStyles();
         })
         .fail((_, textStatus, errorThrown) => {
             console.error("Failed to load confetti-styles.js:", textStatus, errorThrown);
-        }))
+        })
 }
 
 
