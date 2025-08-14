@@ -96,7 +96,8 @@
                 max: 100,
                 step: 1,
                 inputEvent: self => {
-                    $(`holopeek_${self.id}`).checked = false;
+                    //$(`holopeek_${self.id}`).checked = false;
+                    self.func()
                     self.range.value = $(`holopeek_${self.id}_range`).value;
                 }
             }
