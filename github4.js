@@ -1683,7 +1683,6 @@ function playBooSound() {
 
 $(document).ready(() => {
     soundpostState = readCookie("soundpostState") === "true";
-    console.log("soundpoststate", soundpostState)
     document.querySelectorAll('#messagebuffer [class|="chat-msg"]').forEach(element => {
         const messageElement = element.lastElementChild;
         formatMessage(messageElement);
@@ -1691,7 +1690,8 @@ $(document).ready(() => {
 });
 
 function hideMJMessagesOnLoad(messageElement) {
-    if (messageElement.innerHTML.includes('MJ:')) {
+    if (messageElement.innerHTML.startsWith('MJ:')) {
+        console.log("The message did in fact start with MJ: ")
         parentElement.style.display = 'none';
         if (!hidden.includes(parentElement)) {
             hidden.push(parentElement);
