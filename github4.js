@@ -1706,7 +1706,7 @@ function playBooSound() {
     }
 }
 
-socket.once("login", data => {
+socket.once("connect", data => {
     if (data.success) {
         document.querySelectorAll('#messagebuffer [class|="chat-msg"]').forEach(element => {
         const mymessage = element.lastElementChild;
