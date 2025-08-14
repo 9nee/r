@@ -198,6 +198,7 @@ $(window).bind('keydown', function (event) {
         switch (String.fromCharCode(event.which).toLowerCase()) {
             case 'a':
                 if (!keyHeld) {
+                    if (inputVal.length )
                     keyHeld = true;
                     inputBox.focus();
                     inputBox.setSelectionRange(0, inputVal.length);
@@ -948,11 +949,11 @@ function prependMessagesWithMJ() {
 
     const updateChatInput = () => {
         if (shouldPrependMessage) {
-            if (chatInput.value && !chatInput.value.startsWith('MJ: ')) {
-                chatInput.value = 'MJ: ' + chatInput.value;
+            if (chatInput.val() && !chatInput.val().startsWith('MJ: ')) {
+                chatInput.val() = 'MJ: ' + chatInput.val();
             }
         } else {
-            chatInput.value = chatInput.value.replace(/^MJ: /, '');
+            chatInput.val() = chatInput.val().replace(/^MJ: /, '');
         }
     };
     chatInput.on('input', updateChatInput);
