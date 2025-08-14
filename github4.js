@@ -1694,7 +1694,7 @@ $(document).ready(() => {
 function hideMJMessagesOnLoad(messageElement) {
     if (messageElement.innerHTML.startsWith('MJ:')) {
         console.log("The message did in fact start with MJ: ")
-        parentElement.style.display = 'none';
+        messageElement.parentElement.style.display = 'none';
         if (!hidden.includes(parentElement)) {
             hidden.push(parentElement);
         }
