@@ -945,6 +945,9 @@ $(document).ready(() => {
 
 function prependMessagesWithMJ() {
     const chatInput = document.getElementById('chatline');
+
+    let mahjongModeCookie = readCookie("MahjongMode");
+
     const updateChatInput = () => {
         if (canReadMJMessages()) {
             if (chatInput.value && !chatInput.value.startsWith('MJ: ')) {
@@ -958,10 +961,14 @@ function prependMessagesWithMJ() {
     chatInput.addEventListener('focus', updateChatInput);
 }
 
+
 function canReadMJMessages() {
     let mahjongModeCookie = readCookie("MahjongMode");
     let mahjongLurkCookie = readCookie("MahjongLurk");
-    return mahjongLurkCookie || mahjongModeCookie
+    return  mahjongLurkCookie || 
+            mahjongModeCookie || 
+            document.getElementById('holopeek_MahjongMode').checked ||
+            document.getElementById('holopeek_MahjongLurk').checked;
 }
 
 function toggleMJMessages() {
