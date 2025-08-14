@@ -955,8 +955,8 @@ function prependMessagesWithMJ() {
             chatInput.value = chatInput.value.replace(/^MJ: /, '');
         }
     };
-    chatInput.addEventListener('input', updateChatInput);
-    chatInput.addEventListener('focus', updateChatInput);
+    chatInput.on('input', updateChatInput);
+    chatInput.on('focus', updateChatInput);
 }
 
 function canReadMJMessages() {
