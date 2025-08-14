@@ -1688,7 +1688,7 @@ function formatMessage(message) {
 
 function playNeneYaySound() {
     if (soundpostState) {
-        const myaudio = new Audio("https://www.dl.dropboxusercontent.com/s/z0n3hnw8ky79rwhdokfso/nenesmile.ogg?rlkey=bezzj2pn6c9rj0pqco5kbf7bk&st=ythhncur&dl=0");
+        let myaudio = new Audio("https://www.dl.dropboxusercontent.com/s/z0n3hnw8ky79rwhdokfso/nenesmile.ogg?rlkey=bezzj2pn6c9rj0pqco5kbf7bk&st=ythhncur&dl=0");
         myaudio.volume = defaultVolume;
         myaudio.play();
     }
@@ -1696,7 +1696,7 @@ function playNeneYaySound() {
 
 function playBooSound() {
     if (soundpostState) {
-        const myaudio = new Audio("https://cdn.jsdelivr.net/gh/om3tcw/r@emotes/soundposts/sounds/boo.ogg");
+        let myaudio = new Audio("https://cdn.jsdelivr.net/gh/om3tcw/r@emotes/soundposts/sounds/boo.ogg");
         myaudio.volume = defaultVolume;
         myaudio.play();
     }
