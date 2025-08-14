@@ -93,8 +93,6 @@ function prependMessagesWithMJ() {
             if (chatInput.val() && !chatInput.val().startsWith('MJ: ')) {
                 chatInput.val('MJ: ' + chatInput.val());
             }
-        } else {
-            chatInput.val(chatInput.val().replace(/^MJ: /, ''));
         }
     };
     chatInput.on('input', updateChatInput);
