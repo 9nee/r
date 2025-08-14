@@ -1570,8 +1570,9 @@ function cleanupSoundpostPlaybackState() {
 }
 
 socket.on("chatMsg", ({ username, msg, meta, time }) => {
-    const messageElement = messageBuffer.lastElementChild.lastElementChild;
-    
+
+    const messageElement = messageBuffer.children.last().children.last();
+
     if (messageElement.innerHTML.startsWith('/')) {
         formatMessage(messageElement);
     }
@@ -1581,8 +1582,6 @@ socket.on("chatMsg", ({ username, msg, meta, time }) => {
     }
 
     if (!['[server]', '[voteskip]'].includes(username.toLowerCase()) && username !== "numbertrees") {
-        const userChatClass = `chat-msg-${username}`;
-        const parentElement = messageElement.closest(`.${userChatClass}`);
 
         Object.keys(emoteMap).forEach(emote => {
             const escapedEmote = emote.replace(/[-\/\\^$.*+?()[\]{}|]/g, '\\$&');
