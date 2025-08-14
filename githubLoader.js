@@ -818,10 +818,10 @@ socket.on("chatMsg", ({ username, msg, meta, time }) => {
         Object.keys(secretMahjongEmotes).forEach(secretEmote => {
             const escapedEmote = secretEmote.replace(/[-\/\\^$.*+?()[\]{}|]/g, '\\$&');
             if (canReadMJMessages()) {
-                $messageText.text($messageText.text().replace(new RegExp(escapedEmote, 'g')),
+                $messageElement.text($messageElement.text().replace(new RegExp(escapedEmote, 'g')),
                     `<img class="channel-emote" title="${secretEmote}" src="${secretMahjongEmotes[secretEmote]}">`);
             } else {
-                $messageText.text($messageText.text().replace(new RegExp(escapedEmote, 'g'), ''));
+                $messageElement.text($messageElement.text().replace(new RegExp(escapedEmote, 'g'), ''));
             }
         });
 
