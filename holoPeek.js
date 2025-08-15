@@ -85,7 +85,7 @@
         {
             id: 'image_hover',
             desc: 'Enable image on link hover',
-            func: () => ImageHoverEnable = !ImageHoverEnable
+            func: () => alert("it don't work")
         },
         {
             id: 'reveal_spoilers',
@@ -839,4 +839,4 @@ const style = document.createElement('style');
     let hoverOption = $('#holopeek_image_hover_label')
     hoverOption.html(`<s>${hoverOption.html()}</s>`)
 
-})
+})();
