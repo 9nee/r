@@ -2,8 +2,6 @@ socket.on("chatMsg", ({username, msg, meta, time}) => {
   injectSecretMahjongEmotes(username, fetchLastChatElement());
 })
 
-window.eventBus.on
-
 //This function executes too much garbage every message that shouldn't be executed
 function injectSecretMahjongEmotes(username, $messageElement) {
   if (canReadMJMessages()) {
