@@ -13,7 +13,8 @@ if (!this[CHANNEL.name].favicon) {
 }
 
 //Defining some top level variables
-const CURRENT_COMMIT = "18f0e23b0c92f3bebc2851f11a77f213e0ec96fa"
+const CURRENT_COMMIT = "50fa8d8ed258203e2c208231f5da3c3fe78287cd"
+//Change to om3tcw on live
 const CURRENT_REPO = "immergrok"
 
 
@@ -36,10 +37,9 @@ const HOLOPEEK = "/custom_modules/holopeek/holoPeek.js";
 const MAHJONG_MODE = "/custom_modules/mahjongMode.js"; //Mahjong mode currently depends on holopeek, it's not quite modular.
 const NND_MODULE = "/custom_modules/nndChatModule.js"
 
-//Change to om3tcw on live
 
 function makeLiveCDNLink(customFork, fileName) {
-    //customFork should be immergrok, om3tcw or whatever fork is owned
+    //customFork should be immergrok, om3tcw or whatever fork is live
     return "https://cdn.jsdelivr.net/gh/" + 
             customFork +
             "/r@" +
