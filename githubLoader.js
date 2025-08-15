@@ -13,10 +13,9 @@ if (!this[CHANNEL.name].favicon) {
 }
 
 //Defining some top level variables
-const CURRENT_COMMIT = "50fa8d8ed258203e2c208231f5da3c3fe78287cd"
+const CURRENT_COMMIT = "3d035b3931fedae6c27d26b697bc8d5b8511608e"
 //Change to om3tcw on live
 const CURRENT_REPO = "immergrok"
-
 
 let SOUNDPOSTS = loadSoundposts();
 let SOUNDPOST_STATE = "false";
