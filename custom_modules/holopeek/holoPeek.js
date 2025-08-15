@@ -1,5 +1,6 @@
-//700+ lines IIFE :D
-(() => {
+const validValues = ['textarea', 'range', 'text', 'dropdown'];
+
+(function createHoloPeek() {
     const $holoPeekbutton = $('<button>', {
         id: 'holopeek',
         class: 'holoAnim' });
@@ -51,7 +52,6 @@
             id: 'MahjongMode',
             desc: 'Mahjong Mode',
             func: () => {
-
                 const $chatInput = $('#chatline');
                 if ($(`#holopeek_MahjongMode`).is(':checked')) {
                     $chatInput.on('input', prependMessagesWithMJ)
@@ -62,7 +62,6 @@
                     if ($chatInput.val().startsWith('MJ:')) {
                         $chatInput.val($chatInput.val().replace(/^MJ: /, ''));
                     }
-
                 }
                 toggleMJMessages();
             }
@@ -302,7 +301,7 @@
                     self.css = null;
                 }
             },
-            textarea: {
+            dropdown: {
                 value: "",
                 inputEvent: self => {
                     $(`holopeek_${self.id}`).checked = false;
@@ -390,9 +389,9 @@
             `
         }
     ];
+})();
 
-///* Holopeek block
-//* Holopeek style
+(() => {
     const optionsLegendParagraph = $('<p>').html('Options').css('text-align', 'center');
     $holoPeekBubble.append(optionsLegendParagraph);
 
@@ -411,9 +410,7 @@
                 if (holoPeekOption.func) {
                     holoPeekOption.func(holoPeekOption);
                 } 
-
-                $(`style[id="${optId}_style"]`).remove()
-                
+                                
                 if (holoPeekOption.css && $checkboxElem.prop('checked')) {
                     
                     $('<style>', {
@@ -452,7 +449,6 @@
                 val: holoPeekOption.textarea.value,
                 on: {
                     input: () => {
-                        $(`style[id="${optId}_style"]`).remove()
                         $checkboxElem.prop('checked', false);
                         holoPeekOption.textarea.value = textareaElem.val();
                     }
@@ -518,9 +514,8 @@
             holoPeekOptions.forEach(holoPeekOption => {
                 const optionName = holoPeekOption.id;
                 const $jqSelector = $(`#holopeek_${optionName}`)
-                const validValues = ['textarea', 'range', 'text'];
                 let valueElem = null;
-                for (const type of validValues) {
+                for (const type of typesOfInput) {
                     if (holoPeekOption[type]) {
                         valueElem = type;
                         break;
