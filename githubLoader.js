@@ -13,6 +13,9 @@ if (!this[CHANNEL.name].favicon) {
 }
 
 //Defining some top level variables
+const CURRENT_COMMIT = "bc076c9790cf152555ceb86656cbe4461a7fc241"
+const CURRENT_REPO = "immergrok"
+
 let soundpostState = "false";
 let soundpostPlaybackState = {};
 const defaultVolume = 0.1;
@@ -29,8 +32,6 @@ const USERLIST_ENHANCEMENT = "/custom_modules/customUserlist.js";
 const ENHANCED_EMOTES = "/custom_modules/enhancedEmotes.js";
 const HOLOPEEK = "/custom_modules/holopeek/holoPeek.js"
 
-const CURRENT_COMMIT = "acc432b737e7d3503357ff997109d63490e4e21e"
-const CURRENT_REPO = "immergrok"
 //Change to om3tcw on live
 
 function makeLiveCDNLink(customFork, fileName) {
