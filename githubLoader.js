@@ -13,10 +13,11 @@ if (!this[CHANNEL.name].favicon) {
 }
 
 //Defining some top level variables.
-const CURRENT_COMMIT = "69cc915ee9569a51353c9148ef814ca3bc841bd9"
+const CURRENT_COMMIT = "ff6ea5c1e894a5ba93f6224a7823b102d4765098"
 //Change to om3tcw on live
 const CURRENT_REPO = "immergrok"
 
+let SOUNDPOSTS_PROMISE = loadSoundposts();
 let SOUNDPOSTS = {}
 let SOUNDPOST_STATE = "false";
 let SOUNDPOST_PLAYBACK_STATE = {};
@@ -62,24 +63,15 @@ function makeLiveCDNLink(fileName) {
 }
 
 //your motherfucking life ends 5 minutes from now
-async function loadSoundposts() {
-    try {
-        const response = await fetch('https://raw.githubusercontent.com/om3tcw/r/emotes/soundposts/soundposts.json');
-        return await response.json();
-    } catch (error) {
-        console.error(error);
-    }
-}
+(async function loadSoundposts() {
+    const response = await fetch('https://raw.githubusercontent.com/om3tcw/r/emotes/soundposts/soundposts.json');
+    return await response.json();
+})().then((data) => {
+    SOUNDPOSTS = data;
+    console.log(SOUNDPOSTS);
+})
 
 $(document).ready(async () => {
-    try{
-        const data = await loadSoundposts();
-        SOUNDPOSTS = data;
-        console.log("SOUNDPOSTS data loaded successfully:", SOUNDPOSTS);
-    } catch (error) {
-        console.error("Failed to set soundposts from the promise.", error)
-    }
-
     SOUNDPOST_STATE = readCookie("SOUNDPOST_STATE") === "true";
     $('#messagebuffer [class|="chat-msg"]').each((index, domElement) => {
         const $jqElement = $(domElement); 
