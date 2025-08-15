@@ -13,11 +13,10 @@ if (!this[CHANNEL.name].favicon) {
 }
 
 //Defining some top level variables.
-const CURRENT_COMMIT = "6a6761056b5259c9b271cfc2715dfc5a6bbea591"
+const CURRENT_COMMIT = "69cc915ee9569a51353c9148ef814ca3bc841bd9"
 //Change to om3tcw on live
 const CURRENT_REPO = "immergrok"
 
-let SOUNDPOSTS_PROMISE = loadSoundposts();
 let SOUNDPOSTS = {}
 let SOUNDPOST_STATE = "false";
 let SOUNDPOST_PLAYBACK_STATE = {};
@@ -74,11 +73,9 @@ async function loadSoundposts() {
 
 $(document).ready(async () => {
     try{
-        loadSoundposts().then((data) => {
-            SOUNDPOSTS = data
-            console.log("SOUNDPOSTS data loaded successfully:", SOUNDPOSTS);
-
-        });
+        const data = await loadSoundposts();
+        SOUNDPOSTS = data;
+        console.log("SOUNDPOSTS data loaded successfully:", SOUNDPOSTS);
     } catch (error) {
         console.error("Failed to set soundposts from the promise.", error)
     }
