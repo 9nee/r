@@ -27,9 +27,9 @@ function injectSecretMahjongEmotes(username, $messageElement) {
   }
 
 function formatMJMessage($messageElement) {
-    let $timestampElement = $messageElement.find('.timestamp')
+    let $timestampElement = $messageElement.parent().find('.timestamp')
     $($messageElement).addClass("MahjongMessage")
-    $timestampElement.css("backgroundImage", "url('https://raw.githubusercontent.com/om3tcw/r/refs/heads/emotes/eyes/nyagger.png')")
+    $timestampElement.css("background-image", "url('https://raw.githubusercontent.com/om3tcw/r/refs/heads/emotes/eyes/nyagger.png')")
     $messageElement.text($messageElement.text().replace(/^MJ: /, ''));
 
     if (!canReadMJMessages()) {
