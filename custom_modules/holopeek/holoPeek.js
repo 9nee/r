@@ -56,7 +56,10 @@ let isMahjongModeReady = false;
         {
             id: 'MahjongMode',
             desc: 'Mahjong Mode',
-            func: () => {
+            func: async () => {
+                if (!isMahjongModeReady) {
+                    await resolveMahjongPromise()
+                }
                 const $chatInput = $('#chatline');
                 if ($(`#holopeek_MahjongMode`).is(':checked')) {
                     $chatInput.on('input', prependMessagesWithMJ)
