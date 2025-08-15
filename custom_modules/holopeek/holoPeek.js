@@ -119,11 +119,7 @@ let isMahjongModeReady = false;
                 min: 0,
                 max: 100,
                 step: 1,
-                inputEvent: self => {
-                    //Testing, I don't think this condition ever gets executed
-                //     self.func(self)
-                //     self.range.value = $(`#holopeek_${self.id}_range`).val();
-                }
+                inputEvent: self => {}
             }
         },
         {
@@ -148,10 +144,7 @@ let isMahjongModeReady = false;
                 min: 0,
                 max: 1,
                 step: 0.05,
-                inputEvent: self => {
-                    self.func(self)
-                    self.range.value = $(`#holopeek_${self.id}_range`).val();
-                }
+                inputEvent: self => {}
             }
         },
         {
