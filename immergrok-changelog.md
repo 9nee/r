@@ -16,6 +16,10 @@
 
 ## [15Aug2025 - "Laying out the groundwork"]
 
+### Temporary
+
+- [#_] Due to the change in the chat message intercept code, "boo" now only triggers with "/boo", this will be reverted sometime soon.
+
 ### Cookies rewritten
 
 - Did you know we've always had methods exposed in the backend to manage cookies? We did. Now we even use them!
@@ -83,5 +87,5 @@ Ideally this will be fillable directly from the cytube at some point, but it's l
 
 ## \[A while ago - ":jorb: \[r]:jorb:[\/r]"]
 
-- Added reverse tag in its first version, you can use it wrapping emotes and text under \[r][/r]
-· Due to how /runescape code works, it doesn't work with /runescape.
+- Added reverse tag in its first version, you can use it wrapping emotes and text under \[r][/r] or pressing Ctrl+R
+  - Due to how /runescape code works, it doesn't work with /runescape.

@@ -21,9 +21,7 @@ let soundpostPlaybackState = {};
 const defaultVolume = 0.1;
 const defaultAdditionalPlayTime = 3;
 
-const CONFETTI_STYLE = "confetti-styles.js";
-const HOLOPEEK_STYLE = "/custom_modules/holopeek/holoPeek-style.js"
-
+const INJECT_CUSTOM_CSS = "custom_modules/custom_css/injectCustomCss.js";
 const CUSTOM_SETTINGS_MODAL = "/custom_modules/customSettingsModal.js";
 const BETTER_PLAYLIST = "/custom_modules/betterPlaylist.js";
 const BETTER_PMS = "/custom_modules/betterPms.js";
@@ -31,7 +29,9 @@ const SOUND_NOTIFICATIONS = "/custom_modules/soundNotifications.js";
 const MORE_LAYOUT_OPTIONS = "/custom_modules/moreLayoutOptions.js";
 const USERLIST_ENHANCEMENT = "/custom_modules/customUserlist.js";
 const ENHANCED_EMOTES = "/custom_modules/enhancedEmotes.js";
-const HOLOPEEK = "/custom_modules/holopeek/holoPeek.js"
+const HOLOPEEK = "/custom_modules/holopeek/holoPeek.js";
+const MAHJONG_MODE = "/custom_modules/mahjongMode.js"; //Mahjong mode currently depends on holopeek, it's not quite modular.
+const NND_MODULE = "/custom_modules/nndChatModule.js"
 
 //Change to om3tcw on live
 
@@ -56,6 +56,7 @@ function makeLiveCDNLink(fileName) {
 
 let soundposts;
 
+//your motherfucking life ends 5 minutes from now
 fetch('https://raw.githubusercontent.com/om3tcw/r/emotes/soundposts/soundposts.json')
     .then(response => response.json())
     .then(data => {
@@ -68,57 +69,7 @@ fetch('https://raw.githubusercontent.com/om3tcw/r/emotes/soundposts/soundposts.j
 
 $(document).ready(() => {
     soundpostState = readCookie("soundpostState") === "true";
-
-    fetchAndInjectStylesheet(CONFETTI_STYLE);
-    fetchAndInjectStylesheet(HOLOPEEK_STYLE);
-
-    $('#messagebuffer [class|="chat-msg"]').each(function() {
-        const $element = $(this); 
-        const $messageElement = $element.children().last();
-        formatMessage($messageElement);
-
-        if ($messageElement.html().startsWith('MJ:')) {
-            formatMJMessage($messageElement)
-        }
-    })
-    toggleMJMessages();
 });
-
-function fetchAndInjectStylesheet(cdnUrl, injectionFunction) {
-    $.getScript(makeLiveCDNLink(cdnUrl))
-        .done(() => {
-            console.log(`${cdnUrl} loaded`)
-        })
-        .fail((_, textStatus, errorThrown) => {
-            console.error(`Failed to load ${cdnUrl}.js:`, textStatus, errorThrown);
-        })
-}
-
-function prependMessagesWithMJ() {
-    const chatInput = $('#chatline');
-    if (chatInput.val() && !chatInput.val().startsWith('MJ: ')) {
-        chatInput.val('MJ: ' + chatInput.val());
-    }
-}
-
-function canReadMJMessages() {
-    let mahjongModeCookie = readCookie("MahjongMode");
-    let mahjongLurkCookie = readCookie("MahjongLurk");
-    return  mahjongLurkCookie || 
-            mahjongModeCookie || 
-            $('#holopeek_MahjongMode').is(':checked') ||
-            $('#holopeek_MahjongLurk').is(':checked');
-}
-
-function toggleMJMessages() {
-    document.querySelectorAll('#messagebuffer [class|="MahjongMessage"]').forEach(element => {
-        if (canReadMJMessages()) {
-            element.parentElement.style.display = 'block';
-        } else {
-            element.parentElement.style.display = 'none';
-        }
-    })
-}
 
 const xaeModule = {
     options: {
@@ -140,6 +91,7 @@ const xaeModule = {
         various: { notepad: true, emoteToggle: false }
     },
     modules: {
+        customCssInjection: { active: 1, rank: -1, url: makeLiveCDNLink(INJECT_CUSTOM_CSS), done: true },
         customSettings: { active: 1, rank: -1, url: makeLiveCDNLink(CUSTOM_SETTINGS_MODAL), done: true },
         playlistEnhancement: { active: 1, rank: -1, url: makeLiveCDNLink(BETTER_PLAYLIST), done: true },
         pmEnhancement: { active: 1, rank: 1, url: makeLiveCDNLink(BETTER_PMS), done: true },
@@ -148,7 +100,10 @@ const xaeModule = {
         userlistEnhancement: { active: 1, rank: -1, url: makeLiveCDNLink(USERLIST_ENHANCEMENT), done: true },
         enhancedEmotes: { active: 1, rank: -1, url: makeLiveCDNLink(ENHANCED_EMOTES), done: true },
         holoPeek: { active: 1, rank: -1, url: makeLiveCDNLink(HOLOPEEK), done: true },
-        html2canvas: { active: 1, rank: -1, url: "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js", done: true }
+        mahjongMode: { active: 1, rank: -1, url: makeLiveCDNLink(MAHJONG_MODE), done: true },
+        html2canvas: { active: 1, rank: -1, url: "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js", done: true },
+        nndChatModule: {active: 0, rank: -1, url: makeLiveCDNLink(NND_MODULE), done: true }
+
     },
     getScript(url, success, cache = true) {
         return $.ajax({ url, cache, success, type: "GET", dataType: "script" });
@@ -640,99 +595,6 @@ function yayConfetti($message) {
 
 let playedSoundposts = [];
 
-function nicomessage(myplayer, mycontainer, mymsg) {
-    mycontainer.appendChild(mymsg);
-
-    mymsg.addEventListener("transitionend", function () {
-        mymsg.remove();
-    }, { once: true });
-
-    setTimeout(function () {
-        mymsg.remove();
-    }, 10000);
-
-    let maxLane = Math.floor(myplayer.clientHeight / 32) - 1;
-    let lane = Math.floor(Math.random() * (maxLane + 1));
-    let playerWidth = myplayer.clientWidth;
-    let thisWidth = mymsg.clientWidth;
-
-    mymsg.style.top = (32 * lane) + 'px';
-    mymsg.style.right = (0 - thisWidth) + 'px';
-    mymsg.classList.add('moving');
-    requestAnimationFrame(function () {
-        mymsg.style.visibility = 'visible';
-        mymsg.style.right = playerWidth + 'px';
-    });
-}
-
-function nicoprocess(mymsg, myclass) {
-    const container = document.getElementsByClassName("videochatContainer")[0];
-    const player = $("ytapiplayer");
-    if (!container || !player) return;
-
-    if (mymsg.innerHTML.trim()) {
-        let txt = document.createElement("div");
-        txt.classList.add('videoText');
-        if (myclass.trim()) txt.classList.add(myclass);
-        txt.style.visibility = "hidden";
-        txt.innerHTML = mymsg.innerHTML;
-
-        const imgs = txt.getElementsByTagName("img");
-        let loadedImgs = 0;
-
-        [...imgs].forEach(img => {
-            img.onload = () => {
-                if (++loadedImgs === imgs.length) nicomessage(player, container, txt);
-            };
-        });
-
-        if (imgs.length === 0) nicomessage(player, container, txt);
-    }
-}
-
-$('.head-NNDCSS').remove();
-$('.videochatContainer').remove();
-
-const NNDCSSRules = `
-  .videoText {
-    color: white;
-    position: absolute;
-    z-index: 1;
-    cursor: default;
-    white-space: nowrap;
-    font-family: 'Meiryo', sans-serif;
-    letter-spacing: 0.063em;
-    user-select: none;
-    text-shadow: 0 -0.063em #000, 0.063em 0 #000, 0 0.063em #000, -0.063em 0 #000;
-    pointer-events: none;
-  }
-  .videoText.moving {
-    transition: right ${7}s linear, left ${7}s linear;
-  }
-  .videoText.greentext {
-    color: #789922;
-  }
-  .videoText img, .videochatContainer .channel-emote {
-    box-shadow: none!important;
-    vertical-align: middle!important;
-    display: inline-block!important;
-    transition: none!important;
-  }
-  .videoText.shout {
-    color: #f00;
-  }
-`;
-
-$('<style />', {
-    'class': 'head-NNDCSS',
-    text: NNDCSSRules
-}).appendTo('head');
-
-$('.embed-responsive').prepend($('<div/>', {
-    'class': 'videochatContainer'
-}));
-
-
 function initializeSoundpost(emote, soundurl, preload = false) {
     if (!soundpostPlaybackState[emote]) {
         soundpostPlaybackState[emote] = {
@@ -774,16 +636,6 @@ function playSoundpost(emote, additionalPlayTime = defaultAdditionalPlayTime) {
     }, playDuration * 1000);
 }
 
-const secretMJEmotes = {
-    ":nyaggernap:": "https://raw.githubusercontent.com/puchigire/r/emotes/emotes/nyaggernap.jpg",
-    ":yakuless:": "https://raw.githubusercontent.com/puchigire/r/emotes/emotes/yakuless.gif",
-    ":nightynightnyagger:": "https://raw.githubusercontent.com/puchigire/r/emotes/emotes/nightynightnyagger.png",
-    ":chinpo:": "https://raw.githubusercontent.com/puchigire/r/emotes/emotes/chinpo.png",
-    ":sharingiscaring:": "https://raw.githubusercontent.com/puchigire/r/emotes/emotes/sharingiscaring.png",
-    ":pardner:": "https://raw.githubusercontent.com/puchigire/r/emotes/emotes/pardner.png",
-    ":nyaggerfed:": "https://raw.githubusercontent.com/puchigire/r/emotes/emotes/nyaggerfed.png",
-    ":nyaggerfish:": "https://raw.githubusercontent.com/puchigire/r/emotes/emotes/nyaggerfish.png"
-};
 
 function cleanupSoundpostPlaybackState() {
     const limit = 40; 
@@ -814,17 +666,6 @@ socket.on("chatMsg", ({ username, msg, meta, time }) => {
     }
 
     if (!['[server]', '[voteskip]'].includes(username.toLowerCase()) && username !== "numbertrees") {
-
-        Object.keys(secretMJEmotes).forEach(secretEmote => {
-            const escapedEmote = secretEmote.replace(/[-\/\\^$.*+?()[\]{}|]/g, '\\$&');
-            const regex = new RegExp(escapedEmote, 'g');
-            if (canReadMJMessages()) {
-                $messageElement.html($messageElement.html().replace(regex,
-                    `<img class="channel-emote" title="${secretEmote}" src="${secretMJEmotes[secretEmote]}">`));
-            } else {
-                $messageElement.html($messageElement.html().replace(regex, ''));
-            }
-        });
 
         if (soundpostState) {
             const $emotes = $messageElement.find('.channel-emote[title]');
@@ -884,15 +725,4 @@ function playBooSound() {
         myaudio.play();
     }
 }
-
-function formatMJMessage($messageElement) {
-    let $timestampElement = $messageElement.parent().find('.timestamp')
-    $($messageElement).addClass("MahjongMessage")
-    $timestampElement.css("backgroundImage", "url('https://raw.githubusercontent.com/om3tcw/r/refs/heads/emotes/eyes/nyagger.png')")
-    $messageElement.text($messageElement.text().replace(/^MJ: /, ''));
-
-    if (!canReadMJMessages()) {
-        $messageElement.parent().css('display','none')
-    }
-} 
 

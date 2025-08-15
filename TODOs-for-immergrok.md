@@ -7,3 +7,6 @@
 - Egao: make the mods able to turn of and on the change votes option
 - "live reaction"
 - [HIGH PRIO] why is the rrat button broken
+- [HIGH PRIO] dropdown for styles
+- make holopeek bigger?
+- low-bandwidth mode (gifs unload or don't load)
