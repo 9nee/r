@@ -423,7 +423,7 @@ let isMahjongModeReady = false;
             type: 'checkbox',
             click: async () => {
                 if (holoPeekOption.func) {
-                    holoPeekOption.func(holoPeekOption);
+                    await holoPeekOption.func(holoPeekOption);
                 } 
                 
                 //It helps to remove the style created
