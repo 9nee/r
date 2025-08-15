@@ -522,7 +522,7 @@ let holoPeekOptions;
                 const optionName = holoPeekOption.id;
                 const $jqSelector = $(`#holopeek_${optionName}`)
                 let valueElem = null;
-                for (const type of typesOfInput) {
+                for (const type of validValues) {
                     if (holoPeekOption[type]) {
                         valueElem = type;
                         break;

@@ -25,28 +25,19 @@ let PLAYED_SOUNDPOSTS = [];
 const defaultVolume = 0.1;
 const defaultAdditionalPlayTime = 3;
 
-const INJECT_CUSTOM_CSS = "custom_modules/custom_css_injection/customCssInjection.js";
-const CUSTOM_SETTINGS_MODAL = "/custom_modules/customSettingsModal.js";
-const BETTER_PLAYLIST = "/custom_modules/betterPlaylist.js";
-const BETTER_PMS = "/custom_modules/betterPms.js";
-const SOUND_NOTIFICATIONS = "/custom_modules/soundNotifications.js";
-const MORE_LAYOUT_OPTIONS = "/custom_modules/moreLayoutOptions.js";
-const USERLIST_ENHANCEMENT = "/custom_modules/customUserlist.js";
-const ENHANCED_EMOTES = "/custom_modules/enhancedEmotes.js";
-const HOLOPEEK = "/custom_modules/holopeek/holoPeek.js";
-const MAHJONG_MODE = "/custom_modules/mahjongMode.js"; //Mahjong mode currently depends on holopeek, it's not quite modular.
-const NND_MODULE = "/custom_modules/nndChatModule.js"
+const MODULES_PATH = "custom_modules/"
 
-
-function makeLiveCDNLink(customFork, fileName) {
-    //customFork should be immergrok, om3tcw or whatever fork is live
-    return "https://cdn.jsdelivr.net/gh/" + 
-            customFork +
-            "/r@" +
-            CURRENT_COMMIT +
-            "/" +
-            fileName
-}
+const INJECT_CUSTOM_CSS = `${MODULES_PATH}custom_css_injection/customCssInjection.js`;
+const CUSTOM_SETTINGS_MODAL = `${MODULES_PATH}customSettingsModal.js`;
+const BETTER_PLAYLIST = `${MODULES_PATH}betterPlaylist.js`;
+const BETTER_PMS = `${MODULES_PATH}betterPms.js`;
+const SOUND_NOTIFICATIONS = `${MODULES_PATH}soundNotifications.js`;
+const MORE_LAYOUT_OPTIONS = `${MODULES_PATH}moreLayoutOptions.js`;
+const USERLIST_ENHANCEMENT = `${MODULES_PATH}customUserlist.js`;
+const ENHANCED_EMOTES = `${MODULES_PATH}enhancedEmotes.js`;
+const HOLOPEEK = `${MODULES_PATH}holopeek/holoPeek.js`;
+const MAHJONG_MODE = `${MODULES_PATH}mahjongMode.js`; //Mahjong mode currently depends on holopeek, it's not quite modular.
+const NND_MODULE = `${MODULES_PATH}nndChatModule.js`;
 
 function makeLiveCDNLink(fileName) {
     return "https://cdn.jsdelivr.net/gh/" + 
@@ -70,7 +61,7 @@ async function loadSoundposts() {
 
 $(document).ready(async () => {
     await SOUNDPOSTS;
-    SOUNTPOST_STATE = readCookie("SOUNDPOST_STATE") === "true";
+    SOUNDPOST_STATE = readCookie("SOUNDPOST_STATE") === "true";
     $('#messagebuffer [class|="chat-msg"]').each((index, domElement) => {
         const $jqElement = $(domElement); 
         const $messageElement = $jqElement.children().last();
@@ -311,58 +302,6 @@ $(window).bind('keydown', function (event) {
         }
     }
 });
-
-// Replace Video
-(function () {
-    $('#plcontrol').append('<input type="button" class="btn btn-sm btn-default" value="🐀" id="replacebutton">');
-    $('#plcontrol').append('<input type="button" class="btn btn-sm btn-default" value="🔃" id="refreshbutton">');
-
-    $('#replacebutton').click(function () {
-        let newId = window.prompt("Replace the current playing stream\nRefresh to undo\n\nSwitching back to YouTube from Twitch is broken, so reloading the player is necessary in that case\n\nYoutube URL/ID:", "");
-        let newSource = "YT";
-
-        if (newId == null) {
-            newId = "";
-        } else if (newId.includes("https://youtube.com/watch?v=")) {
-            newId = newId.replace('https://youtube.com/watch?v=', '').substring(0, 11);
-        } else if (newId.includes("https://www.youtube.com/watch?v=")) {
-            newId = newId.replace('https://www.youtube.com/watch?v=', '').substring(0, 11);
-        } else if (newId.includes("https://youtu.be/")) {
-            newId = newId.replace('https://youtu.be/', '').substring(0, 11);
-        } else if (newId.includes("https://www.twitch.tv/")) {
-            newId = newId.replace('https://www.twitch.tv/', '');
-            newSource = "TTV";
-        } else if (newId.includes("https://twitch.tv/")) {
-            newId = newId.replace('https://twitch.tv/', '');
-            newSource = "TTV";
-        } else if (newId === "om3tcw") {
-            newId = "cJtkxZrUicI";
-        } else if (newId === "ogey" || newId === "rrat" || newId === "ogey rrat") {
-            newId = "JacN1MzyeKo";
-        } else if (newId.length !== 11) {
-            alert("Invalid input.\nExample input: https://www.youtube.com/watch?v=X9zw0QF12Kc, https://youtu.be/X9zw0QF12Kc, X9zw0QF12Kc, https://www.twitch.tv/holofightz, https://twitch.tv/holofightz");
-            newId = "";
-        }
-
-        document.body.classList.add('chatOnly');
-        socket.emit("removeVideo");
-        CLIENT.videoRemoved = true;
-
-        if (newId !== "") {
-            const playerSrc = newSource === "YT"
-                ? `https://www.youtube.com/embed/${newId}?autohide=1&autoplay=1&controls=1&iv_load_policy=3&rel=0&wmode=opaque&enablejsapi=1&origin=https%3A%2F%2Fom3tcw.com&widgetid=2`
-                : `https://player.twitch.tv?channel=${newId}&parent=om3tcw.com&referrer=location.host`;
-            $("#ytapiplayer")[0].src = playerSrc;
-        }
-    });
-
-    $('#refreshbutton').click(function () {
-        document.body.classList.remove('chatOnly');
-        $("mediarefresh").click();
-        socket.emit("restoreVideo");
-        CLIENT.videoRemoved = false;
-    });
-})();
 
 // Image Hover
 const ImageHoverEnable = false;
@@ -675,15 +614,17 @@ function globalMessageFormatInjection({ username = "undefined",
 
     if (!['[server]', '[voteskip]'].includes(username.toLowerCase()) && username !== "numbertrees") {
 
-        if (SOUNTPOST_STATE) {
+        if (SOUNDPOST_STATE) {
             const $emotes = $message.find('.channel-emote[title]');
             $emotes.each((index, element) => {
                 const $emote = $(element)
                 const emoteTitle = $emote.attr('title')
                 const soundpost = SOUNDPOSTS[emoteTitle];
 
+                const longEmotes = [":homuhomu:", ":rratate:", "bakushin", "calliboy"]
+
                 if (soundpost) {
-                    const preload = (emoteTitle === ":homuhomu:" || emoteTitle === ":rratate:" || emoteTitle === "bakushin");
+                    const preload = longEmotes.includes(emoteTitle);
                     initializeSoundpost(emoteTitle, soundpost.soundurl, preload);
 
                     if (preload && SOUNDPOST_PLAYBACK_STATE[emoteTitle].isPreloaded) {
@@ -721,7 +662,7 @@ function formatCommandMessage($message) {
 }
 
 function playNeneYaySound() {
-    if (SOUNTPOST_STATE) {
+    if (SOUNDPOST_STATE) {
         let myaudio = new Audio("https://www.dl.dropboxusercontent.com/s/z0n3hnw8ky79rwhdokfso/nenesmile.ogg?rlkey=bezzj2pn6c9rj0pqco5kbf7bk&st=ythhncur&dl=0");
         myaudio.volume = defaultVolume;
         myaudio.play();
@@ -729,7 +670,7 @@ function playNeneYaySound() {
 }
 
 function playBooSound() {
-    if (SOUNTPOST_STATE) {
+    if (SOUNDPOST_STATE) {
         let myaudio = new Audio("https://cdn.jsdelivr.net/gh/om3tcw/r@emotes/soundposts/sounds/boo.ogg");
         myaudio.volume = defaultVolume;
         myaudio.play();
