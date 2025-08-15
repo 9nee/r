@@ -70,7 +70,7 @@ async function loadSoundposts() {
 
 $(document).ready(async () => {
     await SOUNDPOSTS;
-    SOUNTPOST_STATE = readCookie("soundpostState") === "true";
+    SOUNTPOST_STATE = readCookie("SOUNDPOST_STATE") === "true";
     $('#messagebuffer [class|="chat-msg"]').each((index, domElement) => {
         const $jqElement = $(domElement); 
         const $messageElement = $jqElement.children().last();
@@ -352,7 +352,7 @@ $(window).bind('keydown', function (event) {
             const playerSrc = newSource === "YT"
                 ? `https://www.youtube.com/embed/${newId}?autohide=1&autoplay=1&controls=1&iv_load_policy=3&rel=0&wmode=opaque&enablejsapi=1&origin=https%3A%2F%2Fom3tcw.com&widgetid=2`
                 : `https://player.twitch.tv?channel=${newId}&parent=om3tcw.com&referrer=location.host`;
-            $("ytapiplayer").src = playerSrc;
+            $("#ytapiplayer")[0].src = playerSrc;
         }
     });
 

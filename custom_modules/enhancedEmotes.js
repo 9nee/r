@@ -13,18 +13,17 @@ $("#cs-emotes-export").on('click', () => {
 });
 
 const soundpostButton = document.createElement("button");
-soundpostButton.style.backgroundImage = soundpostState
+soundpostButton.style.backgroundImage = SOUNDPOST_STATE
     ? "url('https://raw.githubusercontent.com/om3tcw/r/refs/heads/emotes/emotes/schizo.gif')"
     : "url('https://raw.githubusercontent.com/om3tcw/r/refs/heads/emotes/emotes/medicated.png')";
 soundpostButton.style.backgroundSize = "cover";
 
 $(soundpostButton).on("click", () => {
-    soundpostState = !soundpostState;
-    createCookie("soundpostState", soundpostState, 3650);
-    soundpostButton.style.backgroundImage = soundpostState
+    SOUNDPOST_STATE = !SOUNDPOST_STATE;
+    createCookie("SOUNDPOST_STATE", SOUNDPOST_STATE, 3650);
+    soundpostButton.style.backgroundImage = SOUNDPOST_STATE
         ? "url('https://raw.githubusercontent.com/om3tcw/r/refs/heads/emotes/emotes/schizo.gif')"
         : "url('https://raw.githubusercontent.com/om3tcw/r/refs/heads/emotes/emotes/medicated.png')";
 });
 
-const chatInputRow = document.getElementById("chatinputrow");
-chatInputRow.appendChild(soundpostButton);
+$("#chatinputrow").append(soundpostButton)
