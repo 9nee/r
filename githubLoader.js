@@ -23,6 +23,8 @@ let SOUNDPOST_PLAYBACK_STATE = {};
 let PLAYED_SOUNDPOSTS = [];
 const defaultVolume = 0.1;
 const defaultAdditionalPlayTime = 3;
+const $LAST_CHAT_ELEMENT = $('#messagebuffer').children().last().children().last();
+
 
 const MODULES_PATH = "custom_modules/"
 
@@ -647,8 +649,7 @@ cleanupSoundpostPlaybackState();
 }
 
 socket.on("chatMsg", ({username, msg, meta, time}) =>{
-    const $lastChatElement = $('#messagebuffer').children().last().children().last();
-    globalMessageFormatInjection({$message: $lastChatElement});
+    globalMessageFormatInjection({$message: $LAST_CHAT_ELEMENT});
 } )
 
 function formatCommandMessage($message) {

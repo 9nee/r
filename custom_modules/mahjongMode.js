@@ -1,8 +1,8 @@
 socket.on("chatMsg", ({username, msg, meta, time}) => {
-  injectSecretMahjongEmotes(username);
+  injectSecretMahjongEmotes(username, $LAST_CHAT_ELEMENT);
 })
 
-function injectSecretMahjongEmotes(username) {
+function injectSecretMahjongEmotes(username, $message) {
   if (canReadMJMessages()) {
     if (!['[server]', '[voteskip]'].includes(username.toLowerCase())) {
         Object.keys(secretMJEmotes).forEach(secretEmote => {
