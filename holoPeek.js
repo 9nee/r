@@ -302,10 +302,12 @@
             id: 'custom_CSS',
             desc: 'Custom CSS',
             func: self => {
-                const checkboxElem = $(`holopeek_${self.id}`);
-                const textAreaElem = $(`holopeek_${self.id}_textarea`);
-                if (checkboxElem && textAreaElem) {
-                    self.css = checkboxElem.checked ? textAreaElem.value : null;
+                const $checkboxElem = $(`holopeek_${self.id}`);
+                const $textAreaElem = $(`holopeek_${self.id}_textarea`);
+                if ($checkboxElem.is(':checked') && $textAreaElem) {
+                    self.css = $textAreaElem.value;
+                } else {
+                    self.css = null;
                 }
             },
             textarea: {

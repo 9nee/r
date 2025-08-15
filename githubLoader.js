@@ -59,7 +59,6 @@ fetch('https://raw.githubusercontent.com/om3tcw/r/emotes/soundposts/soundposts.j
     .then(response => response.json())
     .then(data => {
         soundposts = data;
-        console.log(soundposts);
     })
     .catch(error => {
         console.error(error);
