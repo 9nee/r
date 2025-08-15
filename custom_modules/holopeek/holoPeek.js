@@ -595,5 +595,5 @@ async function resolveMahjongModePromise(){
 
 (() => {
     console.log("hp ready promise")
-    resolveHoloPeekPromise();
+    holoPeekPromise();
 })();

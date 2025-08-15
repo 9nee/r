@@ -83,7 +83,7 @@ function toggleMJMessages() {
 
 async function resolveHoloPeekPromise() {
   if (!isHoloPeekReady) {
-    return Promise.all([window.holoPeekReadyPromise])
+    return Promise.all([window.holoPeekReady])
       .then(() => {
         isHoloPeekReady = true;
         console.log("Holopeek resolved!!")
@@ -95,5 +95,5 @@ async function resolveHoloPeekPromise() {
 
 (() => {
     console.log("mm ready promise")
-    resolveMahjongModePromise();
+    mahjongModePromise();
 })();
