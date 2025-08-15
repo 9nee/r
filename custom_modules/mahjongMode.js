@@ -1,5 +1,5 @@
 socket.on("chatMsg", ({username, msg, meta, time}) => {
-  injectSecretMahjongEmotes(username, $LAST_CHAT_ELEMENT);
+  injectSecretMahjongEmotes(username, fetchLastChatElement());
 })
 
 function injectSecretMahjongEmotes(username, $messageElement) {

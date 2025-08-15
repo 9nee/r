@@ -23,8 +23,6 @@ let SOUNDPOST_PLAYBACK_STATE = {};
 let PLAYED_SOUNDPOSTS = [];
 const defaultVolume = 0.1;
 const defaultAdditionalPlayTime = 3;
-const $LAST_CHAT_ELEMENT = $('#messagebuffer').children().last().children().last();
-
 
 const MODULES_PATH = "custom_modules/"
 
@@ -39,6 +37,10 @@ const ENHANCED_EMOTES = `${MODULES_PATH}enhancedEmotes.js`;
 const HOLOPEEK = `${MODULES_PATH}holopeek/holoPeek.js`;
 const MAHJONG_MODE = `${MODULES_PATH}mahjongMode.js`; //Mahjong mode currently depends on holopeek, it's not quite modular.
 const NND_MODULE = `${MODULES_PATH}nndChatModule.js`;
+
+function fetchLastChatElement() {
+    return $('#messagebuffer').children().last().children().last();
+}
 
 function makeLiveCDNLink(fileName) {
     return "https://cdn.jsdelivr.net/gh/" + 
@@ -649,7 +651,7 @@ cleanupSoundpostPlaybackState();
 }
 
 socket.on("chatMsg", ({username, msg, meta, time}) =>{
-    globalMessageFormatInjection({$message: $LAST_CHAT_ELEMENT});
+    globalMessageFormatInjection({$message: fetchLastChatElement()});
 } )
 
 function formatCommandMessage($message) {
