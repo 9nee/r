@@ -22,8 +22,8 @@
 
 ### Small file refactors
 
-- No more github417.js, it is now githubLoader.js, hopefully will never have a number again.
-- Started moving responsabilities away from said githubLoader file.
+- No more github417.js, it is now githubLoader.js, hopefully will never have a number again. (Name subject to change)
+- Started moving responsibilities away from said githubLoader file.
   - NEW: holoPeek.js
   - NEW: enhancedEmotes.js (WIP)
   - NEW: confetti-styles.js
@@ -43,7 +43,7 @@
 - Changed the name from "Offtopic mode" to "Mahjong Mode", subject to change.
 - It... works now, kinda, mostly, go test it out.
 
-### Overhauled a bunch of the XaeModules code (thanks Xae)
+### Overhauled a bunch of the XaeModules code (thanks Xae it's actually super cool)
 
 - Created a function makeLiveCDNLink that should create a working CDN link as long as the following parameters are filled:
 
