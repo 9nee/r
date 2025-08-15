@@ -13,7 +13,7 @@ if (!this[CHANNEL.name].favicon) {
 }
 
 //Defining some top level variables
-const CURRENT_COMMIT = "3d035b3931fedae6c27d26b697bc8d5b8511608e"
+const CURRENT_COMMIT = "3c40bf1ecf27b16c5aac77da27fbe125454e8170"
 //Change to om3tcw on live
 const CURRENT_REPO = "immergrok"
 
@@ -647,7 +647,8 @@ cleanupSoundpostPlaybackState();
 }
 
 socket.on("chatMsg", ({username, msg, meta, time}) =>{
-    globalMessageFormatInjection({$message: msg});
+    const $lastChatElement = $('#messagebuffer').children().last().children().last();
+    globalMessageFormatInjection({$message: $lastChatElement});
 } )
 
 function formatCommandMessage($message) {
