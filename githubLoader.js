@@ -646,7 +646,9 @@ function globalMessageFormatInjection({ username = "undefined",
 cleanupSoundpostPlaybackState();
 }
 
-socket.on("chatMsg", globalMessageFormatInjection);
+socket.on("chatMsg", ({username, msg, meta, time}) =>{
+    globalMessageFormatInjection({$message: msg});
+} )
 
 function formatCommandMessage($message) {
     let $text = $message.text();
