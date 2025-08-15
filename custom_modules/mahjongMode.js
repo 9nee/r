@@ -1,19 +1,4 @@
-
-$(document).ready(() => {
-  $('#messagebuffer [class|="chat-msg"]').each(() => {
-        const $element = $(this); 
-        const $messageElement = $element.children().last();
-        formatMessage($messageElement);
-
-        if ($messageElement.html().startsWith('MJ:')) {
-            formatMJMessage($messageElement)
-        }
-    })
-    toggleMJMessages();
-
-    socket.on("chatMsg", injectSecretMahjongEmotes)
-  }
-)
+socket.on("chatMsg", injectSecretMahjongEmotes)
 
 function injectSecretMahjongEmotes() {
   if (canReadMJMessages()) {
@@ -31,7 +16,7 @@ function injectSecretMahjongEmotes() {
   }
 
 function formatMJMessage($messageElement) {
-    let $timestampElement = $messageElement.parent().find('.timestamp')
+    let $timestampElement = $messageElement.find('.timestamp')
     $($messageElement).addClass("MahjongMessage")
     $timestampElement.css("backgroundImage", "url('https://raw.githubusercontent.com/om3tcw/r/refs/heads/emotes/eyes/nyagger.png')")
     $messageElement.text($messageElement.text().replace(/^MJ: /, ''));

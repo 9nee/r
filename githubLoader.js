@@ -69,7 +69,12 @@ fetch('https://raw.githubusercontent.com/om3tcw/r/emotes/soundposts/soundposts.j
 
 $(document).ready(() => {
     soundpostState = readCookie("soundpostState") === "true";
-});
+    $('#messagebuffer [class|="chat-msg"]').each((index, domElement) => {
+        const $jqElement = $(domElement); 
+        const $messageElement = $jqElement.children().last();
+        globalMessageFormatInjection($messageElement);
+    });
+})
 
 const xaeModule = {
     options: {
@@ -652,17 +657,16 @@ function cleanupSoundpostPlaybackState() {
     }
 }
 
-socket.on("chatMsg", ({ username, msg, meta, time }) => {
+function globalMessageFormatInjection(username, $message, meta, time) {
+    // const $messageElement = $('#messagebuffer').children().last().children().last();
+    // const $messageText = $message.text()
 
-    const $messageElement = $('#messagebuffer').children().last().children().last();
-    const $messageText = $messageElement.text()
-
-    if ($messageText.startsWith('/')) {
-        formatMessage($messageElement);
+    if ($message.startsWith('/')) {
+        formatCommandMessage($messageElement);
     }
 
-    if ($messageText.startsWith('MJ:')) {
-        formatMJMessage($messageElement)
+    if ($message.startsWith('MJ:')) {
+        formatMJMessage($message)
     }
 
     if (!['[server]', '[voteskip]'].includes(username.toLowerCase()) && username !== "numbertrees") {
@@ -696,9 +700,11 @@ socket.on("chatMsg", ({ username, msg, meta, time }) => {
         playedSoundposts = [];
     }
 cleanupSoundpostPlaybackState();
-});
+}
 
-function formatMessage($message) {
+socket.on("chatMsg", globalMessageFormatInjection);
+
+function formatCommandMessage($message) {
     let $text = $message.text();
     if ($text.startsWith('/runescape')) {
         runescape($message);
@@ -725,4 +731,5 @@ function playBooSound() {
         myaudio.play();
     }
 }
+
 
