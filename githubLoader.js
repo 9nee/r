@@ -57,9 +57,9 @@ async function loadSoundposts() {
     }
 }
 
-
 $(document).ready(async () => {
     await SOUNDPOSTS;
+    console.log("soundposts on omg!!")
     SOUNDPOST_STATE = readCookie("SOUNDPOST_STATE") === "true";
     $('#messagebuffer [class|="chat-msg"]').each((index, domElement) => {
         const $jqElement = $(domElement); 
