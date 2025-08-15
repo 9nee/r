@@ -25,7 +25,17 @@ let PLAYED_SOUNDPOSTS = [];
 const defaultVolume = 0.1;
 const defaultAdditionalPlayTime = 3;
 
-const MODULES_PATH = "custom_modules/"
+const MODULES_PATH = "custom_modules/";
+
+let resolveMahjongModePromise;
+window.mahjongModeReadyPromise = new Promise(resolve => {
+    resolveMahjongModePromise = resolve;
+});
+
+let resolveHoloPeekPromise;
+window.holoPeekReadyPromise = new Promise(resolve => {
+    resolveHoloPeekPromise = resolve;
+});
 
 const INJECT_CUSTOM_CSS = `${MODULES_PATH}custom_css_injection/customCssInjection.js`;
 const CUSTOM_SETTINGS_MODAL = `${MODULES_PATH}customSettingsModal.js`;

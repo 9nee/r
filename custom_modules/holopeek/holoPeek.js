@@ -58,7 +58,7 @@ let isMahjongModeReady = false;
             desc: 'Mahjong Mode',
             func: async () => {
                 if (!isMahjongModeReady) {
-                    await resolveMahjongPromise().then(() => {
+                    await resolveMahjongModePromise().then(() => {
                         console.log("(1)")
                     });
 
@@ -83,7 +83,7 @@ let isMahjongModeReady = false;
             desc: 'Mahjong Lurk',
             func: async self => {
                 if (!isMahjongModeReady) {
-                    await resolveMahjongPromise()
+                    await resolveMahjongModePromise()
                 }
                 toggleMJMessages();
             }
@@ -580,7 +580,7 @@ let isMahjongModeReady = false;
     hoverOption.html(`<s>${hoverOption.html()}</s>`)
 })();
 
-async function resolveMahjongPromise(){
+async function resolveMahjongModePromise(){
     if (!isMahjongModeReady) {
         return Promise.all([window.mahjongModeReadyPromise])
             .then(() => {
@@ -593,10 +593,7 @@ async function resolveMahjongPromise(){
     }
 } 
 
-
-(function holoPeekReadyPromise() {
-    window.holoPeekReadyPromise = new Promise(resolve => {
-        console.log("hp ready promise")
-        resolve();
-    });
+(() => {
+    console.log("hp ready promise")
+    resolveHoloPeekPromise();
 })();

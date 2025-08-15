@@ -93,9 +93,7 @@ async function resolveHoloPeekPromise() {
   }
 }
 
-(function mahjongModeReadyPromise() {
-  window.mahjongModeReadyPromise = new Promise(resolve => {
+(() => {
     console.log("mm ready promise")
-    resolve();
-    });
+    resolveMahjongModePromise();
 })();
