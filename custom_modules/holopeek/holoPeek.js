@@ -59,7 +59,7 @@ let isMahjongModeReady = false;
             func: async () => {
                 if (!isMahjongModeReady) {
                     await resolveMahjongPromise().then(() => {
-                        console.log("it's over (1)")
+                        console.log("(1)")
                     });
 
                 }
@@ -574,24 +574,29 @@ let isMahjongModeReady = false;
 
 })();
 
-async function resolveMahjongPromise(){
-    if (!isMahjongModeReady) {
-        return Promise.all([window.mahjongModeReadyPromise])
-            .then(() => {
-            isMahjongModeReady = true;
-        })
-    } else {
-        return Promise.resolve(true);
-    }
-} 
 
 (function strikeBrokenHolopeekOptions() {
     let hoverOption = $('#holopeek_image_hover_label')
     hoverOption.html(`<s>${hoverOption.html()}</s>`)
 })();
 
+async function resolveMahjongPromise(){
+    if (!isMahjongModeReady) {
+        return Promise.all([window.mahjongModeReadyPromise])
+            .then(() => {
+            isMahjongModeReady = true;
+            console.log("mahjong resolved!!")
+
+        })
+    } else {
+        return Promise.resolve(true);
+    }
+} 
+
+
 (function holoPeekReadyPromise() {
     window.holoPeekReadyPromise = new Promise(resolve => {
+        console.log("hp ready promise")
         resolve();
     });
 })();
