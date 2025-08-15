@@ -19,7 +19,7 @@ const CURRENT_REPO = "immergrok"
 
 
 let SOUNDPOSTS = loadSoundposts();
-let SOUNTPOST_STATE = "false";
+let SOUNDPOST_STATE = "false";
 let SOUNDPOST_PLAYBACK_STATE = {};
 let PLAYED_SOUNDPOSTS = [];
 const defaultVolume = 0.1;
