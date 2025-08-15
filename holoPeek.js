@@ -533,7 +533,7 @@
     holoPeekOptions.forEach(holoPeekOption => {
         const div = $('<div>').appendTo(holoPeekOptionsContainer);
 
-        const optId = `$holopeek_${holoPeekOption.id}`;
+        const optId = `holopeek_${holoPeekOption.id}`;
         const $checkboxElem = $('<input>', {
             id: optId,
             type: 'checkbox',
