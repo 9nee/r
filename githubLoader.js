@@ -13,7 +13,7 @@ if (!this[CHANNEL.name].favicon) {
 }
 
 //Defining some top level variables.
-const CURRENT_COMMIT = "8f9bcd0569424742b2a2bb6c530029b344fc7908"
+const CURRENT_COMMIT = "d10cadb8bb2bf197756739d6a1f465399c109675"
 //Change to om3tcw on live
 const CURRENT_REPO = "immergrok"
 
