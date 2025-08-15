@@ -54,8 +54,6 @@ function makeLiveCDNLink(fileName) {
             fileName
 }
 
-let soundposts;
-
 //your motherfucking life ends 5 minutes from now
 fetch('https://raw.githubusercontent.com/om3tcw/r/emotes/soundposts/soundposts.json')
     .then(response => response.json())
@@ -68,6 +66,8 @@ fetch('https://raw.githubusercontent.com/om3tcw/r/emotes/soundposts/soundposts.j
 
 
 $(document).ready(() => {
+    let soundposts;
+    let playedSoundposts = [];
     soundpostState = readCookie("soundpostState") === "true";
     $('#messagebuffer [class|="chat-msg"]').each((index, domElement) => {
         const $jqElement = $(domElement); 
@@ -598,8 +598,6 @@ function yayConfetti($message) {
     }
 }
 
-let playedSoundposts = [];
-
 function initializeSoundpost(emote, soundurl, preload = false) {
     if (!soundpostPlaybackState[emote]) {
         soundpostPlaybackState[emote] = {
@@ -663,8 +661,6 @@ function globalMessageFormatInjection({ username = "undefined",
                                         meta = undefined, 
                                         time = undefined
                                     }) {
-
-    // const $messageElement = $('#messagebuffer').children().last().children().last();
     const $messageText = $message.text()
 
     if ($messageText.startsWith('/')) {
@@ -678,7 +674,7 @@ function globalMessageFormatInjection({ username = "undefined",
     if (!['[server]', '[voteskip]'].includes(username.toLowerCase()) && username !== "numbertrees") {
 
         if (soundpostState) {
-            const $emotes = $messageText.find('.channel-emote[title]');
+            const $emotes = $message.find('.channel-emote[title]');
             $emotes.each((index, element) => {
                 const $emote = $(element)
                 const emoteTitle = $emote.attr('title')
