@@ -21,7 +21,7 @@ let soundpostPlaybackState = {};
 const defaultVolume = 0.1;
 const defaultAdditionalPlayTime = 3;
 
-const INJECT_CUSTOM_CSS = "custom_modules/custom_css_injection/injectCustomCss.js";
+const INJECT_CUSTOM_CSS = "custom_modules/custom_css_injection/customCssInjection.js";
 const CUSTOM_SETTINGS_MODAL = "/custom_modules/customSettingsModal.js";
 const BETTER_PLAYLIST = "/custom_modules/betterPlaylist.js";
 const BETTER_PMS = "/custom_modules/betterPms.js";
