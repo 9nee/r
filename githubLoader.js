@@ -112,8 +112,8 @@ const xaeModule = {
         nndChatModule: {active: 0, rank: -1, url: makeLiveCDNLink(NND_MODULE), done: true }
 
     },
-    getScript(url, success, cache = true) {
-        return $.ajax({ url, cache, success, type: "GET", dataType: "script" });
+    getScript(url, success) {
+        return $.getScript({url, success});
     },
     initialize() {
         if (CLIENT.modules) return;
