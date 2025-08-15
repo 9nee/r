@@ -82,12 +82,14 @@ function toggleMJMessages() {
 }
 
 async function resolveHoloPeekPromise() {
-      if (!isHoloPeekReady) {
-      Promise.all([window.holoPeekReadyPromise])
-        .then(() => {
-          isHoloPeekReady = true;
-        })
-    }
+  if (!isHoloPeekReady) {
+    return Promise.all([window.holoPeekReadyPromise])
+      .then(() => {
+        isHoloPeekReady = true;
+      })
+  } else {
+    return Promise.resolve(true);
+  }
 }
 
 (function mahjongModeReadyPromise() {

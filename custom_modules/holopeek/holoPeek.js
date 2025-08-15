@@ -569,10 +569,12 @@ let isMahjongModeReady = false;
 
 async function resolveMahjongPromise(){
     if (!isMahjongModeReady) {
-        Promise.all([window.holoPeekReadyPromise])
+        return Promise.all([window.holoPeekReadyPromise])
             .then(() => {
             isMahjongModeReady = true;
         })
+    } else {
+        return Promise.resolve(true);
     }
 } 
 
