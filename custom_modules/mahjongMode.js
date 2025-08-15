@@ -86,7 +86,6 @@ async function resolveHoloPeekPromise() {
     return Promise.all([window.holoPeekReady])
       .then(() => {
         isHoloPeekReady = true;
-        console.log("Holopeek resolved!!")
       })
   } else {
     return Promise.resolve(true);
@@ -94,6 +93,5 @@ async function resolveHoloPeekPromise() {
 }
 
 (() => {
-    console.log("mm ready promise")
     mahjongModePromise();
 })();

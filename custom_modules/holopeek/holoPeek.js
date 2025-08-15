@@ -58,12 +58,9 @@ let isMahjongModeReady = false;
             desc: 'Mahjong Mode',
             func: async () => {
                 if (!isMahjongModeReady) {
-                    await resolveMahjongModePromise().then(() => {
-                        console.log("(1)")
-                    });
-
+                    await resolveMahjongModePromise()
                 }
-                console.log("We're so back (2)")
+
                 const $chatInput = $('#chatline');
                 if ($(`#holopeek_MahjongMode`).is(':checked')) {
                     $chatInput.on('input', prependMessagesWithMJ)
@@ -75,6 +72,7 @@ let isMahjongModeReady = false;
                         $chatInput.val($chatInput.val().replace(/^MJ: /, ''));
                     }
                 }
+                
                 toggleMJMessages();
             }
         },
@@ -586,7 +584,6 @@ async function resolveMahjongModePromise(){
         return Promise.all([window.mahjongModeReady])
             .then(() => {
             isMahjongModeReady = true;
-            console.log("mahjong resolved!!")
 
         })
     } else {
@@ -595,6 +592,5 @@ async function resolveMahjongModePromise(){
 } 
 
 (() => {
-    console.log("hp ready promise")
     holoPeekPromise();
 })();

@@ -74,8 +74,11 @@ async function loadSoundposts() {
 
 $(document).ready(async () => {
     try{
-        SOUNDPOSTS_PROMISE.then((data) => {SOUNDPOSTS = data});
-        console.log("SOUNDPOSTS data loaded successfully:", SOUNDPOSTS);
+        SOUNDPOSTS_PROMISE.then((data) => {
+            SOUNDPOSTS = data
+            console.log("SOUNDPOSTS data loaded successfully:", SOUNDPOSTS);
+
+        });
     } catch (error) {
         console.error("Failed to set soundposts from the promise.", error)
     }
