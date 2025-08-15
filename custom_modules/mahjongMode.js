@@ -1,6 +1,8 @@
-socket.on("chatMsg", injectSecretMahjongEmotes)
+socket.on("chatMsg", ({username, msg, meta, time}) => {
+  injectSecretMahjongEmotes(username);
+})
 
-function injectSecretMahjongEmotes() {
+function injectSecretMahjongEmotes(username) {
   if (canReadMJMessages()) {
     if (!['[server]', '[voteskip]'].includes(username.toLowerCase())) {
         Object.keys(secretMJEmotes).forEach(secretEmote => {
@@ -34,7 +36,7 @@ const secretMJEmotes = {
     ":sharingiscaring:": "https://raw.githubusercontent.com/puchigire/r/emotes/emotes/sharingiscaring.png",
     ":pardner:": "https://raw.githubusercontent.com/puchigire/r/emotes/emotes/pardner.png",
     ":nyaggerfed:": "https://raw.githubusercontent.com/puchigire/r/emotes/emotes/nyaggerfed.png",
-    ":nyaggerfish:": "https://raw.githubusercontent.com/puchigire/r/emotes/emotes/nyaggerfish.png"
+    ":nyaggerfish:": "https://raw.githubusercºontent.com/puchigire/r/emotes/emotes/nyaggerfish.png"
 };
 
 function prependMessagesWithMJ() {

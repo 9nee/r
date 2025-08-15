@@ -10,3 +10,9 @@
 - [HIGH PRIO] dropdown for styles
 - make holopeek bigger?
 - low-bandwidth mode (gifs unload or don't load)
+
+```js
+if (!['[server]', '[voteskip]'].includes(username.toLowerCase()) && username !== "softbanneduser")
+```
+
+- this piece of code is repeated and should be exported to something readable and reusable
