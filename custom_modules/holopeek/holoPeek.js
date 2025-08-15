@@ -484,7 +484,7 @@ let isMahjongModeReady = false;
                 step: holoPeekOption.range.step,
                 val: holoPeekOption.range.value,
                 on: {
-                    input: () => {
+                    input: async () => {
                         const styleId = `${optId}_style` 
                         holoPeekOption.range.value = rangeElem.val();
                             if ($(`#${styleId}`).length > 0) {
@@ -496,7 +496,7 @@ let isMahjongModeReady = false;
                             }).appendTo('head');
                                                     
                             if (holoPeekOption.func) {
-                                holoPeekOption.func(holoPeekOption);
+                                await holoPeekOption.func(holoPeekOption);
                             }
                         }
                     }
