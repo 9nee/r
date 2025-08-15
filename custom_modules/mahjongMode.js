@@ -4,12 +4,12 @@ socket.on("chatMsg", ({username, msg, meta, time}) => {
 
 function injectSecretMahjongEmotes(username, $messageElement) {
   if (canReadMJMessages()) {
+    const regex = new RegExp(escapedEmote, 'g'); 
     if (!['[server]', '[voteskip]'].includes(username.toLowerCase())) {
         Object.keys(secretMJEmotes).forEach(secretEmote => {
             const escapedEmote = secretEmote.replace(/[-\/\\^$.*+?()[\]{}|]/g, '\\$&');
-            const regex = new RegExp(escapedEmote, 'g'); 
-                $messageElement.html($messageElement.html().replace(regex,
-                    `<img class="channel-emote" title="${secretEmote}" src="${secretMJEmotes[secretEmote]}">`));
+            $messageElement.html($messageElement.html().replace(regex,
+              `<img class="channel-emote" title="${secretEmote}" src="${secretMJEmotes[secretEmote]}">`));
             } 
           )} else {
               $messageElement.html($messageElement.html().replace(regex, ''));
