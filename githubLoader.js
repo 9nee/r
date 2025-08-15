@@ -27,7 +27,7 @@ const SOUND_NOTIFICATIONS = "/custom_modules/soundNotifications.js";
 const MORE_LAYOUT_OPTIONS = "/custom_modules/moreLayoutOptions.js";
 const USERLIST_ENHANCEMENT = "/custom_modules/customUserlist.js";
 const ENHANCED_EMOTES = "/custom_modules/enhancedEmotes.js";
-const HOLOPEEK = "/holopeek/holoPeek.js"
+const HOLOPEEK = "/custom_modules/holopeek/holoPeek.js"
 
 //b76cb09adcddbcb9dd1d9c904d24718c5be59e13 revert
 const CURRENT_COMMIT = "19857cfe7dfd6a920273fe37b8c3d603476010a5"

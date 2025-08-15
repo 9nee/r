@@ -24,14 +24,6 @@
     $holoPeekBubble.hide();
     $('body').append($holoPeekBubble);
 
-    // TODO: make mine
-    const userGuide = document.createElement('a');
-    userGuide.href = "https://github.com/om3tcw/r/blob/emotes/holopeek/User%20Guide.txt";
-    userGuide.target = "_blank";
-    userGuide.innerHTML = "User's guide";
-    userGuide.style.cssText = "color: #888; font-size: small; text-align: end;";
-    $holoPeekBubble.append(userGuide);
-
     const holoPeekOptions = [
         {
             id: 'background',
@@ -48,7 +40,7 @@
                 
             },
             text: {
-                value: 'https://raw.githubusercontent.com/om3tcw/r/emotes/holopeek/black.png',
+                value: `https://raw.githubusercontent.com/${CURRENT_REPO}/r/emotes/custom_modules/holopeek/black.png`,
                 inputEvent: self => {
                     $(`#holopeek_${self.id}`).is(':checked') = false;
                     self.text.value = $(`holopeek_${self.id}_text`).value;
@@ -168,7 +160,7 @@
             #lunaButton {
                 width: 46px;
                 height: 100px;
-                background: url('https://raw.githubusercontent.com/om3tcw/r/emotes/holopeek/lunapeek.png');
+                background: url('https://raw.githubusercontent.com/${CURRENT_REPO}/r/emotes/custom_modules/holopeek/lunapeek.png');
                 position: absolute;
                 right: 0;
                 top: 0;
@@ -580,7 +572,7 @@
         border: none;
         outline: none;
         background: none;
-        background-image: url('https:///raw.githubusercontent.com/om3tcw/r/emotes/holopeek/polkapeek.png');
+        background-image: url('https:///raw.githubusercontent.com/${CURRENT_REPO}/r/emotes/custom_modules/holopeek/polkapeek.png');
         background-repeat: no-repeat;
         image-rendering: crisp-edges;
     }
