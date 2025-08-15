@@ -59,20 +59,23 @@ let isMahjongModeReady = false;
             func: async () => {
                 if (!isMahjongModeReady) {
                     await resolveMahjongPromise().then(() => {
-                        const $chatInput = $('#chatline');
-                        if ($(`#holopeek_MahjongMode`).is(':checked')) {
-                            $chatInput.on('input', prependMessagesWithMJ)
-                            $chatInput.on('focus', prependMessagesWithMJ)
-                        } else {
-                            $chatInput.off('input', prependMessagesWithMJ)
-                            $chatInput.off('focus', prependMessagesWithMJ)
-                            if ($chatInput.val().startsWith('MJ:')) {
-                                $chatInput.val($chatInput.val().replace(/^MJ: /, ''));
-                            }
-                        }
-                        toggleMJMessages();
-                    })
+                        console.log("it's over (1)")
+                    });
+
                 }
+                console.log("We're so back (2)")
+                const $chatInput = $('#chatline');
+                if ($(`#holopeek_MahjongMode`).is(':checked')) {
+                    $chatInput.on('input', prependMessagesWithMJ)
+                    $chatInput.on('focus', prependMessagesWithMJ)
+                } else {
+                    $chatInput.off('input', prependMessagesWithMJ)
+                    $chatInput.off('focus', prependMessagesWithMJ)
+                    if ($chatInput.val().startsWith('MJ:')) {
+                        $chatInput.val($chatInput.val().replace(/^MJ: /, ''));
+                    }
+                }
+                toggleMJMessages();
             }
         },
         {
@@ -80,10 +83,9 @@ let isMahjongModeReady = false;
             desc: 'Mahjong Lurk',
             func: async self => {
                 if (!isMahjongModeReady) {
-                    await resolveMahjongPromise().then(()=> {
-                        toggleMJMessages();
-                    })
+                    await resolveMahjongPromise()
                 }
+                toggleMJMessages();
             }
         },
         {

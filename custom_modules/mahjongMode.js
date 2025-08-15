@@ -86,6 +86,7 @@ async function resolveHoloPeekPromise() {
     return Promise.all([window.holoPeekReadyPromise])
       .then(() => {
         isHoloPeekReady = true;
+        console.log("Holopeek ready and shit!!")
       })
   } else {
     return Promise.resolve(true);
