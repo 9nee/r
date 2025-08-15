@@ -36,7 +36,7 @@ const secretMJEmotes = {
     ":sharingiscaring:": "https://raw.githubusercontent.com/puchigire/r/emotes/emotes/sharingiscaring.png",
     ":pardner:": "https://raw.githubusercontent.com/puchigire/r/emotes/emotes/pardner.png",
     ":nyaggerfed:": "https://raw.githubusercontent.com/puchigire/r/emotes/emotes/nyaggerfed.png",
-    ":nyaggerfish:": "https://raw.githubusercºontent.com/puchigire/r/emotes/emotes/nyaggerfish.png"
+    ":nyaggerfish:": "https://raw.githubusercontent.com/puchigire/r/emotes/emotes/nyaggerfish.png"
 };
 
 function prependMessagesWithMJ() {
