@@ -63,7 +63,13 @@ async function loadSoundposts() {
 }
 
 $(document).ready(async () => {
-    SOUNDPOSTS = await SOUNDPOSTS_PROMISE;
+    try{
+        SOUNDPOSTS = await SOUNDPOSTS_PROMISE;
+        console.log("SOUNDPOSTS data loaded successfully:", SOUNDPOSTS);
+    } catch (error) {
+        console.error("Failed to set soundposts from the promise.", error)
+    }
+    
     SOUNDPOST_STATE = readCookie("SOUNDPOST_STATE") === "true";
     $('#messagebuffer [class|="chat-msg"]').each((index, domElement) => {
         const $jqElement = $(domElement); 
