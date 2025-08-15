@@ -17,7 +17,8 @@ const CURRENT_COMMIT = "fdc829db55373d6bd4f98abc8582ba22c429e83e"
 //Change to om3tcw on live
 const CURRENT_REPO = "immergrok"
 
-let SOUNDPOSTS = loadSoundposts();
+let SOUNDPOSTS_PROMISE = loadSoundposts();
+let SOUNDPOSTS = {}
 let SOUNDPOST_STATE = "false";
 let SOUNDPOST_PLAYBACK_STATE = {};
 let PLAYED_SOUNDPOSTS = [];
@@ -62,8 +63,7 @@ async function loadSoundposts() {
 }
 
 $(document).ready(async () => {
-    await SOUNDPOSTS;
-    console.log("soundposts on omg!!")
+    SOUNDPOSTS = await SOUNDPOSTS_PROMISE;
     SOUNDPOST_STATE = readCookie("SOUNDPOST_STATE") === "true";
     $('#messagebuffer [class|="chat-msg"]').each((index, domElement) => {
         const $jqElement = $(domElement); 
