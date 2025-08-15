@@ -20,14 +20,14 @@ const defaultAdditionalPlayTime = 3;
 
 const CONFETTI_STYLE_CSS = "confetti-styles.js";
 
-const CUSTOM_SETTINGS_MODAL = "customsettingsmodal.js";
-const PLAYLIST_ENHANCEMENT = "playlistenhancement2.js";
-const PM_ENHANCEMENT = "pmenhancement.js";
-const SOUND_NOTIFICATIONS = "notifier.js";
-const MORE_LAYOUT_OPTIONS = "layoutoptions.js";
-const USERLIST_ENHANCEMENT = "userlist.js";
-const ENHANCED_EMOTES = "enhancedEmotes.js";
-const HOLOPEEK = "holoPeek.js"
+const CUSTOM_SETTINGS_MODAL = "/custom_modules/customSettingsModal.js";
+const BETTER_PLAYLIST = "/custom_modules/betterPlaylist.js";
+const BETTER_PMS = "/custom_modules/betterPms.js";
+const SOUND_NOTIFICATIONS = "/custom_modules/soundNotifications.js";
+const MORE_LAYOUT_OPTIONS = "/custom_modules/moreLayoutOptions.js";
+const USERLIST_ENHANCEMENT = "/custom_modules/customUserlist.js";
+const ENHANCED_EMOTES = "/custom_modules/enhancedEmotes.js";
+const HOLOPEEK = "/holopeek/holoPeek.js"
 
 //b76cb09adcddbcb9dd1d9c904d24718c5be59e13 revert
 const CURRENT_COMMIT = "ddf79f5db1e597c4d5ac7dcf6580e5d70fd74f84"
@@ -140,8 +140,8 @@ const xaeModule = {
     },
     modules: {
         customSettings: { active: 1, rank: -1, url: makeLiveCDNLink(CUSTOM_SETTINGS_MODAL), done: true },
-        playlistEnhancement: { active: 1, rank: -1, url: makeLiveCDNLink(PLAYLIST_ENHANCEMENT), done: true },
-        pmEnhancement: { active: 1, rank: 1, url: makeLiveCDNLink(PM_ENHANCEMENT), done: true },
+        playlistEnhancement: { active: 1, rank: -1, url: makeLiveCDNLink(BETTER_PLAYLIST), done: true },
+        pmEnhancement: { active: 1, rank: 1, url: makeLiveCDNLink(BETTER_PMS), done: true },
         soundNotifications: { active: 1, rank: -1, url: makeLiveCDNLink(SOUND_NOTIFICATIONS), done: true },
         moreLayoutOptions: { active: 1, rank: -1, url: makeLiveCDNLink(MORE_LAYOUT_OPTIONS), done: true },
         userlistEnhancement: { active: 1, rank: -1, url: makeLiveCDNLink(USERLIST_ENHANCEMENT), done: true },

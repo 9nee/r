@@ -35,8 +35,8 @@
 - NEW: The range sliders will now update live, instead of when you refresh the checkbox.
 - Reset button now comes with an alert so you don't reset on accident.
 - Holopeek was very tightly tied to (the now rewritten) cookies and riddled with bad code. It still is, but a bit less now.
-- [BUG-002] Enable image on link hover hasn't worked for 17 years, just writing it down.
-- [BUG-003] Polka leaves if you leave the cursor, it's minor so I'm not going to fix it right now.
+- [#15] Enable image on link hover hasn't worked for 17 years, just writing it down.
+- [#_] Polka leaves if you leave the cursor, it's minor so I'm not going to fix it right now (note: maybe this gets fixed before live?).
 
 ### Offtopic mode rewrite
 
@@ -76,7 +76,7 @@ Ideally this will be fillable directly from the cytube at some point, but it's l
 - Fixed a bunch of Layoutoptions.js code
   - Remove video will stop playing the video, even if a new one starts playing, it won't consume bandwidth
   - Chat only is now restorable by pressing on a new button (Restore Header and Video)
-  - [BUG-001]: Under rare circumstances, the video won't update and has to be restored by refreshing the page
+  - [#14]: Under rare circumstances, the video won't update and has to be restored by refreshing the page
 
 ---
 
