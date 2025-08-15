@@ -658,10 +658,12 @@ function cleanupSoundpostPlaybackState() {
 }
 
 //TODO: I don't like this destructuring assignment
-function globalMessageFormatInjection(  username = "undefined", 
+function globalMessageFormatInjection({ username = "undefined", 
                                         $message = "undefined", 
                                         meta = undefined, 
-                                        time = undefined) {
+                                        time = undefined
+                                    }) {
+
     // const $messageElement = $('#messagebuffer').children().last().children().last();
     const $messageText = $message.text()
 
@@ -676,7 +678,7 @@ function globalMessageFormatInjection(  username = "undefined",
     if (!['[server]', '[voteskip]'].includes(username.toLowerCase()) && username !== "numbertrees") {
 
         if (soundpostState) {
-            const $emotes = $messageElement.find('.channel-emote[title]');
+            const $emotes = $messageText.find('.channel-emote[title]');
             $emotes.each((index, element) => {
                 const $emote = $(element)
                 const emoteTitle = $emote.attr('title')
