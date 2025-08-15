@@ -17,7 +17,6 @@ const CURRENT_COMMIT = "ff6ea5c1e894a5ba93f6224a7823b102d4765098"
 //Change to om3tcw on live
 const CURRENT_REPO = "immergrok"
 
-let SOUNDPOSTS_PROMISE = loadSoundposts();
 let SOUNDPOSTS = {}
 let SOUNDPOST_STATE = "false";
 let SOUNDPOST_PLAYBACK_STATE = {};
