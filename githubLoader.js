@@ -13,7 +13,7 @@ if (!this[CHANNEL.name].favicon) {
 }
 
 //Defining some top level variables
-const CURRENT_COMMIT = "ba2c191b95d906813d68a9c116f85f6d2d86ada6"
+const CURRENT_COMMIT = "18f0e23b0c92f3bebc2851f11a77f213e0ec96fa"
 const CURRENT_REPO = "immergrok"
 
 let soundpostState = "false";
