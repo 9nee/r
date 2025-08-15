@@ -579,7 +579,6 @@ let isMahjongModeReady = false;
 })();
 
 async function resolveMahjongModePromise(){
-    console.log(window.mahjongModeReady)
     if (!isMahjongModeReady) {
         return Promise.all([window.mahjongModeReady])
             .then(() => {
