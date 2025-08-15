@@ -1,7 +1,11 @@
 const validValues = ['textarea', 'range', 'text', 'dropdown'];
+let $holoPeekBubble;
+let $holoPeekBubbleTail;
+let $holoPeekButton;
+let holoPeekOptions; 
 
 (function createHoloPeek() {
-    const $holoPeekbutton = $('<button>', {
+    $holoPeekbutton = $('<button>', {
         id: 'holopeek',
         class: 'holoAnim' });
 
@@ -13,19 +17,19 @@ const validValues = ['textarea', 'range', 'text', 'dropdown'];
     
     $('body').append($holoPeekbutton);
 
-    const $holoPeekBubbleTail = $('<div>', {
+    $holoPeekBubbleTail = $('<div>', {
         id: "holoPeekBubbleTail" 
     });
     $holoPeekBubbleTail.hide();
     $('body').append($holoPeekBubbleTail);
 
-    const $holoPeekBubble = $('<div>', {
+    $holoPeekBubble = $('<div>', {
         id: "holoPeekBubble"
     })
     $holoPeekBubble.hide();
     $('body').append($holoPeekBubble);
 
-    const holoPeekOptions = [
+    holoPeekOptions = [
         {
             id: 'background',
             desc: 'Change Background',
@@ -410,7 +414,7 @@ const validValues = ['textarea', 'range', 'text', 'dropdown'];
                 if (holoPeekOption.func) {
                     holoPeekOption.func(holoPeekOption);
                 } 
-                                
+
                 if (holoPeekOption.css && $checkboxElem.prop('checked')) {
                     
                     $('<style>', {
