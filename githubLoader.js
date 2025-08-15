@@ -12,7 +12,7 @@ if (!this[CHANNEL.name].favicon) {
         .appendTo("head");
 }
 
-//Defining some top level variables
+//Defining some top level variables.
 const CURRENT_COMMIT = "8f9bcd0569424742b2a2bb6c530029b344fc7908"
 //Change to om3tcw on live
 const CURRENT_REPO = "immergrok"
