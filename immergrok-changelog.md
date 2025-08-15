@@ -68,6 +68,7 @@ Ideally this will be fillable directly from the cytube at some point, but it's l
 - Removed the line that made ctrl+a not work, this was intentionally put there by someone, I'm blaming Luxes
   - This of course comes with one or two minor things like the textbox not being automatically focused, but this is better than what we had (which was fucking nothing)
 - Renamed github1.css to migobote-stylesheet.css and cleaned it up of a bunch of filth
+- fetchAndInjectStylesheet(cdn, injectFunction) function that makes it so we don't need to have the beeping CSS inside the JS files anymore, it just requires a const declaration.
 
 ---
 

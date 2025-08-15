@@ -21,7 +21,8 @@ let soundpostPlaybackState = {};
 const defaultVolume = 0.1;
 const defaultAdditionalPlayTime = 3;
 
-const CONFETTI_STYLE_CSS = "confetti-styles.js";
+const CONFETTI_STYLE = "confetti-styles.js";
+const HOLOPEEK_STYLE = "/custom_modules/holopeek/holoPeek-style.js"
 
 const CUSTOM_SETTINGS_MODAL = "/custom_modules/customSettingsModal.js";
 const BETTER_PLAYLIST = "/custom_modules/betterPlaylist.js";
@@ -68,7 +69,8 @@ fetch('https://raw.githubusercontent.com/om3tcw/r/emotes/soundposts/soundposts.j
 $(document).ready(() => {
     soundpostState = readCookie("soundpostState") === "true";
 
-    fetchConfettiStyle();
+    fetchAndInjectStylesheet(CONFETTI_STYLE, injectConfettiStyles);
+    fetchAndInjectStylesheet(HOLOPEEK_STYLE, injectHoloPeekStyle);
 
     $('#messagebuffer [class|="chat-msg"]').each(function() {
         const $element = $(this); 
@@ -82,14 +84,13 @@ $(document).ready(() => {
     toggleMJMessages();
 });
 
-function fetchConfettiStyle() {
-    makeLiveCDNLink()
-    $.getScript(makeLiveCDNLink(CONFETTI_STYLE_CSS))
+function fetchAndInjectStylesheet(cdnUrl, injectionFunction) {
+    $.getScript(makeLiveCDNLink(cdnUrl))
         .done(() => {
-            injectConfettiStyles();
+            injectionFunction();
         })
         .fail((_, textStatus, errorThrown) => {
-            console.error("Failed to load confetti-styles.js:", textStatus, errorThrown);
+            console.error(`Failed to load ${cdnUrl}.js:`, textStatus, errorThrown);
         })
 }
 
