@@ -3,6 +3,7 @@ let $holoPeekBubble;
 let $holoPeekBubbleTail;
 let $holoPeekButton;
 let holoPeekOptions; 
+let isMahjongModeReady = false;
 
 (function createHoloPeek() {
     $holoPeekbutton = $('<button>', {
@@ -73,7 +74,10 @@ let holoPeekOptions;
         {
             id: 'MahjongLurk',
             desc: 'Mahjong Lurk',
-            func: self => {
+            func: async self => {
+                if (!isMahjongModeReady) {
+                    await resolveMahjongPromise()
+                }
                 toggleMJMessages();
             }
         },
@@ -563,7 +567,22 @@ let holoPeekOptions;
 
 })();
 
+async function resolveMahjongPromise(){
+    if (!isMahjongModeReady) {
+        Promise.all([window.holoPeekReadyPromise])
+            .then(() => {
+            isMahjongModeReady = true;
+        })
+    }
+} 
+
 (function strikeBrokenHolopeekOptions() {
     let hoverOption = $('#holopeek_image_hover_label')
     hoverOption.html(`<s>${hoverOption.html()}</s>`)
+})();
+
+(function holoPeekReadyPromise() {
+    window.holoPeekReadyPromise = new Promise(resolve => {
+        resolve();
+    });
 })();

@@ -2,12 +2,17 @@ socket.on("chatMsg", ({username, msg, meta, time}) => {
   injectSecretMahjongEmotes(username, fetchLastChatElement());
 })
 
+window.eventBus.on
+
+//This function executes too much garbage every message that shouldn't be executed
 function injectSecretMahjongEmotes(username, $messageElement) {
   if (canReadMJMessages()) {
+
     const regex = new RegExp(escapedEmote, 'g'); 
+    const escapedEmote = secretEmote.replace(/[-\/\\^$.*+?()[\]{}|]/g, '\\$&');
+
     if (!['[server]', '[voteskip]'].includes(username.toLowerCase())) {
         Object.keys(secretMJEmotes).forEach(secretEmote => {
-            const escapedEmote = secretEmote.replace(/[-\/\\^$.*+?()[\]{}|]/g, '\\$&');
             $messageElement.html($messageElement.html().replace(regex,
               `<img class="channel-emote" title="${secretEmote}" src="${secretMJEmotes[secretEmote]}">`));
             } 
@@ -46,9 +51,16 @@ function prependMessagesWithMJ() {
     }
 }
 
-function canReadMJMessages() {
+let isHoloPeekReady = false;
+
+async function canReadMJMessages() {
     let mahjongModeCookie = readCookie("MahjongMode");
     let mahjongLurkCookie = readCookie("MahjongLurk");
+  
+    if (!isHoloPeekReady) {
+      await resolveHoloPeekPromise();
+    }
+  
     return  mahjongLurkCookie || 
             mahjongModeCookie || 
             $('#holopeek_MahjongMode').is(':checked') ||
@@ -64,3 +76,18 @@ function toggleMJMessages() {
         }
     })
 }
+
+async function resolveHoloPeekPromise() {
+      if (!isHoloPeekReady) {
+      Promise.all([window.holoPeekReadyPromise])
+        .then(() => {
+          isHoloPeekReady = true;
+        })
+    }
+}
+
+(function mahjongModeReadyPromise() {
+  window.mahjongModeReadyPromise = new Promise(resolve => {
+        resolve();
+    });
+})();
