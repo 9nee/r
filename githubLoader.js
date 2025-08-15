@@ -72,7 +72,7 @@ $(document).ready(() => {
     $('#messagebuffer [class|="chat-msg"]').each((index, domElement) => {
         const $jqElement = $(domElement); 
         const $messageElement = $jqElement.children().last();
-        globalMessageFormatInjection($messageElement);
+        globalMessageFormatInjection({$message: $messageElement});
     });
 })
 
@@ -657,7 +657,11 @@ function cleanupSoundpostPlaybackState() {
     }
 }
 
-function globalMessageFormatInjection(username, $message, meta, time) {
+//TODO: I don't like this destructuring assignment
+function globalMessageFormatInjection(  username = "undefined", 
+                                        $message = "undefined", 
+                                        meta = undefined, 
+                                        time = undefined) {
     // const $messageElement = $('#messagebuffer').children().last().children().last();
     const $messageText = $message.text()
 
