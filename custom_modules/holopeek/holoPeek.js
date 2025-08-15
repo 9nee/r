@@ -421,7 +421,7 @@ let isMahjongModeReady = false;
         const $checkboxElem = $('<input>', {
             id: optId,
             type: 'checkbox',
-            click: () => {
+            click: async () => {
                 if (holoPeekOption.func) {
                     holoPeekOption.func(holoPeekOption);
                 } 
