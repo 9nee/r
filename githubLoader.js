@@ -16,8 +16,11 @@ if (!this[CHANNEL.name].favicon) {
 const CURRENT_COMMIT = "18f0e23b0c92f3bebc2851f11a77f213e0ec96fa"
 const CURRENT_REPO = "immergrok"
 
-let soundpostState = "false";
-let soundpostPlaybackState = {};
+
+let SOUNDPOSTS = loadSoundposts();
+let SOUNTPOST_STATE = "false";
+let SOUNDPOST_PLAYBACK_STATE = {};
+let PLAYED_SOUNDPOSTS = [];
 const defaultVolume = 0.1;
 const defaultAdditionalPlayTime = 3;
 
@@ -55,20 +58,19 @@ function makeLiveCDNLink(fileName) {
 }
 
 //your motherfucking life ends 5 minutes from now
-fetch('https://raw.githubusercontent.com/om3tcw/r/emotes/soundposts/soundposts.json')
-    .then(response => response.json())
-    .then(data => {
-        soundposts = data;
-    })
-    .catch(error => {
+async function loadSoundposts() {
+    try {
+        const response = await fetch('https://raw.githubusercontent.com/om3tcw/r/emotes/soundposts/soundposts.json');
+        return await response.json();
+    } catch (error) {
         console.error(error);
-    });
+    }
+}
 
 
-$(document).ready(() => {
-    let soundposts;
-    let playedSoundposts = [];
-    soundpostState = readCookie("soundpostState") === "true";
+$(document).ready(async () => {
+    await SOUNDPOSTS;
+    SOUNTPOST_STATE = readCookie("soundpostState") === "true";
     $('#messagebuffer [class|="chat-msg"]').each((index, domElement) => {
         const $jqElement = $(domElement); 
         const $messageElement = $jqElement.children().last();
@@ -599,8 +601,8 @@ function yayConfetti($message) {
 }
 
 function initializeSoundpost(emote, soundurl, preload = false) {
-    if (!soundpostPlaybackState[emote]) {
-        soundpostPlaybackState[emote] = {
+    if (!SOUNDPOST_PLAYBACK_STATE[emote]) {
+        SOUNDPOST_PLAYBACK_STATE[emote] = {
             audio: new Audio(soundurl),
             totalPlayTime: 0,
             isPlaying: false,
@@ -608,17 +610,17 @@ function initializeSoundpost(emote, soundurl, preload = false) {
             isPreloaded: false
         };
 
-        soundpostPlaybackState[emote].audio.volume = defaultVolume;
+        SOUNDPOST_PLAYBACK_STATE[emote].audio.volume = defaultVolume;
         if (preload) {
-            soundpostPlaybackState[emote].audio.addEventListener('canplaythrough', () => {
-                soundpostPlaybackState[emote].isPreloaded = true;
+            SOUNDPOST_PLAYBACK_STATE[emote].audio.addEventListener('canplaythrough', () => {
+                SOUNDPOST_PLAYBACK_STATE[emote].isPreloaded = true;
             }, { once: true });
         }
     }
 }
 
 function playSoundpost(emote, additionalPlayTime = defaultAdditionalPlayTime) {
-    const soundpost = soundpostPlaybackState[emote];
+    const soundpost = SOUNDPOST_PLAYBACK_STATE[emote];
     soundpost.totalPlayTime += additionalPlayTime;
 
     if (!soundpost.isPlaying && soundpost.isPreloaded) {
@@ -642,15 +644,15 @@ function playSoundpost(emote, additionalPlayTime = defaultAdditionalPlayTime) {
 
 function cleanupSoundpostPlaybackState() {
     const limit = 40; 
-    const keys = Object.keys(soundpostPlaybackState);
+    const keys = Object.keys(SOUNDPOST_PLAYBACK_STATE);
     if (keys.length > limit) {
         const toDelete = keys.slice(0, keys.length - limit);
         toDelete.forEach(key => {
-            if (soundpostPlaybackState[key].audio) {
-                soundpostPlaybackState[key].audio.pause();
-                soundpostPlaybackState[key].audio.src = "";
+            if (SOUNDPOST_PLAYBACK_STATE[key].audio) {
+                SOUNDPOST_PLAYBACK_STATE[key].audio.pause();
+                SOUNDPOST_PLAYBACK_STATE[key].audio.src = "";
             }
-            delete soundpostPlaybackState[key];
+            delete SOUNDPOST_PLAYBACK_STATE[key];
         });
     }
 }
@@ -673,33 +675,33 @@ function globalMessageFormatInjection({ username = "undefined",
 
     if (!['[server]', '[voteskip]'].includes(username.toLowerCase()) && username !== "numbertrees") {
 
-        if (soundpostState) {
+        if (SOUNTPOST_STATE) {
             const $emotes = $message.find('.channel-emote[title]');
             $emotes.each((index, element) => {
                 const $emote = $(element)
                 const emoteTitle = $emote.attr('title')
-                const soundpost = soundposts[emoteTitle];
+                const soundpost = SOUNDPOSTS[emoteTitle];
 
                 if (soundpost) {
                     const preload = (emoteTitle === ":homuhomu:" || emoteTitle === ":rratate:" || emoteTitle === "bakushin");
                     initializeSoundpost(emoteTitle, soundpost.soundurl, preload);
 
-                    if (preload && soundpostPlaybackState[emoteTitle].isPreloaded) {
+                    if (preload && SOUNDPOST_PLAYBACK_STATE[emoteTitle].isPreloaded) {
                         playSoundpost(emoteTitle, 5);
                     } else if (preload) {
-                        soundpostPlaybackState[emoteTitle].audio.addEventListener('canplaythrough', () => {
+                        SOUNDPOST_PLAYBACK_STATE[emoteTitle].audio.addEventListener('canplaythrough', () => {
                             playSoundpost(emoteTitle, 3);
                         }, { once: true });
-                    } else if (!playedSoundposts.includes(soundpost.soundurl)) {
+                    } else if (!PLAYED_SOUNDPOSTS.includes(soundpost.soundurl)) {
                         const myaudio = new Audio(soundpost.soundurl);
                         myaudio.volume = defaultVolume;
                         myaudio.play();
-                        playedSoundposts.push(soundpost.soundurl);
+                        PLAYED_SOUNDPOSTS.push(soundpost.soundurl);
                     }
                 }
             });
         }
-        playedSoundposts = [];
+        PLAYED_SOUNDPOSTS = [];
     }
 cleanupSoundpostPlaybackState();
 }
@@ -719,7 +721,7 @@ function formatCommandMessage($message) {
 }
 
 function playNeneYaySound() {
-    if (soundpostState) {
+    if (SOUNTPOST_STATE) {
         let myaudio = new Audio("https://www.dl.dropboxusercontent.com/s/z0n3hnw8ky79rwhdokfso/nenesmile.ogg?rlkey=bezzj2pn6c9rj0pqco5kbf7bk&st=ythhncur&dl=0");
         myaudio.volume = defaultVolume;
         myaudio.play();
@@ -727,7 +729,7 @@ function playNeneYaySound() {
 }
 
 function playBooSound() {
-    if (soundpostState) {
+    if (SOUNTPOST_STATE) {
         let myaudio = new Audio("https://cdn.jsdelivr.net/gh/om3tcw/r@emotes/soundposts/sounds/boo.ogg");
         myaudio.volume = defaultVolume;
         myaudio.play();
