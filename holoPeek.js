@@ -85,7 +85,10 @@
         {
             id: 'image_hover',
             desc: 'Enable image on link hover',
-            func: () => alert("it don't work")
+            func: () => {
+                alert("it don't work")
+                $('#holopeek_image_hover').prop('checked', false)
+            }
         },
         {
             id: 'reveal_spoilers',
@@ -838,5 +841,4 @@ const style = document.createElement('style');
 (function strikeBrokenHolopeekOptions() {
     let hoverOption = $('#holopeek_image_hover_label')
     hoverOption.html(`<s>${hoverOption.html()}</s>`)
-
 })();

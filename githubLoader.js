@@ -53,6 +53,18 @@ function makeLiveCDNLink(fileName) {
             fileName
 }
 
+let soundposts;
+
+fetch('https://raw.githubusercontent.com/om3tcw/r/emotes/soundposts/soundposts.json')
+    .then(response => response.json())
+    .then(data => {
+        soundposts = data;
+        console.log(soundposts);
+    })
+    .catch(error => {
+        console.error(error);
+    });
+
 
 $(document).ready(() => {
     soundpostState = readCookie("soundpostState") === "true";
