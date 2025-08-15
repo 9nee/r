@@ -1,4 +1,4 @@
-function injectConfettiStyles() {
+(function injectConfettiStyles() {
   const cssConfetti = `
     @keyframes confettiExplode {
       0% {
@@ -60,7 +60,5 @@ function injectConfettiStyles() {
   $styleElement.text(cssConfetti);
 
   $('head').append($styleElement);
-}
-
-window.injectConfettiStyles = injectConfettiStyles;
+})();
 

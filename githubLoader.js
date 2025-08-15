@@ -69,8 +69,8 @@ fetch('https://raw.githubusercontent.com/om3tcw/r/emotes/soundposts/soundposts.j
 $(document).ready(() => {
     soundpostState = readCookie("soundpostState") === "true";
 
-    fetchAndInjectStylesheet(CONFETTI_STYLE, injectConfettiStyles);
-    fetchAndInjectStylesheet(HOLOPEEK_STYLE, injectHoloPeekStyle);
+    fetchAndInjectStylesheet(CONFETTI_STYLE);
+    fetchAndInjectStylesheet(HOLOPEEK_STYLE);
 
     $('#messagebuffer [class|="chat-msg"]').each(function() {
         const $element = $(this); 
@@ -87,7 +87,7 @@ $(document).ready(() => {
 function fetchAndInjectStylesheet(cdnUrl, injectionFunction) {
     $.getScript(makeLiveCDNLink(cdnUrl))
         .done(() => {
-            injectionFunction();
+            console.log(`${cdnUrl} loaded`)
         })
         .fail((_, textStatus, errorThrown) => {
             console.error(`Failed to load ${cdnUrl}.js:`, textStatus, errorThrown);

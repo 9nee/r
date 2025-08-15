@@ -1,4 +1,4 @@
-function injectHoloPeekStyle() {
+(function injectHoloPeekStyle() {
   const cssHoloPeek = `
     #holopeek {
         width: 57px;
@@ -139,8 +139,4 @@ function injectHoloPeekStyle() {
   $styleElement.text(cssHoloPeek);
 
   $('head').append($styleElement);
-
-}
-
-window.injectHoloPeekStyle = injectHoloPeekStyle;
-
+})();
