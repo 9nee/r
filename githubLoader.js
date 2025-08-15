@@ -659,13 +659,13 @@ function cleanupSoundpostPlaybackState() {
 
 function globalMessageFormatInjection(username, $message, meta, time) {
     // const $messageElement = $('#messagebuffer').children().last().children().last();
-    // const $messageText = $message.text()
+    const $messageText = $message.text()
 
-    if ($message.startsWith('/')) {
-        formatCommandMessage($messageElement);
+    if ($messageText.startsWith('/')) {
+        formatCommandMessage($message);
     }
 
-    if ($message.startsWith('MJ:')) {
+    if ($messageText.startsWith('MJ:')) {
         formatMJMessage($message)
     }
 
