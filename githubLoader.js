@@ -71,8 +71,8 @@ function makeLiveCDNLink(fileName) {
 
 //JQUERY 1.12.4 HAS VERY BUGGY SUPPORT FOR ASYNC/AWAIT.
 //THIS ROUNDABOUT FUCKASS WAY IS THE PREFERRED WAY OF DOING THINGS IF WE DEPEND ON ASYNCHRONICITY
+//UPDATILIA DOCUMENT THIS
 async function onDomReadyLogic() {
-    console.log("FWARK!!");
     await Promise.all([window.mahjongModeReady]); 
     SOUNDPOST_STATE = readCookie("SOUNDPOST_STATE");
     $('#messagebuffer [class|="chat-msg"]').each((index, domElement) => {
