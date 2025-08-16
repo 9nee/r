@@ -69,22 +69,24 @@ function makeLiveCDNLink(fileName) {
     SOUNDPOSTS = data;
 })
 
-console.log(document.readyState);
-
 //JQUERY 1.12.4 HAS VERY BUGGY SUPPORT FOR ASYNC/AWAIT.
-//DOCUMENT.ADDEVENTLISTENER PREFERRED.
-document.addEventListener("DOMContentLoaded", async () => {
-    console.log("FWARK!!")
-    Promise.all([window.mahjongModeReady])
-        .then(() => {
-            SOUNDPOST_STATE = readCookie("SOUNDPOST_STATE");
-            $('#messagebuffer [class|="chat-msg"]').each((index, domElement) => {
-                const $jqElement = $(domElement); 
-                const $messageElement = $jqElement.children().last();
-                globalMessageFormatInjection({$message: $messageElement});
-            })
-        });
-})
+//THIS ROUNDABOUT FUCKASS WAY IS THE PREFERRED WAY OF DOING THINGS IF WE DEPEND ON ASYNCHRONICITY
+async function onDomReadyLogic() {
+    console.log("FWARK!!");
+    await Promise.all([window.mahjongModeReady]); 
+    SOUNDPOST_STATE = readCookie("SOUNDPOST_STATE");
+    $('#messagebuffer [class|="chat-msg"]').each((index, domElement) => {
+        const $jqElement = $(domElement); 
+        const $messageElement = $jqElement.children().last();
+        globalMessageFormatInjection({$message: $messageElement});
+    });
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener("DOMContentLoaded", onDomReadyLogic);
+} else {
+    onDomReadyLogic();
+}
 
 const xaeModule = {
     options: {
