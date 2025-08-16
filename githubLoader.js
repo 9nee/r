@@ -13,7 +13,7 @@ if (!this[CHANNEL.name].favicon) {
 }
 
 //Defining some top level variables.
-const CURRENT_COMMIT = "de5881fd525ac25f85f18e1a4dbdc31e44f53139"
+const CURRENT_COMMIT = "9df0a9d5733fc83abafd53bd59fd9d40d9bae54d"
 //Change to om3tcw on live
 const CURRENT_REPO = "immergrok"
 
@@ -26,6 +26,7 @@ const defaultAdditionalPlayTime = 3;
 
 const MODULES_PATH = "custom_modules/";
 
+const PROMISES_AND_RESOLUTIONS = `${MODULES_PATH}promisesAndResolutions.js`
 const INJECT_CUSTOM_CSS = `${MODULES_PATH}custom_css_injection/customCssInjection.js`;
 const CUSTOM_SETTINGS_MODAL = `${MODULES_PATH}customSettingsModal.js`;
 const BETTER_PLAYLIST = `${MODULES_PATH}betterPlaylist.js`;
