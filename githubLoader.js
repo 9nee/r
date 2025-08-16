@@ -70,10 +70,10 @@ function makeLiveCDNLink(fileName) {
 })
 
 $(document).ready(async () => {
-    console.log("FWARK")
+    console.log("FWARK!!")
     Promise.all([window.mahjongModeReady])
         .then(() => {
-            SOUNDPOST_STATE = readCookie("SOUNDPOST_STATE") === "true";
+            SOUNDPOST_STATE = readCookie("SOUNDPOST_STATE");
             $('#messagebuffer [class|="chat-msg"]').each((index, domElement) => {
                 const $jqElement = $(domElement); 
                 const $messageElement = $jqElement.children().last();
