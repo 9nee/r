@@ -73,7 +73,7 @@ let isMahjongModeReady = false;
                     }
                 }
                 
-                toggleMJMessages();
+                await toggleMJMessages();
             }
         },
         {
@@ -405,14 +405,14 @@ let isMahjongModeReady = false;
     $holoPeekBubble.append(holoPeekOptionsContainer);
 
     //* HoloPeek prototype-esque definition
-    holoPeekOptions.forEach(holoPeekOption => {
+    holoPeekOptions.forEach(async (holoPeekOption) => {
         const div = $('<div>').appendTo(holoPeekOptionsContainer);
 
         const optId = `holopeek_${holoPeekOption.id}`;
         const $checkboxElem = $('<input>', {
             id: optId,
             type: 'checkbox',
-            click: () => {
+            click: async () => {
                 if (holoPeekOption.func) {
                     holoPeekOption.func(holoPeekOption);
                 } 
