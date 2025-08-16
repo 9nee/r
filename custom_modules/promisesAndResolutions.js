@@ -16,9 +16,9 @@ window.mahjongPromise = new Promise(resolve => {
     resolveMahjong = resolve;
 });
 
-let resolvePromise;
+let resolveHoloPeek;
 window.holoPeekPromise = new Promise(resolve => {
-    resolvePromise = resolve;
+    resolveHoloPeek = resolve;
 });
 
 async function resolveHoloPeekPromise() {

@@ -99,6 +99,7 @@ const xaeModule = {
         various: { notepad: true, emoteToggle: false }
     },
     modules: {
+        promisesAndResolutions: { active: 1, rank: -1, url: makeLiveCDNLink(PROMISES_AND_RESOLUTIONS), done: true },
         customCssInjection: { active: 1, rank: -1, url: makeLiveCDNLink(INJECT_CUSTOM_CSS), done: true },
         customSettings: { active: 1, rank: -1, url: makeLiveCDNLink(CUSTOM_SETTINGS_MODAL), done: true },
         playlistEnhancement: { active: 1, rank: -1, url: makeLiveCDNLink(BETTER_PLAYLIST), done: true },

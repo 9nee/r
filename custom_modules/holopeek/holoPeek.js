@@ -571,5 +571,5 @@ let isMahjongModeReady = false;
 })();
 
 (() => {
-    resolvePromise();
+    resolveHoloPeek();
 })();

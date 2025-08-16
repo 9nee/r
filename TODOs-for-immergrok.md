@@ -10,6 +10,7 @@
 - [HIGH PRIO] dropdown for styles
 - make holopeek bigger?
 - low-bandwidth mode (gifs unload or don't load)
+- you shouldn't have to make the constant for the module and then add the module, it should be a single update and maybe a function that parametrizes it
 
 ```js
 if (!['[server]', '[voteskip]'].includes(username.toLowerCase()) && username !== "softbanneduser")
