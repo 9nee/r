@@ -437,7 +437,7 @@ let isMahjongModeReady = false;
             if (valueElem) holoPeekOption[valueElem].value = cookieValue;
             $checkboxElem.prop('checked', true);
             const interval = setInterval(() => {
-                //TODO: What the fuck is all this
+                //TODO: this is what executes every "clicked" option change
                 if ($(".userlist_item").length) {
                     clearInterval(interval);
                     $checkboxElem.triggerHandler('click');
