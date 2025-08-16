@@ -70,6 +70,7 @@ function makeLiveCDNLink(fileName) {
 })
 
 $(document).ready(async () => {
+    console.log("FWARK")
     Promise.all([window.mahjongModeReady])
         .then(() => {
             SOUNDPOST_STATE = readCookie("SOUNDPOST_STATE") === "true";
