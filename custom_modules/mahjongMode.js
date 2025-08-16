@@ -3,8 +3,10 @@ socket.on("chatMsg", ({username, msg, meta, time}) => {
 })
 
 //This function executes too much garbage every message that shouldn't be executed
-function injectSecretMahjongEmotes(username, $messageElement) {
-  if (canReadMJMessages()) {
+async function injectSecretMahjongEmotes(username, $messageElement) {
+
+  const canRead = await canReadMJMessages();
+  if (canRead) {
     if (!['[server]', '[voteskip]'].includes(username.toLowerCase())) {
       const escapedEmotes = Object.keys(secretMJEmotes)
                                   .map( secretEmote => 
@@ -26,13 +28,14 @@ function injectSecretMahjongEmotes(username, $messageElement) {
     }
   }
 
-function formatMJMessage($messageElement) {
+async function formatMJMessage($messageElement) {
     let $timestampElement = $messageElement.parent().find('.timestamp')
     $($messageElement).addClass("MahjongMessage")
     $timestampElement.css("background-image", "url('https://raw.githubusercontent.com/om3tcw/r/refs/heads/emotes/eyes/nyagger.png')")
     $messageElement.text($messageElement.text().replace(/^MJ: /, ''));
 
-    if (!canReadMJMessages()) {
+    const canRead = await canReadMJMessages();
+    if (!canRead) {
         $messageElement.parent().css('display','none')
     }
 } 
@@ -65,15 +68,16 @@ async function canReadMJMessages() {
       await resolveHoloPeekPromise();
     }
   
-    return  mahjongLurkCookie || 
-            mahjongModeCookie || 
-            $('#holopeek_MahjongMode').is(':checked') ||
-            $('#holopeek_MahjongLurk').is(':checked');
+    return mahjongLurkCookie || 
+          mahjongModeCookie || 
+          $('#holopeek_MahjongMode').is(':checked') ||
+          $('#holopeek_MahjongLurk').is(':checked');
 }
 
-function toggleMJMessages() {
+async function toggleMJMessages() {
+    const canRead = await canReadMJMessages();
     document.querySelectorAll('#messagebuffer [class|="MahjongMessage"]').forEach(element => {
-        if (canReadMJMessages()) {
+        if (canRead) {
             element.parentElement.style.display = 'block';
         } else {
             element.parentElement.style.display = 'none';

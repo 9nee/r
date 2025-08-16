@@ -67,7 +67,6 @@ function makeLiveCDNLink(fileName) {
     return await response.json();
 })().then((data) => {
     SOUNDPOSTS = data;
-    console.log(SOUNDPOSTS);
 })
 
 $(document).ready(async () => {
