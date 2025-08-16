@@ -576,7 +576,6 @@ async function resolveMahjongModePromise(){
         return Promise.all([window.mahjongModeReady])
             .then(() => {
             isMahjongModeReady = true;
-
         })
     } else {
         return Promise.resolve(true);

@@ -69,13 +69,16 @@ function makeLiveCDNLink(fileName) {
     SOUNDPOSTS = data;
 })
 
-$(document).ready(() => {
-    SOUNDPOST_STATE = readCookie("SOUNDPOST_STATE") === "true";
-    $('#messagebuffer [class|="chat-msg"]').each((index, domElement) => {
-        const $jqElement = $(domElement); 
-        const $messageElement = $jqElement.children().last();
-        globalMessageFormatInjection({$message: $messageElement});
-    });
+$(document).ready(async () => {
+    Promise.all([window.mahjongModeReady])
+        .then(() => {
+            SOUNDPOST_STATE = readCookie("SOUNDPOST_STATE") === "true";
+            $('#messagebuffer [class|="chat-msg"]').each((index, domElement) => {
+                const $jqElement = $(domElement); 
+                const $messageElement = $jqElement.children().last();
+                globalMessageFormatInjection({$message: $messageElement});
+            })
+        });
 })
 
 const xaeModule = {
