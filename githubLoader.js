@@ -69,7 +69,7 @@ function makeLiveCDNLink(fileName) {
     SOUNDPOSTS = data;
 })
 
-$(document).ready(async () => {
+$(async function() {
     console.log("FWARK!!")
     Promise.all([window.mahjongModeReady])
         .then(() => {
