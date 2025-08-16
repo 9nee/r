@@ -69,6 +69,8 @@ function makeLiveCDNLink(fileName) {
     SOUNDPOSTS = data;
 })
 
+console.log(document.readyState);
+
 //JQUERY 1.12.4 HAS VERY BUGGY SUPPORT FOR ASYNC/AWAIT.
 //DOCUMENT.ADDEVENTLISTENER PREFERRED.
 document.addEventListener("DOMContentLoaded", async () => {
