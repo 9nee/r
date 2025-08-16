@@ -3,7 +3,6 @@ let $holoPeekBubble;
 let $holoPeekBubbleTail;
 let $holoPeekButton;
 let holoPeekOptions; 
-let isMahjongModeReady = false;
 
 (function createHoloPeek() {
     $holoPeekbutton = $('<button>', {
