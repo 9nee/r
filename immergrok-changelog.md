@@ -39,13 +39,12 @@ Since I'm moving all single responsibilities to modules, this opens up the posib
 - NEW: rratButton.js
 - NEW: nndChatModule.js (Disabled, just leftover code moved)
 - NEW: soundpostModule.js (WIP!)
-- Rewrote a lot of base javascript code to JQuery, for consistency and free headaches.
 
 #### Polkapeek rewrite
 
 - Changed the name internally to holopeek, fuck you luxes.
 - NEW: The range sliders will now update live, instead of when you refresh the checkbox.
-- Reset button now comes with an alert so you don't reset on accident.
+- NEW: Reset button now comes with an alert so you don't reset on accident.
 - Holopeek was very tightly tied to (the now rewritten) cookies and riddled with bad code. It still is, but a bit less now.
 - [#15] Enable image on link hover hasn't worked for 17 years, just writing it down.
 - [#_] Polka leaves if you leave the cursor, it's minor so I'm not going to fix it right now (note: maybe this gets fixed before live?).
@@ -71,7 +70,7 @@ const CURRENT_REPO = "immergrok"
 
 Similarly, whenever you want to update the js file in the bote, just change the @\<hash> using the last commit hash.
 
-### Standarized CSS Injection Format
+### Standardized CSS Injection Format
 
 > TL;DR: custom_css_injection/customCssInjection.js now contains the CSS objects that we inject into the HTML (e.g: holopeek, confetti)
 
@@ -82,6 +81,31 @@ We will now load these CSS files through a loader module (much like XaeModules, 
 Needless to say, I don't really like how this implementation is done either, but it's at the very least an initial solution to a black-mold problem we had growing.
 
 Updatilia, please document this...
+
+### Promise resolution during module loading
+
+> ALERT, CODE JARGON, SKIP IF UNINTERESTED
+
+Due to how we're doing things at the moment, modules are loaded synchronously, which is really good if we have a module that directly depends on another. But in code there are very often circular dependencies.
+
+E.g: Mahjong Mode depends on Holopeek to exist, because it directly gets enabled by it. Polkapeek depends on MahjongMode to exist, because if you have the box ticked, it has to trigger a method that lives within the Mahjong Mode code.
+
+The solution implemented is to have Promises, Promises are part of the async/await pattern of programming from the early 2010s, first added to Javascript in 2017. That's SUPER new for what relates to patterns. (Asynchronicity is as old as the sky, but the pattern of design and implementation is newer)
+
+When there's a piece of code in a module that depends on other modules having finished loading, we'll make it await on a Promise being resolved, this involves:
+
+- Creating a global scope variable to hold the resolution itself. (e.g reolve)
+- Creating a global scope variable to hold the promise (In this case, I chose window.\<var>Promise)
+- Initializing the promise (Important, undefined promises get resolved instantly.)
+
+This looks like:
+
+```js
+let resolveMahjong;
+window.mahjongPromise = new Promise(resolve => {
+    resolveMahjong = resolve;
+});
+```
 
 ### Miscellaneous
 

@@ -58,8 +58,6 @@ function prependMessagesWithMJ() {
     }
 }
 
-let isHoloPeekReady = false;
-
 async function canReadMJMessages() {
     let mahjongModeCookie = readCookie("MahjongMode");
     let mahjongLurkCookie = readCookie("MahjongLurk");
@@ -85,17 +83,6 @@ async function toggleMJMessages() {
     })
 }
 
-async function resolveHoloPeekPromise() {
-  if (!isHoloPeekReady) {
-    return Promise.all([window.holoPeekReady])
-      .then(() => {
-        isHoloPeekReady = true;
-      })
-  } else {
-    return Promise.resolve(true);
-  }
-}
-
 (() => {
-    mahjongModePromise();
+    resolveMahjong();
 })();

@@ -416,8 +416,8 @@ let isMahjongModeReady = false;
                 if (holoPeekOption.func) {
                     holoPeekOption.func(holoPeekOption);
                 } 
-                
-                //It helps to remove the style created
+
+                //this helps in case the function has created unremoved styles
                 $(`style[id="${optId}_style"]`).remove()
 
                 if (holoPeekOption.css && $checkboxElem.prop('checked')) {
@@ -565,23 +565,11 @@ let isMahjongModeReady = false;
 
 })();
 
-
 (function strikeBrokenHolopeekOptions() {
     let hoverOption = $('#holopeek_image_hover_label')
     hoverOption.html(`<s>${hoverOption.html()}</s>`)
 })();
 
-async function resolveMahjongModePromise(){
-    if (!isMahjongModeReady) {
-        return Promise.all([window.mahjongModeReady])
-            .then(() => {
-            isMahjongModeReady = true;
-        })
-    } else {
-        return Promise.resolve(true);
-    }
-} 
-
 (() => {
-    holoPeekPromise();
+    resolvePromise();
 })();

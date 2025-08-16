@@ -16,3 +16,5 @@ if (!['[server]', '[voteskip]'].includes(username.toLowerCase()) && username !==
 ```
 
 - this piece of code is repeated and should be exported to something readable and reusable
+
+- MOVE THE PROMISES TO THEIR OWN MODULE!!! THIS IS NIGH-IMPERATIVE FOR BETTER DEVELOPMENT.

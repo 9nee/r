@@ -26,16 +26,6 @@ const defaultAdditionalPlayTime = 3;
 
 const MODULES_PATH = "custom_modules/";
 
-let mahjongModePromise;
-window.mahjongModeReady = new Promise(resolve => {
-    mahjongModePromise = resolve;
-});
-
-let holoPeekPromise;
-window.holoPeekReady = new Promise(resolve => {
-    holoPeekPromise = resolve;
-});
-
 const INJECT_CUSTOM_CSS = `${MODULES_PATH}custom_css_injection/customCssInjection.js`;
 const CUSTOM_SETTINGS_MODAL = `${MODULES_PATH}customSettingsModal.js`;
 const BETTER_PLAYLIST = `${MODULES_PATH}betterPlaylist.js`;
@@ -73,7 +63,7 @@ function makeLiveCDNLink(fileName) {
 //THIS ROUNDABOUT FUCKASS WAY IS THE PREFERRED WAY OF DOING THINGS IF WE DEPEND ON ASYNCHRONICITY
 //UPDATILIA DOCUMENT THIS
 async function onDomReadyLogic() {
-    await Promise.all([window.mahjongModeReady]); 
+    await Promise.all([window.mahjongPromise]); 
     SOUNDPOST_STATE = readCookie("SOUNDPOST_STATE");
     $('#messagebuffer [class|="chat-msg"]').each((index, domElement) => {
         const $jqElement = $(domElement); 
