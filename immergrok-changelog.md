@@ -14,7 +14,7 @@
   - not legally binding
     - specially if I land this job i'm in wait for
 
-## [15Aug2025 - "Laying out the groundwork"]
+## [1XAug2025 - "Laying out the groundwork"] (WIP)
 
 ### Temporary
 
@@ -24,16 +24,24 @@
 
 - Did you know we've always had methods exposed in the backend to manage cookies? We did. Now we even use them!
 
-### Small file refactors
+### Complete refactors
 
 - No more github417.js, it is now githubLoader.js, hopefully will never have a number again. (Name subject to change)
-- Started moving responsibilities away from said githubLoader file.
-  - NEW: holoPeek.js
-  - NEW: enhancedEmotes.js (WIP)
-  - NEW: confetti-styles.js
+- Standardized most of the plain JavaScript to JQuery. Now we pester tomboysweat to update to JQuery 3.
+
+#### Custom Modules folder
+
+Since I'm moving all single responsibilities to modules, this opens up the posibility of having a menu to pick and choose which modules you want loaded. Just the possibility though, it's not implemented.
+
+- NEW: Holopeek folder with holoPeek.js
+- NEW: enhancedEmotes.js (WIP)
+- NEW: Custom CSS Injection folder! (read below)
+- NEW: rratButton.js
+- NEW: nndChatModule.js (Disabled, just leftover code moved)
+- NEW: soundpostModule.js (WIP!)
 - Rewrote a lot of base javascript code to JQuery, for consistency and free headaches.
 
-### Polkapeek rewrite
+#### Polkapeek rewrite
 
 - Changed the name internally to holopeek, fuck you luxes.
 - NEW: The range sliders will now update live, instead of when you refresh the checkbox.
@@ -42,7 +50,7 @@
 - [#15] Enable image on link hover hasn't worked for 17 years, just writing it down.
 - [#_] Polka leaves if you leave the cursor, it's minor so I'm not going to fix it right now (note: maybe this gets fixed before live?).
 
-### Offtopic mode rewrite
+#### Offtopic mode rewrite
 
 - Changed the name from "Offtopic mode" to "Mahjong Mode", subject to change.
 - It... works now, kinda, mostly, go test it out.
@@ -63,7 +71,17 @@ const CURRENT_REPO = "immergrok"
 
 Similarly, whenever you want to update the js file in the bote, just change the @\<hash> using the last commit hash.
 
-Ideally this will be fillable directly from the cytube at some point, but it's low on the priority list
+### Standarized CSS Injection Format
+
+> TL;DR: custom_css_injection/customCssInjection.js now contains the CSS objects that we inject into the HTML (e.g: holopeek, confetti)
+
+Many files injected CSS directly into the HTML to then use them, this is "fine" as a workaround for our current purposes and scope, but in turn they filled the "code" files of our repo with 100+ lines long CSS variables that riddled the files with a type code-rot that doesn't even have a common name, because anyone who sees it suffers a brain infart before documenting it.
+
+We will now load these CSS files through a loader module (much like XaeModules, but much simpler in scope and complexity), which load single-IIFE files that append the style onto the HTML.
+
+Needless to say, I don't really like how this implementation is done either, but it's at the very least an initial solution to a black-mold problem we had growing.
+
+Updatilia, please document this...
 
 ### Miscellaneous
 
@@ -72,7 +90,7 @@ Ideally this will be fillable directly from the cytube at some point, but it's l
 - Removed the line that made ctrl+a not work, this was intentionally put there by someone, I'm blaming Luxes
   - This of course comes with one or two minor things like the textbox not being automatically focused, but this is better than what we had (which was fucking nothing)
 - Renamed github1.css to migobote-stylesheet.css and cleaned it up of a bunch of filth
-- fetchAndInjectStylesheet(cdn, injectFunction) function that makes it so we don't need to have the beeping CSS inside the JS files anymore, it just requires a const declaration.
+- Removed a shit ton of JavaScript/CSS backups we had for no reason. For the love of fuck, we use git, we already have those backups by default.
 
 ---
 

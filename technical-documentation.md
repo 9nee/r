@@ -13,3 +13,9 @@ If you have a circular dependency, or a dependency that appears on a module load
 TODO: write code example for it
 
 A good example can be found in mahjongMode.js
+
+## Reverse
+
+In its current implementation reverse is a two-part piece of code
+The first is a css rule, and the second is two filter lists.
+If one must edit these, this should be taken into account, no "code" regarding the reverse addition can be found in this repo.
