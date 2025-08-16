@@ -69,7 +69,7 @@ function makeLiveCDNLink(fileName) {
     SOUNDPOSTS = data;
 })
 
-$(document).ready(async () => {
+$(document).ready(() => {
     SOUNDPOST_STATE = readCookie("SOUNDPOST_STATE") === "true";
     $('#messagebuffer [class|="chat-msg"]').each((index, domElement) => {
         const $jqElement = $(domElement); 
