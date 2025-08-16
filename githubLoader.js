@@ -69,7 +69,9 @@ function makeLiveCDNLink(fileName) {
     SOUNDPOSTS = data;
 })
 
-$(async function() {
+//JQUERY 1.12.4 HAS VERY BUGGY SUPPORT FOR ASYNC/AWAIT.
+//DOCUMENT.ADDEVENTLISTENER PREFERRED.
+document.addEventListener("DOMContentLoaded", async () => {
     console.log("FWARK!!")
     Promise.all([window.mahjongModeReady])
         .then(() => {
