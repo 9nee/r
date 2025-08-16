@@ -412,9 +412,9 @@ let isMahjongModeReady = false;
         const $checkboxElem = $('<input>', {
             id: optId,
             type: 'checkbox',
-            click: async () => {
+            click: () => {
                 if (holoPeekOption.func) {
-                    await holoPeekOption.func(holoPeekOption);
+                    holoPeekOption.func(holoPeekOption);
                 } 
                 
                 //It helps to remove the style created
