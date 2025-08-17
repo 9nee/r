@@ -23,6 +23,7 @@ class NeoXaeModuleLoader {
     #options;
     #state;
     #clientRank;
+    #moduleRegistryInstance;
 
     constructor(modulePaths) {
         this.#modulePaths = modulePaths
@@ -53,15 +54,14 @@ class NeoXaeModuleLoader {
         if (CLIENT.modules) {
             return;
         }
-
-        this.#turnPathsIntoModuleObjects(this.#modulePaths)
         
         //Idk about any-o-this, chief
         CLIENT.modules = this.#moduleObjects;
         window[CHANNEL.name].modulesOptions = this.#options;
         
-        await this.#preloadRegistry();
+        this.#moduleRegistryInstance = await this.#preloadRegistry();
 
+        this.#turnPathsIntoModuleObjects(this.#modulePaths)
         this.allModulesLoaded = this.#sequencerLoader();
     }
 
@@ -81,7 +81,23 @@ class NeoXaeModuleLoader {
     }
 
     async #preloadRegistry() {
-        return this.#getScript(makeLiveCDNLink(MODULE_REGISTRY));
+        return new Promise((resolve, reject) => {
+            $.getScript({
+                url: makeLiveCDNLink(MODULE_REGISTRY),
+                cache: false,
+                success: function(data) {
+                    resolve(data);
+                    if (window.moduleRegistry) {
+                        resolve(window.moduleRegistry);
+                    } else {
+                        reject(new Error("Module registry script loaded but window.moduleRegistry was not found."));
+                    }
+                },
+                error: function(_, textStatus, errorThrown) {
+                    reject(new Error(`Failed to load module registry: ${textStatus} - ${errorThrown}`));
+                }
+            });
+        });
     }
 
     #isModuleEligibleForLoading(moduleConfig) {
@@ -105,6 +121,13 @@ class NeoXaeModuleLoader {
                 this.#state.pos++;
 
                 const moduleImport = this.#getScript(moduleObject.url);
+                moduleImport.then( () => {
+                    if (this.#moduleRegistryInstance) {
+                        this.#moduleRegistryInstance.markReady(moduleName)
+                    } else {
+                        console.error("Something hit the fan")
+                    }
+                })
 
                 window.moduleRegistry.markReady(moduleName);
 
