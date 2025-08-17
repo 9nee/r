@@ -21,7 +21,6 @@ class NeoXaeModuleLoader {
     #modulePaths
     #moduleObjects;
     #options;
-    #cache;
     #state;
     #clientRank;
 
@@ -29,7 +28,6 @@ class NeoXaeModuleLoader {
         this.#modulePaths = modulePaths
         this.#moduleObjects = null;
         this.#options = ModuleLoaderOptions;
-        this.#cache = false;
         this.#state = { prev: "", pos: 0 };
         this.#clientRank = CLIENT.rank;
         this.allModulesLoaded = null;
@@ -67,23 +65,8 @@ class NeoXaeModuleLoader {
         this.allModulesLoaded = this.#sequencerLoader();
     }
 
-    async #getScript(url, cache) {
-        return new Promise((resolve, reject) => {
-            $.getScript({
-                url: url,
-                cache: cache,
-                success: function(data) {
-                    resolve(data);
-                },
-                error: function(_, textStatus, errorThrown) {
-                    reject(new Error(`Failed to load ${url}: ${textStatus} - ${errorThrown}`));
-                }
-            });
-        });
-    }
-
     async #preloadRegistry() {
-        return this.#getScript(makeLiveCDNLink(MODULE_REGISTRY), null, null);
+        return import(makeLiveCDNLink(MODULE_REGISTRY));
     }
 
     #isModuleEligibleForLoading(moduleConfig) {
@@ -106,8 +89,13 @@ class NeoXaeModuleLoader {
                 this.#state.prev = moduleName;
                 this.#state.pos++;
 
-                const cache = moduleObject.cache ?? this.#cache;
-                moduleLoadPromises.push(this.#getScript(moduleObject.url, null, cache));
+                const moduleImport = import(moduleObject.url);
+
+                moduleImport.then(() => {
+                      window.moduleRegistry.markReady(moduleName)
+                })
+
+                moduleLoadPromises.push(moduleImport);
             }
         }
         return Promise.all(moduleLoadPromises);

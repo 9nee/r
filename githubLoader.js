@@ -73,7 +73,7 @@ const ModuleLoaderPromise = (async () => {
     
     await ModuleLoaderInstance.allModulesLoaded;
 
-    console.log("This should wait until all modules have loaded")
+    console.log("All modules loaded!")
 
     SOUNDPOST_STATE = readCookie("SOUNDPOST_STATE");
     $('#messagebuffer [class|="chat-msg"]').each((index, domElement) => {

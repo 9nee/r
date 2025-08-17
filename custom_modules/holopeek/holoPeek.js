@@ -57,7 +57,7 @@ let holoPeekOptions;
             desc: 'Mahjong Mode',
             func: async () => {
 
-                await window.moduleRegistry.waitForReady("mahjongMode")
+                await window.moduleRegistry.waitForReady("mahjongMode.js")
 
                 const $chatInput = $('#chatline');
                 if ($(`#holopeek_MahjongMode`).is(':checked')) {
@@ -78,7 +78,7 @@ let holoPeekOptions;
             id: 'MahjongLurk',
             desc: 'Mahjong Lurk',
             func: async self => {
-                await window.moduleRegistry.waitForReady("mahjongMode")
+                await window.moduleRegistry.waitForReady("mahjongMode.js")
                 toggleMJMessages();
             }
         },
@@ -564,8 +564,4 @@ let holoPeekOptions;
 (function strikeBrokenHolopeekOptions() {
     let hoverOption = $('#holopeek_image_hover_label')
     hoverOption.html(`<s>${hoverOption.html()}</s>`)
-})();
-
-(() => {
-    window.moduleRegistry.markReady("holoPeek")
 })();
