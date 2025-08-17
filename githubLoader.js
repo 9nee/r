@@ -12,7 +12,7 @@ if (!this[CHANNEL.name].favicon) {
         .appendTo("head");
 }
 
-const CURRENT_COMMIT = "15823902c93f12ba8ad87b2774f5f0133f8fff79"
+const CURRENT_COMMIT = "a77d2fcbe5514dec9ef42f3a9497b9a60b6d25c4"
 //Change to om3tcw on live
 const CURRENT_REPO = "immergrok"
 
@@ -98,7 +98,7 @@ const xaeModule = {
         various: { notepad: true, emoteToggle: false }
     },
     modules: {
-        promisesAndResolutions: { active: 1, rank: -1, url: makeLiveCDNLink(MODULE_READINESS_STATE), done: true },
+        moduleReadinessState: { active: 1, rank: -1, url: makeLiveCDNLink(MODULE_READINESS_STATE), done: true },
         customCssInjection: { active: 1, rank: -1, url: makeLiveCDNLink(INJECT_CUSTOM_CSS), done: true },
         customSettings: { active: 1, rank: -1, url: makeLiveCDNLink(CUSTOM_SETTINGS_MODAL), done: true },
         playlistEnhancement: { active: 1, rank: -1, url: makeLiveCDNLink(BETTER_PLAYLIST), done: true },

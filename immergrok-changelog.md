@@ -6,6 +6,7 @@
   - Meta tags and Soundposts inside the emotes themselves.
   - A method to filter and search by meta tags and soundpost status
   - A way to add meta tags and soundposts directly from the bote
+  - alt emotes that show up on rotation
 - Holopeek v2
 - bees?!
 - Better ctrl+a

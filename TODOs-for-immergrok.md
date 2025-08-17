@@ -19,4 +19,6 @@ if (!['[server]', '[voteskip]'].includes(username.toLowerCase()) && username !==
 - this piece of code is repeated and should be exported to something readable and reusable
 
 - MOVE THE IIFE FROM THE PROMISES TO THE XAEMODULE LOAD ROUTINE ITSELF
-  
+
+- [HIGH PRIO] CI/CD/a method to remove all cookies on live deployment
+  - mostly because it's good cv fluff.
