@@ -26,8 +26,8 @@ function moduleReadinessState(name) {
   }
 
   return {
-    promise, 
-    resolve: markReady,
+    waitForReady: waitForReady, 
+    markReady: markReady,
     isReady: isReady}
 }
 

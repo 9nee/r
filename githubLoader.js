@@ -63,7 +63,7 @@ function makeLiveCDNLink(fileName) {
 //THIS ROUNDABOUT FUCKASS WAY IS THE PREFERRED WAY OF DOING THINGS IF WE DEPEND ON ASYNCHRONICITY
 //UPDATILIA DOCUMENT THIS
 async function onDomReadyLogic() {
-    await Promise.all([window.mahjongPromise]); 
+    await moduleReadinessMap.mahjongMode.waitForReady();
     SOUNDPOST_STATE = readCookie("SOUNDPOST_STATE");
     $('#messagebuffer [class|="chat-msg"]').each((index, domElement) => {
         const $jqElement = $(domElement); 
