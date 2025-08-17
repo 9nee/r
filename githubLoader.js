@@ -64,14 +64,15 @@ const ModuleLoader = (async () => {
     return new importedModule.NeoXaeModuleLoader(ModulePaths)
 })();
 
-ModuleLoader.initialize()
-
 (async function postModuleLoadLogic() {
-    if (!ModuleLoader.allModulesLoaded) {
-        return;
-    }
-    await ModuleLoader.allModulesLoaded;
+
+    const ModuleLoaderInstance = await ModuleLoader;
+    ModuleLoaderInstance.initialize();
+    
+    await ModuleLoaderInstance.allModulesLoaded;
+
     console.log("This should wait until all modules have loaded")
+
     SOUNDPOST_STATE = readCookie("SOUNDPOST_STATE");
     $('#messagebuffer [class|="chat-msg"]').each((index, domElement) => {
         const $jqElement = $(domElement); 
