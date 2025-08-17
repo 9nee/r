@@ -103,7 +103,7 @@ const xaeModule = {
         window[CHANNEL.name].modulesOptions = this.options;
         console.info("[XaeModule]", "Begin Loading.");
         this.index = Object.keys(this.modules);
-        this.sequencerLoader();
+        await this.sequencerLoader();
         this.cache = false;
     },
     async sequencerLoader() {
