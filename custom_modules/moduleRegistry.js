@@ -32,5 +32,5 @@ window.moduleRegistry = (() => {
       return readinessState[moduleName].isReady
     }}
   }
-)
+)()
 
