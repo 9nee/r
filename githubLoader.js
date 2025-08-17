@@ -613,8 +613,7 @@ function globalMessageFormatInjection({ username = "undefined",
         formatCommandMessage($message);
     }
 
-    if (moduleReadinessMap.mahjongMode.isReady() &&
-        $messageText.startsWith('MJ:')) {
+    if ($messageText.startsWith('MJ:')) {
             formatMJMessage($message)
     }
 

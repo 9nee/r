@@ -1,40 +1,36 @@
-function moduleReadinessState(name) {
+window.moduleRegistry = (() => {
+  const readinessState = {};
 
-  if (!name) {
-    name = "[name wasn't provided]!"
-  }
-
-  const isReady = { value: false };
-  let resolveFn;
-  const promise = new Promise(resolve => {
-    resolveFn = resolve;
-  });
-
-  function markReady() {
-    if (!isReady.value) {
-      resolveFn()
-      isReady.value = true;
-      console.log(`${name} resolved`)
+  function manageReadinessState(moduleName) {
+    if (!readinessState[moduleName]) {
+      let resolveFn;
+      const promise = new Promise(resolve => {
+        resolveFn = resolve;
+      });
+    
+      readinessState[moduleName] = {
+        promise: promise,
+        resolve: resolveFn,
+        isReady: false
+      }
     }
-  }
-
-  async function waitForReady() {
-    if (!isReady.value) {
-      await promise;
-    }
-    return true;
+    return readinessState[moduleName]
   }
 
   return {
-    waitForReady: waitForReady, 
-    markReady: markReady,
-    isReady: isReady}
-}
-
-const moduleReadinessMap = {
-  mahjongMode: moduleReadinessState("Mahjong Mode"),
-  holoPeek: moduleReadinessState("HoloPeek")
-}
-
-console.log("squeeeeeeb")
+    waitForReady: (moduleName) => {
+      return manageReadinessState(moduleName).promise
+    },
+    markReady: (moduleName) => {
+      const moduleState = manageReadinessState(moduleName)
+      if (!moduleState.isReady) {
+        moduleState.isReady = true;
+        moduleState.resolve(true)
+      }  
+    },
+    isReady: (moduleName) => {
+      return readinessState[moduleName].isReady
+    }}
+  }
+)
 

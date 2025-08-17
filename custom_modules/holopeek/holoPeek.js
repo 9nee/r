@@ -57,7 +57,7 @@ let holoPeekOptions;
             desc: 'Mahjong Mode',
             func: async () => {
 
-                await moduleReadinessMap.mahjongMode.waitForReady();
+                await window.moduleRegistry.waitForReady("mahjongMode")
 
                 const $chatInput = $('#chatline');
                 if ($(`#holopeek_MahjongMode`).is(':checked')) {
@@ -78,7 +78,7 @@ let holoPeekOptions;
             id: 'MahjongLurk',
             desc: 'Mahjong Lurk',
             func: async self => {
-                await moduleReadinessMap.mahjongMode.waitForReady();
+                await window.moduleRegistry.waitForReady("mahjongMode")
                 toggleMJMessages();
             }
         },
@@ -567,5 +567,5 @@ let holoPeekOptions;
 })();
 
 (() => {
-    moduleReadinessMap.holoPeek.markReady();
+    window.moduleRegistry.markReady("holoPeek")
 })();
