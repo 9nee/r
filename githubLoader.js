@@ -12,7 +12,7 @@ if (!this[CHANNEL.name].favicon) {
         .appendTo("head");
 }
 
-const CURRENT_COMMIT = "15823902c93f12ba8ad87b2774f5f0133f8fff79"
+const CURRENT_COMMIT = "dbe5395eea79e1b4bbc4939bbc776731cf8af2ab"
 //Change to om3tcw on live
 const CURRENT_REPO = "9nee"
 
