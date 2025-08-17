@@ -108,7 +108,7 @@ const xaeModule = {
         userlistEnhancement: { active: 1, rank: -1, url: makeLiveCDNLink(USERLIST_ENHANCEMENT), done: true },
         enhancedEmotes: { active: 1, rank: -1, url: makeLiveCDNLink(ENHANCED_EMOTES), done: true },
         holoPeek: { active: 1, rank: -1, url: makeLiveCDNLink(HOLOPEEK), done: true },
-        mahjongMode: { active: 1, rank: -1, url: makeLiveCDNLink(MAHJONG_MODE), done: true },
+        mahjongMode: { active: 0, rank: -1, url: makeLiveCDNLink(MAHJONG_MODE), done: true },
         html2canvas: { active: 1, rank: -1, url: "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js", done: true },
         nndChatModule: {active: 0, rank: -1, url: makeLiveCDNLink(NND_MODULE), done: true }
 
