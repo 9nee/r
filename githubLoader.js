@@ -23,24 +23,22 @@ let PLAYED_SOUNDPOSTS = [];
 const defaultVolume = 0.1;
 const defaultAdditionalPlayTime = 3;
 
-const MODULES_PATH = "custom_modules/";
+const MODULES_FOLDER = "custom_modules/";
 
-const MODULE_READINESS_STATE = `${MODULES_PATH}moduleReadinessState.js`
-const INJECT_CUSTOM_CSS = `${MODULES_PATH}custom_css_injection/customCssInjection.js`;
-const CUSTOM_SETTINGS_MODAL = `${MODULES_PATH}customSettingsModal.js`;
-const BETTER_PLAYLIST = `${MODULES_PATH}betterPlaylist.js`;
-const BETTER_PMS = `${MODULES_PATH}betterPms.js`;
-const SOUND_NOTIFICATIONS = `${MODULES_PATH}soundNotifications.js`;
-const MORE_LAYOUT_OPTIONS = `${MODULES_PATH}moreLayoutOptions.js`;
-const USERLIST_ENHANCEMENT = `${MODULES_PATH}customUserlist.js`;
-const ENHANCED_EMOTES = `${MODULES_PATH}enhancedEmotes.js`;
-const HOLOPEEK = `${MODULES_PATH}holopeek/holoPeek.js`;
-const MAHJONG_MODE = `${MODULES_PATH}mahjongMode.js`; //Mahjong mode currently depends on holopeek, it's not quite modular.
-const NND_MODULE = `${MODULES_PATH}nndChatModule.js`;
-
-function fetchLastChatElement() {
-    return $('#messagebuffer').children().last().children().last();
-}
+const ModulePaths = [
+    `moduleReadinessState.js`,
+    `custom_css_injection/customCssInjection.js`,
+    `customSettingsModal.js`,
+    `betterPlaylist.js`,
+    `betterPms.js`,
+    `soundNotifications.js`,
+    `moreLayoutOptions.js`,
+    `customUserlist.js`,
+    `enhancedEmotes.js`,
+    `holopeek/holoPeek.js`,
+    `mahjongMode.js`, //Mahjong mode currently depends on holopeek, it's not quite modular.
+    { name: `nndChatModule.js`, isActive: 0, rank: -1}
+]
 
 function makeLiveCDNLink(fileName) {
     return "https://cdn.jsdelivr.net/gh/" + 
@@ -49,6 +47,26 @@ function makeLiveCDNLink(fileName) {
             CURRENT_COMMIT +
             "/" +
             fileName
+}
+
+function createXaeModuleObject(moduleName, isActive = 1, rank = -1) {
+    return { active: isActive, rank: rank, url: makeLiveCDNLink(`${MODULES_FOLDER}${moduleName}`), done: true};
+}
+function populateXaeModules(ModulePaths) {
+    let modules = {}
+    for (const module of ModulePaths) {
+        if (module === typeof(string)) {
+            modules[module] = createXaeModuleObject(module)
+        } else{
+            modules[module.name] = createXaeModuleObject(module.name, module.isActive, module.rank)
+        }
+    }
+    return modules;
+}
+//html2canvas: { active: 1, rank: -1, url: "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js", done: true },
+
+function fetchLastChatElement() {
+    return $('#messagebuffer').children().last().children().last();
 }
 
 //your motherfucking life ends 5 minutes from now
@@ -78,22 +96,7 @@ const xaeModule = {
         },
         various: { notepad: true, emoteToggle: false }
     },
-    modules: {
-        moduleReadinessState: { active: 1, rank: -1, url: makeLiveCDNLink(MODULE_READINESS_STATE), done: true },
-        customCssInjection: { active: 1, rank: -1, url: makeLiveCDNLink(INJECT_CUSTOM_CSS), done: true },
-        customSettings: { active: 1, rank: -1, url: makeLiveCDNLink(CUSTOM_SETTINGS_MODAL), done: true },
-        playlistEnhancement: { active: 1, rank: -1, url: makeLiveCDNLink(BETTER_PLAYLIST), done: true },
-        pmEnhancement: { active: 1, rank: 1, url: makeLiveCDNLink(BETTER_PMS), done: true },
-        soundNotifications: { active: 1, rank: -1, url: makeLiveCDNLink(SOUND_NOTIFICATIONS), done: true },
-        moreLayoutOptions: { active: 1, rank: -1, url: makeLiveCDNLink(MORE_LAYOUT_OPTIONS), done: true },
-        userlistEnhancement: { active: 1, rank: -1, url: makeLiveCDNLink(USERLIST_ENHANCEMENT), done: true },
-        enhancedEmotes: { active: 1, rank: -1, url: makeLiveCDNLink(ENHANCED_EMOTES), done: true },
-        holoPeek: { active: 1, rank: -1, url: makeLiveCDNLink(HOLOPEEK), done: true },
-        mahjongMode: { active: 1, rank: -1, url: makeLiveCDNLink(MAHJONG_MODE), done: true },
-        html2canvas: { active: 1, rank: -1, url: "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js", done: true },
-        nndChatModule: {active: 0, rank: -1, url: makeLiveCDNLink(NND_MODULE), done: true }
-
-    },
+    modules: populateXaeModules(ModulePaths),
     getScript(url, success) {
         return $.getScript({url, success});
     },
@@ -457,10 +460,9 @@ $('#messagebuffer').off('click').click(e => {
 });
 
 // Slav's Enhancements
-
-let html2canvasScript = document.createElement('script');
-html2canvasScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
-document.head.appendChild(html2canvasScript);
+// let html2canvasScript = document.createElement('script');
+// html2canvasScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+// document.head.appendChild(html2canvasScript);
 
 function runescape($message) {
 
