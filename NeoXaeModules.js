@@ -61,7 +61,7 @@ class NeoXaeModuleLoader {
         
         this.#moduleRegistryInstance = await this.#preloadRegistry();
 
-        breakpoint;
+        debugger;
         this.#turnPathsIntoModuleObjects(this.#modulePaths)
         this.allModulesLoaded = this.#sequencerLoader();
     }
