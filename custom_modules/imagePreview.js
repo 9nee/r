@@ -5,15 +5,15 @@ function createHoverImage(jqChatMessage) {
         if (!window.imagePreview || !window.imagePreview.enabled) {
             return;
         }
-        const messageAfter = $(this).parent().find("img");
-        if (!messageAfter.is("img")) {
+        const messageAfter = $(this).parent().parent().find("img");
+        if (!messageAfter[0]) {
             const newImg = new Image();
             newImg.style.display = "none";
             newImg.onload = function () {
                 this.classList.add("imageHoverPreview", "imageLoaded");
             };
             newImg.src = $(this).html();
-            $(this).parent().after(newImg);
+            $(this).parent().parent().after(newImg);
         }
         $("#messagebuffer div:hover .imageHoverPreview").stop(true, false).slideDown(100);
         $("#messagebuffer div:hover").one("mouseout", function () {
