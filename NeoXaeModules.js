@@ -1,4 +1,4 @@
-const XaeModuleLoaderOptions = 
+const ModuleLoaderOptions = 
 {
     playlist: {
         collapse: false,
@@ -17,7 +17,7 @@ const XaeModuleLoaderOptions =
     },
 }
 
-class XaeModuleLoader {
+class NeoXaeModuleLoader {
     #modulePaths
     #moduleObjects;
     #options;
@@ -28,27 +28,27 @@ class XaeModuleLoader {
     constructor(modulePaths) {
         this.#modulePaths = modulePaths
         this.#moduleObjects = null;
-        this.#options = XaeModuleLoaderOptions;
+        this.#options = ModuleLoaderOptions;
         this.#cache = false;
         this.#state = { prev: "", pos: 0 };
         this.#clientRank = CLIENT.rank;
         this.allModulesLoaded = null;
     }
 
-    #createXaeModuleObject(moduleName, isActive = 1, rank = -1) {
+    #createModuleObject(moduleName, isActive = 1, rank = -1) {
         return { active: isActive, rank: rank, url: makeLiveCDNLink(`${MODULES_FOLDER}${moduleName}`), done: true};
     }
 
-    #turnPathsIntoXaeModules(modules) {
-        let modules = {}
-        for (const module of ModulePaths) {
+    #turnPathsIntoModuleObjects(modulePaths) {
+        let moduleObjects = {}
+        for (const module of modulePaths) {
             if (typeof module === 'string') {
-                modules[module] = this.#createXaeModuleObject(module)
+                moduleObjects[module] = this.#createModuleObject(module)
             } else {
-                modules[module.name] = this.#createXaeModuleObject(module.name, module.isActive, module.rank)
+                moduleObjects[module.name] = this.#createModuleObject(module.name, module.isActive, module.rank)
             }
         }
-        this.#moduleObjects = modules
+        this.#moduleObjects = moduleObjects
     }
 
     async initialize() {
@@ -56,9 +56,9 @@ class XaeModuleLoader {
             return;
         }
 
-        this.#turnPathsIntoXaeModules(this.#modulePaths)
+        this.#turnPathsIntoModuleObjects(this.#modulePaths)
         
-        //Idk about this, chief
+        //Idk about any-o-this, chief
         CLIENT.modules = this.#moduleObjects;
         window[CHANNEL.name].modulesOptions = this.#options;
         

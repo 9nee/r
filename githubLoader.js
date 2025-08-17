@@ -59,16 +59,18 @@ function fetchLastChatElement() {
     SOUNDPOSTS = data;
 })
 
-const NeoXaeModules = (async () => {
-    await import(makeLiveCDNLink("NeoXaeModules.js"))
+const ModuleLoader = (async () => {
+    const importedModule =  await import(makeLiveCDNLink("NeoXaeModules.js"))
+    return new importedModule.NeoXaeModuleLoader(ModulePaths)
 })();
 
+ModuleLoader.initialize()
 
 (async function postModuleLoadLogic() {
-    if (!NeoXaeModules.allModulesLoaded) {
+    if (!ModuleLoader.allModulesLoaded) {
         return;
     }
-    await NeoXaeModules.allModulesLoaded;
+    await ModuleLoader.allModulesLoaded;
     console.log("This should wait until all modules have loaded")
     SOUNDPOST_STATE = readCookie("SOUNDPOST_STATE");
     $('#messagebuffer [class|="chat-msg"]').each((index, domElement) => {
