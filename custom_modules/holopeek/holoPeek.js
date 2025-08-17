@@ -5,7 +5,7 @@ let $holoPeekButton;
 let holoPeekOptions; 
 
 (function createHoloPeek() {
-    $holoPeekbutton = $('<button>', {
+    $holoPeekButton = $('<button>', {
         id: 'holopeek',
         class: 'holoAnim' });
 
@@ -15,7 +15,7 @@ let holoPeekOptions;
         $('#holoPeekBubbleTail').toggle()
     });
     
-    $('body').append($holoPeekbutton);
+    $('body').append($holoPeekButton);
 
     $holoPeekBubbleTail = $('<div>', {
         id: "holoPeekBubbleTail" 
