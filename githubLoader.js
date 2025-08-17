@@ -104,7 +104,7 @@ const xaeModule = {
         various: { notepad: true, emoteToggle: false }
     },
     modules: populateXaeModules(ModulePaths),
-    getScript(url, success) {
+    getScript(url, success, cache) {
         return new Promise((resolve, reject) => {
             $.getScript({
                 url: url,
