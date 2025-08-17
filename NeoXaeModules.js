@@ -81,7 +81,7 @@ class NeoXaeModuleLoader {
     }
 
     async #preloadRegistry() {
-        return this.#getScript(makeLiveCDNLink(MODULE_REGISTRY));
+        return this.#getScript(MODULE_REGISTRY);
     }
 
     #isModuleEligibleForLoading(moduleConfig) {
