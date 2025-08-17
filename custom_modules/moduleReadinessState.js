@@ -36,3 +36,5 @@ const moduleReadinessMap = {
   holoPeek: moduleReadinessState("HoloPeek")
 }
 
+console.log("squeeeeeeb")
+
