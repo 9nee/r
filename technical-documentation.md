@@ -52,27 +52,27 @@ I made a module registry that can be accessed through
 The names are pretty self-explanatory, but the following pseudocode should explain the usage:
 
 ```js
-
 async function checkForScript2() {
-
-  await window.moduleRegistry.waitForReady("script2.js");
-
+  await window.moduleRegistry.waitForReady("script2");
   runLogic();
   console.log("None of this runs until the await resolves")
-
 }
+
 //Runs the function above
 checkForScript2();
+
 //This (and below) executes even if the logic from the above script hasn't executed
 console.log("This does!");
-
 ```
 
-The module loading script registers the "markReady" by default when the file has finished loading.
+Whenever there's a script that needs to signal its completion, it has to do so manually, I looked everywhere for a way to not have to do this manually but it eludes me. The current way to do this is:
 
-Good practices say that you should always write the asynchronicity if there's an interaction that might fail due to not having one of the resources ready.
-
-But even if the scripts are loaded in parallel... the ones put *earlier* in the array *do* load faster. So if they're more important, they should be first.
+```js
+//At the very end of script2, an IIFE
+(() => {
+    window.moduleRegistry.markReady("script2")
+})();
+```
 
 ### How to add a new script
 

@@ -565,3 +565,7 @@ let holoPeekOptions;
     let hoverOption = $('#holopeek_image_hover_label')
     hoverOption.html(`<s>${hoverOption.html()}</s>`)
 })();
+
+(() => {
+    window.moduleRegistry.markReady("holoPeek")
+})();

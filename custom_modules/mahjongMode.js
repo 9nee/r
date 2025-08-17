@@ -80,3 +80,7 @@ async function toggleMJMessages() {
         }
     })
 }
+
+(() => {
+    window.moduleRegistry.markReady("mahjongMode")
+})();

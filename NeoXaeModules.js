@@ -91,10 +91,6 @@ class NeoXaeModuleLoader {
 
                 const moduleImport = import(moduleObject.url);
 
-                moduleImport.then(() => {
-                      window.moduleRegistry.markReady(moduleName)
-                })
-
                 moduleLoadPromises.push(moduleImport);
             }
         }
