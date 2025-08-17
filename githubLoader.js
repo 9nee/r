@@ -124,7 +124,7 @@ const xaeModule = {
         window[CHANNEL.name].modulesOptions = this.options;
         console.info("[XaeModule]", "Begin Loading.");
         this.moduleNames = Object.keys(this.modules);
-        await this.sequencerLoader();
+        this.allModulesLoaded = this.sequencerLoader();
         this.cache = false;
     },
     async sequencerLoader() {
@@ -148,6 +148,8 @@ const xaeModule = {
                 this.state.pos++;
                 this.sequencerLoader();
             }
+
+        return Promise.all(loadPromises)
         }
     ,
     state: { prev: "", pos: 0 }
@@ -159,7 +161,8 @@ xaeModule.initialize();
     if (!xaeModule.modules) {
         return;   
     }
-    await xaeModule.initialize();
+    await xaeModule.allModulesLoaded;
+    console.log("This should wait until all modules have loaded")
     SOUNDPOST_STATE = readCookie("SOUNDPOST_STATE");
     $('#messagebuffer [class|="chat-msg"]').each((index, domElement) => {
         const $jqElement = $(domElement); 
