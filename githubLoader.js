@@ -24,7 +24,7 @@ const defaultVolume = 0.1;
 const defaultAdditionalPlayTime = 3;
 
 const MODULES_FOLDER = "custom_modules/";
-const MODULE_REGISTRY = `${MODULES_FOLDER}"moduleRegistry.js`
+const MODULE_REGISTRY = `${MODULES_FOLDER}moduleRegistry.js`
 const ModulePaths = [
     `custom_css_injection/customCssInjection.js`,
     `customSettingsModal.js`,
