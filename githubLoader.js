@@ -12,7 +12,6 @@ if (!this[CHANNEL.name].favicon) {
         .appendTo("head");
 }
 
-//Defining some top level variables.
 const CURRENT_COMMIT = "f017149af83916aa54d4a27b287f237cb29c58bb"
 //Change to om3tcw on live
 const CURRENT_REPO = "immergrok"
@@ -26,7 +25,7 @@ const defaultAdditionalPlayTime = 3;
 
 const MODULES_PATH = "custom_modules/";
 
-const PROMISES_AND_RESOLUTIONS = `${MODULES_PATH}promisesAndResolutions.js`
+const MODULE_READINESS_STATE = `${MODULES_PATH}moduleReadinessState.js`
 const INJECT_CUSTOM_CSS = `${MODULES_PATH}custom_css_injection/customCssInjection.js`;
 const CUSTOM_SETTINGS_MODAL = `${MODULES_PATH}customSettingsModal.js`;
 const BETTER_PLAYLIST = `${MODULES_PATH}betterPlaylist.js`;
@@ -99,7 +98,7 @@ const xaeModule = {
         various: { notepad: true, emoteToggle: false }
     },
     modules: {
-        promisesAndResolutions: { active: 1, rank: -1, url: makeLiveCDNLink(PROMISES_AND_RESOLUTIONS), done: true },
+        promisesAndResolutions: { active: 1, rank: -1, url: makeLiveCDNLink(MODULE_READINESS_STATE), done: true },
         customCssInjection: { active: 1, rank: -1, url: makeLiveCDNLink(INJECT_CUSTOM_CSS), done: true },
         customSettings: { active: 1, rank: -1, url: makeLiveCDNLink(CUSTOM_SETTINGS_MODAL), done: true },
         playlistEnhancement: { active: 1, rank: -1, url: makeLiveCDNLink(BETTER_PLAYLIST), done: true },

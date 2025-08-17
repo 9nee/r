@@ -84,27 +84,68 @@ Updatilia, please document this...
 
 ### Promise resolution during module loading
 
-> ALERT, CODE JARGON, SKIP IF UNINTERESTED
+> TW: CODE JARGON, SKIP IF UNINTERESTED
 
 Due to how we're doing things at the moment, modules are loaded synchronously, which is really good if we have a module that directly depends on another. But in code there are very often circular dependencies.
 
-E.g: Mahjong Mode depends on Holopeek to exist, because it directly gets enabled by it. Polkapeek depends on MahjongMode to exist, because if you have the box ticked, it has to trigger a method that lives within the Mahjong Mode code.
+E.g: Mahjong Mode depends on Holopeek to exist, because it directly gets enabled by it. Holopeek depends on MahjongMode to exist, because if you have the box ticked, it has to trigger a method that lives within the Mahjong Mode code.
 
 The solution implemented is to have Promises, Promises are part of the async/await pattern of programming from the early 2010s, first added to Javascript in 2017. That's SUPER new for what relates to patterns. (Asynchronicity is as old as the sky, but the pattern of design and implementation is newer)
 
 When there's a piece of code in a module that depends on other modules having finished loading, we'll make it await on a Promise being resolved, this involves:
 
-- Creating a global scope variable to hold the resolution itself. (e.g reolve)
+- Creating a global scope variable to hold the resolution itself. (e.g resolve)
 - Creating a global scope variable to hold the promise (In this case, I chose window.\<var>Promise)
 - Initializing the promise (Important, undefined promises get resolved instantly.)
 
 This looks like:
+
+`promisesAndResolutions.js`
 
 ```js
 let resolveMahjong;
 window.mahjongPromise = new Promise(resolve => {
     resolveMahjong = resolve;
 });
+
+async function resolveMahjongModePromise(){
+    if (!isMahjongModeReady) {
+        return Promise.all([window.mahjongPromise])
+            .then(() => {
+            isMahjongModeReady = true;
+        })
+    } else {
+        return Promise.resolve(true);
+    }
+} 
+```
+
+`mahjongMode.js`
+
+```js
+//At the very end of the file, meaning it has loaded
+//This COULD and SHOULD be part of the XAEMODULES ROUTINE.
+(() => {
+    resolveMahjong();
+})();
+```
+
+`holoPeek.js`
+
+```js
+//A very real function
+function featureThatDependsOnMahjongModeLoaded() {
+    if (!isMahjongModeReady) {
+      await resolveMahjongModePromise()
+    }
+    //awaits until promise is resolved
+    return ":yakuless:"
+}
+
+//does NOT await for the promise to be resolved, will execute regardless
+function otherCode() {
+  console.log("log debugging")
+}
 ```
 
 ### Miscellaneous

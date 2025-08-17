@@ -56,9 +56,8 @@ let holoPeekOptions;
             id: 'MahjongMode',
             desc: 'Mahjong Mode',
             func: async () => {
-                if (!isMahjongModeReady) {
-                    await resolveMahjongModePromise()
-                }
+
+                await moduleReadinessMap.mahjongMode.waitForReady();
 
                 const $chatInput = $('#chatline');
                 if ($(`#holopeek_MahjongMode`).is(':checked')) {
@@ -79,9 +78,7 @@ let holoPeekOptions;
             id: 'MahjongLurk',
             desc: 'Mahjong Lurk',
             func: async self => {
-                if (!isMahjongModeReady) {
-                    await resolveMahjongModePromise()
-                }
+                await moduleReadinessMap.mahjongMode.waitForReady();
                 toggleMJMessages();
             }
         },
@@ -570,5 +567,5 @@ let holoPeekOptions;
 })();
 
 (() => {
-    resolveHoloPeek();
+    moduleReadinessMap.holoPeek.markReady();
 })();

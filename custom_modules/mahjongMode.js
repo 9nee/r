@@ -62,9 +62,7 @@ async function canReadMJMessages() {
     let mahjongModeCookie = readCookie("MahjongMode");
     let mahjongLurkCookie = readCookie("MahjongLurk");
   
-    if (!isHoloPeekReady) {
-      await resolveHoloPeekPromise();
-    }
+    await moduleReadinessMap.holoPeek.waitForReady();
   
     return mahjongLurkCookie || 
           mahjongModeCookie || 
@@ -84,5 +82,5 @@ async function toggleMJMessages() {
 }
 
 (() => {
-    resolveMahjong();
+    moduleReadinessMap.mahjongMode.markReady();
 })();
