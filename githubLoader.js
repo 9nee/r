@@ -37,7 +37,7 @@ const ENHANCED_EMOTES         = `${MODULES_PATH}enhancedEmotes.js`;
 const HOLOPEEK                = `${MODULES_PATH}holopeek/holoPeek.js`;
 const MAHJONG_MODE            = `${MODULES_PATH}mahjongMode.js`; //Mahjong mode currently depends on holopeek, it's not quite modular.
 const NND_MODULE              = `${MODULES_PATH}nndChatModule.js`;
-const IMG_PREVIEW_MODULE      = `${MODULES_PATH}imageHoverPreview.js`;
+const IMG_PREVIEW_MODULE      = `${MODULES_PATH}imagePreview.js`;
 
 function fetchLastChatElement() {
     return $('#messagebuffer').children().last().children().last();
