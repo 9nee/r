@@ -258,7 +258,7 @@ $(document).ready(function () {
 let keyHeld = false;
 $(window).bind('keyup', function () { keyHeld = false; });
 $(window).bind('keydown', function (event) {
-    const inputBox = $("chatline");
+    const inputBox = $("#chatline");
     const inputVal = inputBox.value;
     if (event.ctrlKey && !event.shiftKey) {
         switch (String.fromCharCode(event.which).toLowerCase()) {
