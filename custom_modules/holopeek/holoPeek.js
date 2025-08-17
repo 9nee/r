@@ -70,7 +70,6 @@ let holoPeekOptions;
                         $chatInput.val($chatInput.val().replace(/^MJ: /, ''));
                     }
                 }
-                
                 await toggleMJMessages();
             }
         },
@@ -83,11 +82,10 @@ let holoPeekOptions;
             }
         },
         {
-            id: 'image_hover',
+            id: 'ImagePreview',
             desc: 'Enable image on link hover',
             func: () => {
-                alert("it don't work")
-                $('#holopeek_image_hover').prop('checked', false)
+                toggleImagePreview();
             }
         },
         {

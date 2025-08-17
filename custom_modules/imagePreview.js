@@ -1,7 +1,10 @@
 
 
 function createHoverImage(jqChatMessage) {
-    jqChatMessage.find("a").bind("mouseenter", function ({target}) {
+    jqChatMessage.find("a").bind("mouseenter", function ({ target }) {
+        if (!window.imagePreview || !window.imagePreview.enabled) {
+            return;
+        }
         const messageAfter = $(this).parent().find("img");
         if (!messageAfter.is("img")) {
             const newImg = new Image();
@@ -20,14 +23,35 @@ function createHoverImage(jqChatMessage) {
 }
 
 
-new MutationObserver(mutationList =>
-  mutationList.filter(m => m.type === 'childList').forEach(m => {
-    Array.from(m.addedNodes)
-          .filter(n => n.nodeType == Node.ELEMENT_NODE)
-          .forEach(node => createHoverImage($(node)));
-})).observe($("#messagebuffer")[0],{childList: true, subtree: true});
+function toggleImagePreview() {
+    let cookie = readCookie("ImagrePreview");
 
-// a -> span -> div
-$("#messagebuffer a").parent().parent().each(function () {
-    createHoverImage($(this));
-});
+    if (!cookie) {
+        if (!window.imagePreview) {
+            let observer = new MutationObserver(mutationList =>
+                mutationList.filter(m => m.type === 'childList').forEach(m => {
+                    Array.from(m.addedNodes)
+                        .filter(n => n.nodeType == Node.ELEMENT_NODE)
+                        .forEach(node => createHoverImage($(node)));
+                })
+            );
+
+            window.imagePreview = {
+                observer: observer,
+                enabled: true
+            };
+        }
+        window.imagePreview.ovserver.observe($("#messagebuffer")[0], { childList: true, subtree: true });
+
+        // a -> span -> div
+        $("#messagebuffer a").parent().parent().each(function () {
+            createHoverImage($(this));
+        });
+    } else {
+        if (window.imagePreview) {
+            window.imagePreview.observer.disconnect();
+            window.imagePreview.enabled = false;
+        }
+    }
+}
+
