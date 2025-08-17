@@ -48,27 +48,10 @@ function makeLiveCDNLink(fileName) {
             fileName
 }
 
-function createXaeModuleObject(moduleName, isActive = 1, rank = -1) {
-    return { active: isActive, rank: rank, url: makeLiveCDNLink(`${MODULES_FOLDER}${moduleName}`), done: true};
-}
-function populateXaeModules(ModulePaths) {
-    let modules = {}
-    for (const module of ModulePaths) {
-        if (typeof module === 'string') {
-            modules[module] = createXaeModuleObject(module)
-        } else {
-            modules[module.name] = createXaeModuleObject(module.name, module.isActive, module.rank)
-        }
-    }
-    return modules;
-}
-//html2canvas: { active: 1, rank: -1, url: "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js", done: true },
-
 function fetchLastChatElement() {
     return $('#messagebuffer').children().last().children().last();
 }
 
-//your motherfucking life ends 5 minutes from now
 (async function loadSoundposts() {
     const response = await fetch('https://raw.githubusercontent.com/om3tcw/r/emotes/soundposts/soundposts.json');
     return await response.json();
@@ -76,82 +59,13 @@ function fetchLastChatElement() {
     SOUNDPOSTS = data;
 })
 
-const xaeModule = {
-    shouldModuleBeLoaded(module) {
-        return module.active && module.rank <= CLIENT.rank;
-    },
-    options: {
-        playlist: {
-            collapse: false,
-            hidePlaylist: true,
-            inlineBlame: true,
-            moveReporting: false,
-            quickQuality: false,
-            recentMedia: true,
-            simpleLeader: true,
-            syncCheck: true,
-            thumbnails: true,
-            timeEstimates: true,
-            userlist: { autoHider: true },
-            smartScroll: false,
-            maxMessages: 120
-        },
-        various: { notepad: true, emoteToggle: false }
-    },
-    modules: populateXaeModules(ModulePaths),
-    getScript(url, success, cache) {
-        return new Promise((resolve, reject) => {
-            $.getScript({
-                url: url,
-                cache: cache,
-                success: function(data) {
-                    resolve(data)
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    reject(new Error(`Failed to load ${url} ${textStatus} - ${errorThrown}`));
-                }
-            })
-        })
-    },
-    async initialize() {
-        if (!CLIENT.modules) {
-            CLIENT.modules = this;
-            window[CHANNEL.name].modulesOptions = this.options;
-            await this.preloadRegistry();
-            console.info("[XaeModule]", "Begin Loading.");
-            this.allModulesLoaded = this.sequencerLoader();
-            this.cache = this.cache ?? false;
-        };
-    },
-    preloadRegistry() {
-        return this.getScript(makeLiveCDNLink(MODULE_REGISTRY), null, null);
-    },
-    async sequencerLoader() {
-        const moduleLoadPromises = [];
-        this.state.pos = 0;
-        this.state.prev = "";
-        for (const moduleName of Object.keys(this.modules)) {
-            const moduleBeingLoaded = this.modules[moduleName]            
-            if (this.shouldModuleBeLoaded(moduleBeingLoaded)) {
-                this.state.prev = moduleName;
-                this.state.pos++;
-                const cache = moduleBeingLoaded.cache ?? this.cache;
-                moduleLoadPromises.push(this.getScript(moduleBeingLoaded.url, null, cache));
-            }
-        }
-        return Promise.all(moduleLoadPromises)
-        }
-    ,
-    state: { prev: "", pos: 0 }
-};
-
-xaeModule.initialize();
+const NeoXaeModules = await import(makeLiveCDNLink("XaeModules.js"));
 
 (async function postModuleLoadLogic() {
-    if (!xaeModule.modules) {
-        return;   
+    if (!NeoXaeModules.allModulesLoaded) {
+        return;
     }
-    await xaeModule.allModulesLoaded;
+    await NeoXaeModules.allModulesLoaded;
     console.log("This should wait until all modules have loaded")
     SOUNDPOST_STATE = readCookie("SOUNDPOST_STATE");
     $('#messagebuffer [class|="chat-msg"]').each((index, domElement) => {
