@@ -65,8 +65,23 @@ class NeoXaeModuleLoader {
         this.allModulesLoaded = this.#sequencerLoader();
     }
 
+    async #getScript(moduleName) {
+        return new Promise((resolve, reject) => {
+            $.getScript({
+                url: makeLiveCDNLink(moduleName),
+                cache: false,
+                success: function(data) {
+                    resolve(data);
+                },
+                error: function(_, textStatus, errorThrown) {
+                    reject(new Error(`Failed to load module registry: ${textStatus} - ${errorThrown}`));
+                }
+            });
+        });
+    }
+
     async #preloadRegistry() {
-        return import(makeLiveCDNLink(MODULE_REGISTRY));
+        return this.#getScript(makeLiveCDNLink(MODULE_REGISTRY));
     }
 
     #isModuleEligibleForLoading(moduleConfig) {
@@ -89,7 +104,9 @@ class NeoXaeModuleLoader {
                 this.#state.prev = moduleName;
                 this.#state.pos++;
 
-                const moduleImport = import(moduleObject.url);
+                const moduleImport = this.#getScript(moduleObject.url);
+
+                window.moduleRegistry.markReady(moduleName);
 
                 moduleLoadPromises.push(moduleImport);
             }

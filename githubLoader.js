@@ -75,8 +75,6 @@ const ModuleLoaderPromise = (async () => {
     
     await ModuleLoaderInstance.allModulesLoaded;
 
-    console.log("All modules loaded!")
-
     //Your motherfucking life ends 5 minutes from now
     SOUNDPOST_STATE = readCookie("SOUNDPOST_STATE");;
 
@@ -86,8 +84,6 @@ const ModuleLoaderPromise = (async () => {
         await globalMessageFormatInjection({$message: $messageElement});
     })
 })();
-
-
 
 //TODO: move to the other ready function?  
 $(document).ready(function () {
@@ -541,7 +537,7 @@ async function globalMessageFormatInjection({ username = "undefined",
         formatCommandMessage($message);
     }
 
-    await window.moduleRegistry.waitForReady("mahjongMode")
+    await window.moduleRegistry.waitForReady("mahjongMode.js")
     if ($messageText.startsWith('MJ:')) {
             formatMJMessage($message)
     }
