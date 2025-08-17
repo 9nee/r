@@ -118,7 +118,6 @@ const xaeModule = {
             CLIENT.modules = this;
             window[CHANNEL.name].modulesOptions = this.options;
             await this.preloadRegistry();
-            debugger;
             console.info("[XaeModule]", "Begin Loading.");
             this.allModulesLoaded = this.sequencerLoader();
             this.cache = this.cache ?? false;
