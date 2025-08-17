@@ -9,11 +9,12 @@ function createHoverImage(jqChatMessage) {
         if (!messageAfter[0]) {
             const newImg = new Image();
             newImg.style.display = "none";
+            newImg.referrerPolicy = "no-referrer";
             newImg.onload = function () {
                 this.classList.add("imageHoverPreview", "imageLoaded");
             };
-            newImg.src = $(this).html();
-            $(this).parent().parent().after(newImg);
+            newImg.src = target.href;
+            target.parentElement.parentElement.appendChild(newImg); // fuck jqueery
         }
         $("#messagebuffer div:hover .imageHoverPreview").stop(true, false).slideDown(100);
         $("#messagebuffer div:hover").one("mouseout", function () {
