@@ -146,7 +146,7 @@ const xaeModule = {
 
 xaeModule.initialize();
 
-async function postModuleLoadLogic() {
+(async function postModuleLoadLogic() {
     if (!xaeModule.modules) {
         return;   
     }
@@ -157,14 +157,7 @@ async function postModuleLoadLogic() {
         const $messageElement = $jqElement.children().last();
         globalMessageFormatInjection({$message: $messageElement});
     });
-}
-
-if (document.readyState === 'loading') {
-    document.addEventListener("DOMContentLoaded", postModuleLoadLogic);
-} else {
-    postModuleLoadLogic();
-}
-
+})();
 
 //TODO: move to the other ready function?  
 $(document).ready(function () {
