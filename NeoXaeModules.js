@@ -17,7 +17,7 @@ const ModuleLoaderOptions =
     },
 }
 
-class NeoXaeModuleLoader {
+export class NeoXaeModuleLoader {
     #modulePaths
     #moduleObjects;
     #options;
