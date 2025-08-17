@@ -59,25 +59,6 @@ function makeLiveCDNLink(fileName) {
     SOUNDPOSTS = data;
 })
 
-//JQUERY 1.12.4 HAS VERY BUGGY SUPPORT FOR ASYNC/AWAIT.
-//THIS ROUNDABOUT FUCKASS WAY IS THE PREFERRED WAY OF DOING THINGS IF WE DEPEND ON ASYNCHRONICITY
-//UPDATILIA DOCUMENT THIS
-async function onDomReadyLogic() {
-    await moduleReadinessMap.mahjongMode.waitForReady();
-    SOUNDPOST_STATE = readCookie("SOUNDPOST_STATE");
-    $('#messagebuffer [class|="chat-msg"]').each((index, domElement) => {
-        const $jqElement = $(domElement); 
-        const $messageElement = $jqElement.children().last();
-        globalMessageFormatInjection({$message: $messageElement});
-    });
-}
-
-if (document.readyState === 'loading') {
-    document.addEventListener("DOMContentLoaded", onDomReadyLogic);
-} else {
-    onDomReadyLogic();
-}
-
 const xaeModule = {
     options: {
         playlist: {
@@ -108,7 +89,7 @@ const xaeModule = {
         userlistEnhancement: { active: 1, rank: -1, url: makeLiveCDNLink(USERLIST_ENHANCEMENT), done: true },
         enhancedEmotes: { active: 1, rank: -1, url: makeLiveCDNLink(ENHANCED_EMOTES), done: true },
         holoPeek: { active: 1, rank: -1, url: makeLiveCDNLink(HOLOPEEK), done: true },
-        mahjongMode: { active: 0, rank: -1, url: makeLiveCDNLink(MAHJONG_MODE), done: true },
+        mahjongMode: { active: 1, rank: -1, url: makeLiveCDNLink(MAHJONG_MODE), done: true },
         html2canvas: { active: 1, rank: -1, url: "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js", done: true },
         nndChatModule: {active: 0, rank: -1, url: makeLiveCDNLink(NND_MODULE), done: true }
 
@@ -116,7 +97,7 @@ const xaeModule = {
     getScript(url, success) {
         return $.getScript({url, success});
     },
-    initialize() {
+    async initialize() {
         if (CLIENT.modules) return;
         CLIENT.modules = this;
         window[CHANNEL.name].modulesOptions = this.options;
@@ -125,7 +106,7 @@ const xaeModule = {
         this.sequencerLoader();
         this.cache = false;
     },
-    sequencerLoader() {
+    async sequencerLoader() {
         if (this.state.prev) {
             setTimeout(this.modules[this.state.prev].done, 0);
             this.state.prev = "";
@@ -164,6 +145,26 @@ const xaeModule = {
 };
 
 xaeModule.initialize();
+
+async function postModuleLoadLogic() {
+    if (!xaeModule.modules) {
+        return;   
+    }
+    await xaeModule.initialize();
+    SOUNDPOST_STATE = readCookie("SOUNDPOST_STATE");
+    $('#messagebuffer [class|="chat-msg"]').each((index, domElement) => {
+        const $jqElement = $(domElement); 
+        const $messageElement = $jqElement.children().last();
+        globalMessageFormatInjection({$message: $messageElement});
+    });
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener("DOMContentLoaded", postModuleLoadLogic);
+} else {
+    postModuleLoadLogic();
+}
+
 
 //TODO: move to the other ready function?  
 $(document).ready(function () {
