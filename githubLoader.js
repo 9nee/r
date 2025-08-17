@@ -25,18 +25,19 @@ const defaultAdditionalPlayTime = 3;
 
 const MODULES_PATH = "custom_modules/";
 
-const MODULE_READINESS_STATE = `${MODULES_PATH}moduleReadinessState.js`
-const INJECT_CUSTOM_CSS = `${MODULES_PATH}custom_css_injection/customCssInjection.js`;
-const CUSTOM_SETTINGS_MODAL = `${MODULES_PATH}customSettingsModal.js`;
-const BETTER_PLAYLIST = `${MODULES_PATH}betterPlaylist.js`;
-const BETTER_PMS = `${MODULES_PATH}betterPms.js`;
-const SOUND_NOTIFICATIONS = `${MODULES_PATH}soundNotifications.js`;
-const MORE_LAYOUT_OPTIONS = `${MODULES_PATH}moreLayoutOptions.js`;
-const USERLIST_ENHANCEMENT = `${MODULES_PATH}customUserlist.js`;
-const ENHANCED_EMOTES = `${MODULES_PATH}enhancedEmotes.js`;
-const HOLOPEEK = `${MODULES_PATH}holopeek/holoPeek.js`;
-const MAHJONG_MODE = `${MODULES_PATH}mahjongMode.js`; //Mahjong mode currently depends on holopeek, it's not quite modular.
-const NND_MODULE = `${MODULES_PATH}nndChatModule.js`;
+const MODULE_READINESS_STATE  = `${MODULES_PATH}moduleReadinessState.js`
+const INJECT_CUSTOM_CSS       = `${MODULES_PATH}custom_css_injection/customCssInjection.js`;
+const CUSTOM_SETTINGS_MODAL   = `${MODULES_PATH}customSettingsModal.js`;
+const BETTER_PLAYLIST         = `${MODULES_PATH}betterPlaylist.js`;
+const BETTER_PMS              = `${MODULES_PATH}betterPms.js`;
+const SOUND_NOTIFICATIONS     = `${MODULES_PATH}soundNotifications.js`;
+const MORE_LAYOUT_OPTIONS     = `${MODULES_PATH}moreLayoutOptions.js`;
+const USERLIST_ENHANCEMENT    = `${MODULES_PATH}customUserlist.js`;
+const ENHANCED_EMOTES         = `${MODULES_PATH}enhancedEmotes.js`;
+const HOLOPEEK                = `${MODULES_PATH}holopeek/holoPeek.js`;
+const MAHJONG_MODE            = `${MODULES_PATH}mahjongMode.js`; //Mahjong mode currently depends on holopeek, it's not quite modular.
+const NND_MODULE              = `${MODULES_PATH}nndChatModule.js`;
+const IMG_PREVIEW_MODULE      = `${MODULES_PATH}imageHoverPreview.js`;
 
 function fetchLastChatElement() {
     return $('#messagebuffer').children().last().children().last();
@@ -111,6 +112,7 @@ const xaeModule = {
         mahjongMode: { active: 1, rank: -1, url: makeLiveCDNLink(MAHJONG_MODE), done: true },
         html2canvas: { active: 1, rank: -1, url: "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js", done: true },
         nndChatModule: {active: 0, rank: -1, url: makeLiveCDNLink(NND_MODULE), done: true }
+        imgPreviewModule: {active: 0, rank: -1, url: makeLiveCDNLink(IMG_PREVIEW_MODULE), done: true }
 
     },
     getScript(url, success) {
