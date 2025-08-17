@@ -17,7 +17,7 @@ const ModuleLoaderOptions =
     },
 }
 
-export class NeoXaeModuleLoader {
+class NeoXaeModuleLoader {
     #modulePaths
     #moduleObjects;
     #options;
@@ -113,3 +113,5 @@ export class NeoXaeModuleLoader {
         return Promise.all(moduleLoadPromises);
     }
 }
+
+export default NeoXaeModuleLoader;
