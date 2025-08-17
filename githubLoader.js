@@ -71,10 +71,10 @@ const ModuleLoaderPromise = (async () => {
     const ModuleLoaderClass = await ModuleLoaderPromise;
     const ModuleLoaderInstance = new ModuleLoaderClass(ModulePaths);
 
-    ModuleLoaderInstance.initialize();
+    await ModuleLoaderInstance.initialize();
     
     await ModuleLoaderInstance.allModulesLoaded;
-
+    
     //Your motherfucking life ends 5 minutes from now
     SOUNDPOST_STATE = readCookie("SOUNDPOST_STATE");;
 
