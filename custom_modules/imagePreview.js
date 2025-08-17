@@ -41,7 +41,7 @@ function toggleImagePreview() {
                 enabled: true
             };
         }
-        window.imagePreview.ovserver.observe($("#messagebuffer")[0], { childList: true, subtree: true });
+        window.imagePreview.observer.observe($("#messagebuffer")[0], { childList: true, subtree: true });
 
         // a -> span -> div
         $("#messagebuffer a").parent().parent().each(function () {
