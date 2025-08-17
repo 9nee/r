@@ -117,7 +117,7 @@ const xaeModule = {
         if (!CLIENT.modules) {
             CLIENT.modules = this;
             window[CHANNEL.name].modulesOptions = this.options;
-            this.preloadRegistry();
+            await this.preloadRegistry();
             debugger;
             console.info("[XaeModule]", "Begin Loading.");
             this.allModulesLoaded = this.sequencerLoader();
@@ -125,7 +125,7 @@ const xaeModule = {
         };
     },
     preloadRegistry() {
-        return $.getScript(makeLiveCDNLink(MODULE_REGISTRY));
+        return this.getScript(makeLiveCDNLink(MODULE_REGISTRY), null, null);
     },
     async sequencerLoader() {
         const moduleLoadPromises = [];
