@@ -117,14 +117,14 @@ const xaeModule = {
         if (!CLIENT.modules) {
             CLIENT.modules = this;
             window[CHANNEL.name].modulesOptions = this.options;
-            await this.preloadRegistry();
+            this.preloadRegistry();
             console.info("[XaeModule]", "Begin Loading.");
             this.allModulesLoaded = this.sequencerLoader();
             this.cache = this.cache ?? false;
         };
     },
-    async preloadRegistry() {
-        return this.getScript(makeLiveCDNLink(MODULE_REGISTRY), null, null);
+    preloadRegistry() {
+        return $.getScript(makeLiveCDNLink(MODULE_REGISTRY));
     },
     async sequencerLoader() {
         const moduleLoadPromises = [];
