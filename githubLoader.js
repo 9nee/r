@@ -618,8 +618,9 @@ function globalMessageFormatInjection({ username = "undefined",
         formatCommandMessage($message);
     }
 
-    if ($messageText.startsWith('MJ:')) {
-        formatMJMessage($message)
+    if (moduleReadinessMap.mahjongMode.isReady() &&
+        $messageText.startsWith('MJ:')) {
+            formatMJMessage($message)
     }
 
     if (!['[server]', '[voteskip]'].includes(username.toLowerCase()) && username !== "numbertrees") {
