@@ -64,7 +64,16 @@ const ModuleLoaderPromise = (async () => {
     return importedModule.default;
 })();
 
-(async function postModuleLoadLogic() {
+//MessageFormatInjection.js?
+function insertFormatOnExistingMessages() {
+    $('#messagebuffer [class|="chat-msg"]').each((index, domElement) => {
+        const $jqElement = $(domElement); 
+        const $messageElement = $jqElement.children().last();
+        globalMessageFormatInjection({$message: $messageElement});
+    })
+}
+
+(async function loadLogic() {
 
     const ModuleLoaderClass = await ModuleLoaderPromise;
     const ModuleLoaderInstance = new ModuleLoaderClass(ModulePaths);
@@ -75,13 +84,14 @@ const ModuleLoaderPromise = (async () => {
 
     console.log("All modules loaded!")
 
-    SOUNDPOST_STATE = readCookie("SOUNDPOST_STATE");
-    $('#messagebuffer [class|="chat-msg"]').each((index, domElement) => {
-        const $jqElement = $(domElement); 
-        const $messageElement = $jqElement.children().last();
-        globalMessageFormatInjection({$message: $messageElement});
-    });
+    //Your motherfucking life ends 5 minutes from now
+    SOUNDPOST_STATE = readCookie("SOUNDPOST_STATE");;
+
+    insertFormatOnExistingMessages();
+
 })();
+
+
 
 //TODO: move to the other ready function?  
 $(document).ready(function () {
