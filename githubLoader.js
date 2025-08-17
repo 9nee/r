@@ -60,7 +60,7 @@ function fetchLastChatElement() {
 })
 
 const NeoXaeModules = (async () => {
-    await import(makeLiveCDNLink("XaeModules.js"))
+    await import(makeLiveCDNLink("NeoXaeModules.js"))
 })();
 
 
