@@ -12,7 +12,7 @@ if (!this[CHANNEL.name].favicon) {
         .appendTo("head");
 }
 
-const CURRENT_COMMIT = "0cfab06e8016bcf41a68b275047a7e595f38d1c2"
+const CURRENT_COMMIT = "95d28f11210b2a2c6d0cdb3ce835db3209d77d58"
 //Change to om3tcw on live
 const CURRENT_REPO = "immergrok"
 
@@ -39,10 +39,6 @@ const ModulePaths = [
     `mahjongMode.js`,
     { name: `nndChatModule.js`, isActive: 0, rank: -1}
 ]
-
-//JQUERY 1.12 IS THE BANE OF MY EXISTENCE.
-//THIS ISN'T NEEDED IN JQUERY 3+
-
 
 function makeLiveCDNLink(fileName) {
     return "https://cdn.jsdelivr.net/gh/" + 
