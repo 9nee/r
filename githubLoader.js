@@ -55,7 +55,7 @@ function createXaeModuleObject(moduleName, isActive = 1, rank = -1) {
 function populateXaeModules(ModulePaths) {
     let modules = {}
     for (const module of ModulePaths) {
-        if (module === typeof(string)) {
+        if (typeof module === 'string') {
             modules[module] = createXaeModuleObject(module)
         } else{
             modules[module.name] = createXaeModuleObject(module.name, module.isActive, module.rank)
