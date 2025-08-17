@@ -61,6 +61,7 @@ class NeoXaeModuleLoader {
         
         this.#moduleRegistryInstance = await this.#preloadRegistry();
 
+        breakpoint;
         this.#turnPathsIntoModuleObjects(this.#modulePaths)
         this.allModulesLoaded = this.#sequencerLoader();
     }
@@ -121,13 +122,6 @@ class NeoXaeModuleLoader {
                 this.#state.pos++;
 
                 const moduleImport = this.#getScript(moduleObject.url);
-                moduleImport.then( () => {
-                    if (this.#moduleRegistryInstance) {
-                        this.#moduleRegistryInstance.markReady(moduleName)
-                    } else {
-                        console.error("Something hit the fan")
-                    }
-                })
 
                 window.moduleRegistry.markReady(moduleName);
 
