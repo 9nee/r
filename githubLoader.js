@@ -109,8 +109,8 @@ const xaeModule = {
             $.getScript({
                 url: url,
                 cache: cache,
-                success: function(success) {
-                    resolve(success)
+                success: function(data) {
+                    resolve(data)
                 },
                 error: function() {
                     reject(new Error(`Failed to load ${url}`))
@@ -119,37 +119,31 @@ const xaeModule = {
         })
     },
     async initialize() {
-        if (CLIENT.modules) return;
-        CLIENT.modules = this;
-        window[CHANNEL.name].modulesOptions = this.options;
-        console.info("[XaeModule]", "Begin Loading.");
-        this.moduleNames = Object.keys(this.modules);
-        this.allModulesLoaded = this.sequencerLoader();
-        this.cache = false;
+        if (!CLIENT.modules) {
+            CLIENT.modules = this;
+            window[CHANNEL.name].modulesOptions = this.options;
+            console.info("[XaeModule]", "Begin Loading.");
+            this.allModulesLoaded = this.sequencerLoader();
+            this.cache = this.cache ?? false;
+        };
     },
-    async sequencerLoader() {
-        const loadPromises = [];
-        if (this.state.prev) {
-            setTimeout(this.modules[this.state.prev].done, 0);
-            this.state.prev = "";
-        }
-        if (this.state.pos >= this.moduleNames.length) {
-            console.info("[XaeModule]", "Loading Complete.");
-            return;
-        }
-        const moduleBeingLoaded = this.moduleNames[this.state.pos];
-        if (this.state.pos < this.moduleNames.length && this.shouldModuleBeLoaded(this.modules[moduleBeingLoaded])) {
-                console.info("[XaeModule]", "Loading:", moduleBeingLoaded);
-                this.state.prev = moduleBeingLoaded;
-                this.state.pos++;
-                const cache = this.modules[moduleBeingLoaded].cache ?? this.cache;
-                loadPromises.push(this.getScript(this.modules[moduleBeingLoaded].url, this.sequencerLoader.bind(this), cache));
-            } else {
-                this.state.pos++;
-                this.sequencerLoader();
-            }
 
-        return Promise.all(loadPromises)
+    async sequencerLoader() {
+        const moduleLoadPromises = [];
+        this.state.pos = 0;
+        this.state.prev = "";
+        for (const moduleName of Object.keys(this.modules)) {
+            const moduleBeingLoaded = this.modules[moduleName]
+            
+            if (this.shouldModuleBeLoaded(moduleBeingLoaded)) {
+                this.state.prev = moduleName;
+                this.state.pos++;
+                const cache = moduleBeingLoaded.cache ?? this.cache;
+                moduleLoadPromises.push(this.getScript(moduleBeingLoaded.url, null, cache));
+            }
+        }
+
+        return Promise.all(moduleLoadPromises)
         }
     ,
     state: { prev: "", pos: 0 }
