@@ -24,9 +24,8 @@ const defaultVolume = 0.1;
 const defaultAdditionalPlayTime = 3;
 
 const MODULES_FOLDER = "custom_modules/";
-
+const MODULE_REGISTRY = "moduleRegistry.js"
 const ModulePaths = [
-    `moduleReadinessState.js`,
     `custom_css_injection/customCssInjection.js`,
     `customSettingsModal.js`,
     `betterPlaylist.js`,
@@ -123,13 +122,17 @@ const xaeModule = {
             this.cache = this.cache ?? false;
         };
     },
-
+    async preloadRegistry() {
+        return this.getScript(makeLiveCDNLink(MODULE_REGISTRY), null, null);
+    },
     async sequencerLoader() {
         const moduleLoadPromises = [];
         this.state.pos = 0;
         this.state.prev = "";
         for (const moduleName of Object.keys(this.modules)) {
             const moduleBeingLoaded = this.modules[moduleName]
+
+            await this.preloadRegistry();
             
             if (this.shouldModuleBeLoaded(moduleBeingLoaded)) {
                 this.state.prev = moduleName;
@@ -138,7 +141,6 @@ const xaeModule = {
                 moduleLoadPromises.push(this.getScript(moduleBeingLoaded.url, null, cache));
             }
         }
-
         return Promise.all(moduleLoadPromises)
         }
     ,
