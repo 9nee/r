@@ -10,9 +10,6 @@ if (!window[CHANNEL.name]) {
     } else if (typeof window.playlist !== "function") {
         console.error("[XaeTube: Audio Notifier]", "Playlist parser unavailable. Aborting load.");
         return;
-        return
-    } else {
-        console.info("[XaeTube: Audio Notifier]", "Loading Module.")
     }
     if (typeof window[CHANNEL.name].audioLibrary === "undefined") {
         console.warn("[XaeTube: Audio Notifier]", "WARNING: Audio library module not loaded.")
@@ -20,132 +17,132 @@ if (!window[CHANNEL.name]) {
     if (!$("#customSettingsStaging").length) {
         console.warn("[XaeTube: Audio Notifier]", "WARNING: Settings module not loaded.")
     }
-    const AudioNotifier = function() {
-        this.Squee = {
-            timeSinceLast: 0,
-            toggleState: true,
-            volume: .35,
-            id: "squee"
-        };
-        this.Poll = {
-            timeSinceLast: 0,
-            toggleState: true,
-            volume: .2,
-            id: "votingpoll"
-        };
-        this.Priv = {
-            timeSinceLast: 0,
-            toggleState: true,
-            volume: .15,
-            id: "uhoh"
-        };
-        this.Video = {
-            timeSinceLast: 0,
-            toggleState: true,
-            volume: .35,
-            id: "fairywand"
-        };
-        this.Marked = {
-            timeSinceLast: 0,
-            toggleState: true,
-            volume: .4,
-            id: "bell"
-        };
-        this.typeNames = {
-            Squee: "Username",
-            Poll: "Poll",
-            Priv: "Private Message",
-            Video: "Queued Video",
-            Marked: "Marked Video"
-        };
-        this.choices = Object.assign({}, {
-            squee: "",
-            votingpoll: "https://cdn.jsdelivr.net/gh/om3tcw/r@emotes/soundposts/sounds/ogeyrrat.ogg",
-            uhoh: "https://cdn.jsdelivr.net/gh/om3tcw/r@emotes/soundposts/sounds/sharkmail.ogg",
-            fairywand: "https://cdn.jsdelivr.net/gh/om3tcw/r@emotes/soundposts/sounds/morinayeah.ogg", 
-            bell: "https://cdn.jsdelivr.net/gh/om3tcw/r@emotes/soundposts/sounds/fairywand.ogg"
-        }, window[CHANNEL.name].audioLibrary ? window[CHANNEL.name].audioLibrary.squees : undefined);
-        this.handler = {
-            Squee: function(data) {
-                var squee;
-                if (!this.Squee.toggleState) {
-                    return
-                }
-                if (!CHANNEL.opts.chat_antiflood) {
-                    console.info("[XaeTube: Audio Notifier]", "User ping ignored: Chat throttle off.");
-                    return
-                }
-                if (Date.now() - this.Squee.timeSinceLast < 7e3) return;
-                squee = $(".nick-highlight:not( .parsed )");
-                if (!squee.length) return;
-                squee.addClass("parsed");
-                var start = Date.parse("2015-10-31T04:00:00Z"),
-                    end = Date.parse("2015-11-01T04:00:00Z"),
-                    current = Date.now();
-                current > start && end > current ? function() {
-                    toot = new Audio("/skulltrumpet.wav");
-                    toot.volume = .33;
-                    toot.play()
-                }() : this.Squee.audio[0].play();
-                this.Squee.timeSinceLast = Date.now()
-            }.bind(this),
-            Poll: function(data) {
-                if (!this.Poll.toggleState) return;
-                if (CLIENT.rank < CHANNEL.perms.pollvote) return;
-                if (Date.now() - this.Poll.timeSinceLast <  6e4) return;
-                this.Poll.audio[0].play();
-                this.Poll.timeSinceLast = Date.now()
-            }.bind(this),
-            Priv: function(data) {
-                if (!this.Priv.toggleState) return;
-                if (data.username == CLIENT.name) return;
-                if (window.IGNORED.includes(data.username)) return;
-                if ($(document.activeElement).hasClass("pm-input")) return;
-                if (Date.now() - this.Priv.timeSinceLast < 18e4) return;
-                this.Priv.audio[0].play();
-                this.Priv.timeSinceLast = Date.now();
-                $("div.chat-msg-\\\\\\$server\\\\\\$:contains(Direct Message Notification)").remove();
-                $("#messagebuffer").trigger("whisper", `Direct Message Notification: ${data.username}`)
-            }.bind(this),
-            Video: function(data) {
-                var addedby;
-                if (!this.Video.toggleState) return;
-                if (CLIENT.rank < CHANNEL.perms.seeplaylist) return;
-                addedby = playlist(true).addedby == CLIENT.name;
-                if (addedby && this.Video.last) {
+    class AudioNotifier {
+        constructor() {
+            this.Squee = {
+                timeSinceLast: 0,
+                toggleState: true,
+                volume: .35,
+                id: "squee"
+            };
+            this.Poll = {
+                timeSinceLast: 0,
+                toggleState: true,
+                volume: .2,
+                id: "votingpoll"
+            };
+            this.Priv = {
+                timeSinceLast: 0,
+                toggleState: true,
+                volume: .15,
+                id: "uhoh"
+            };
+            this.Video = {
+                timeSinceLast: 0,
+                toggleState: true,
+                volume: .35,
+                id: "fairywand"
+            };
+            this.Marked = {
+                timeSinceLast: 0,
+                toggleState: true,
+                volume: .4,
+                id: "bell"
+            };
+            this.typeNames = {
+                Squee: "Username",
+                Poll: "Poll",
+                Priv: "Private Message",
+                Video: "Queued Video",
+                Marked: "Marked Video"
+            };
+            this.choices = Object.assign({}, {
+                squee: "",
+                votingpoll: "https://cdn.jsdelivr.net/gh/om3tcw/r@emotes/soundposts/sounds/ogeyrrat.ogg",
+                uhoh: "https://cdn.jsdelivr.net/gh/om3tcw/r@emotes/soundposts/sounds/sharkmail.ogg",
+                fairywand: "https://cdn.jsdelivr.net/gh/om3tcw/r@emotes/soundposts/sounds/morinayeah.ogg",
+                bell: "https://cdn.jsdelivr.net/gh/om3tcw/r@emotes/soundposts/sounds/fairywand.ogg"
+            }, window[CHANNEL.name].audioLibrary ? window[CHANNEL.name].audioLibrary.squees : undefined);
+            this.handler = {
+                Squee: function (data) {
+                    var squee;
+                    if (!this.Squee.toggleState) {
+                        return;
+                    }
+                    if (!CHANNEL.opts.chat_antiflood) {
+                        console.info("[XaeTube: Audio Notifier]", "User ping ignored: Chat throttle off.");
+                        return;
+                    }
+                    if (Date.now() - this.Squee.timeSinceLast < 7e3) return;
+                    squee = $(".nick-highlight:not( .parsed )");
+                    if (!squee.length) return;
+                    squee.addClass("parsed");
+                    var start = Date.parse("2015-10-31T04:00:00Z"), end = Date.parse("2015-11-01T04:00:00Z"), current = Date.now();
+                    current > start && end > current ? function () {
+                        toot = new Audio("/skulltrumpet.wav");
+                        toot.volume = .33;
+                        toot.play();
+                    } () : this.Squee.audio[0].play();
+                    this.Squee.timeSinceLast = Date.now();
+                }.bind(this),
+                Poll: function (data) {
+                    if (!this.Poll.toggleState) return;
+                    if (CLIENT.rank < CHANNEL.perms.pollvote) return;
+                    if (Date.now() - this.Poll.timeSinceLast < 6e4) return;
+                    this.Poll.audio[0].play();
+                    this.Poll.timeSinceLast = Date.now();
+                }.bind(this),
+                Priv: function (data) {
+                    if (!this.Priv.toggleState) return;
+                    if (data.username == CLIENT.name) return;
+                    if (window.IGNORED.includes(data.username)) return;
+                    if ($(document.activeElement).hasClass("pm-input")) return;
+                    if (Date.now() - this.Priv.timeSinceLast < 18e4) return;
+                    this.Priv.audio[0].play();
+                    this.Priv.timeSinceLast = Date.now();
+                    $("div.chat-msg-\\\\\\$server\\\\\\$:contains(Direct Message Notification)").remove();
+                    $("#messagebuffer").trigger("whisper", `Direct Message Notification: ${data.username}`);
+                }.bind(this),
+                Video: function (data) {
+                    var addedby;
+                    if (!this.Video.toggleState) return;
+                    if (CLIENT.rank < CHANNEL.perms.seeplaylist) return;
+                    addedby = playlist(true).addedby == CLIENT.name;
+                    if (addedby && this.Video.last) {
+                        this.Video.timeSinceLast = Date.now();
+                        return;
+                    }
+                    this.Video.last = false;
+                    if (!addedby) return;
+                    if (Date.now() - this.Video.timeSinceLast < 6e5) return;
+                    this.Video.audio[0].play();
                     this.Video.timeSinceLast = Date.now();
-                    return
-                }
-                this.Video.last = false;
-                if (!addedby) return;
-                if (Date.now() - this.Video.timeSinceLast < 6e5) return;
-                this.Video.audio[0].play();
-                this.Video.timeSinceLast = Date.now();
-                this.Video.last = true;
-                $("div.chat-msg-\\\\\\$server\\\\\\$:contains(Video Notification)").remove();
-                $("#messagebuffer").trigger("whisper", "Video Notification: Your video is now playing!")
-            }.bind(this),
-            Marked: function(uid) {
-                if (!this.Marked.toggleState) return;
-                if (CLIENT.rank < CHANNEL.perms.seeplaylist) return;
-                if (Date.now() - this.Marked.timeSinceLast < 1 * 1e3) return;
-                var item = $(`.pluid-${uid}`);
-                var marked = $("#queue").data("marked");
-                var isMarked = marked.includes(uid);
-                if (!isMarked) {
-                    return
-                }
-                marked.splice(marked.indexOf(uid), 1);
-                item.find(".qbtn-mark").removeClass("btn-warning").addClass("btn-default disabled");
-                this.Marked.audio[0].play();
-                this.Marked.timeSinceLast = Date.now();
-                this.Marked.last = true;
-                $("div.chat-msg-\\\\\\$server\\\\\\$:contains(Video Notification)").remove();
-                $("#messagebuffer").trigger("whisper", "Video Notification: A video you marked is now playing!")
-            }.bind(this)
-        };
-        return this
-    };
+                    this.Video.last = true;
+                    $("div.chat-msg-\\\\\\$server\\\\\\$:contains(Video Notification)").remove();
+                    $("#messagebuffer").trigger("whisper", "Video Notification: Your video is now playing!");
+                }.bind(this),
+                Marked: function (uid) {
+                    if (!this.Marked.toggleState) return;
+                    if (CLIENT.rank < CHANNEL.perms.seeplaylist) return;
+                    if (Date.now() - this.Marked.timeSinceLast < 1 * 1e3) return;
+                    var item = $(`.pluid-${uid}`);
+                    var marked = $("#queue").data("marked");
+                    var isMarked = marked.includes(uid);
+                    if (!isMarked) {
+                        return;
+                    }
+                    marked.splice(marked.indexOf(uid), 1);
+                    item.find(".qbtn-mark").removeClass("btn-warning").addClass("btn-default disabled");
+                    this.Marked.audio[0].play();
+                    this.Marked.timeSinceLast = Date.now();
+                    this.Marked.last = true;
+                    $("div.chat-msg-\\\\\\$server\\\\\\$:contains(Video Notification)").remove();
+                    $("#messagebuffer").trigger("whisper", "Video Notification: A video you marked is now playing!");
+                }.bind(this)
+            };
+            return this;
+        }
+    }
     Object.assign(AudioNotifier.prototype, {
         pushNoticeChange: function(change) {
             var type, id, silent;

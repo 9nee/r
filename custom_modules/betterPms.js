@@ -8,8 +8,6 @@
     } else if (typeof CLIENT.name === "undefined") {
         console.error("[XaeTube: Better PMs]", "Client is an anonymous user. Aborting load.");
         return
-    } else {
-        console.info("[XaeTube: Better PMs]", "Loading Module.")
     }
     if (!window[CHANNEL.name]) {
         window[CHANNEL.name] = {}
