@@ -534,7 +534,7 @@ function cleanupSoundpostPlaybackState() {
 }
 
 //TODO: I don't like this destructuring assignment
-function globalMessageFormatInjection({ username = "undefined", 
+async function globalMessageFormatInjection({ username = "undefined", 
                                         $message = "undefined", 
                                         meta = undefined, 
                                         time = undefined
@@ -545,6 +545,7 @@ function globalMessageFormatInjection({ username = "undefined",
         formatCommandMessage($message);
     }
 
+    await window.moduleRegistry.waitForReady("mahjongMode")
     if ($messageText.startsWith('MJ:')) {
             formatMJMessage($message)
     }
