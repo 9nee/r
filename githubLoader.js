@@ -36,9 +36,13 @@ const ModulePaths = [
     `customUserlist.js`,
     `enhancedEmotes.js`,
     `holopeek/holoPeek.js`,
-    `mahjongMode.js`, //Mahjong mode currently depends on holopeek, it's not quite modular.
+    `mahjongMode.js`,
     { name: `nndChatModule.js`, isActive: 0, rank: -1}
 ]
+
+//JQUERY 1.12 IS THE BANE OF MY EXISTENCE.
+//THIS ISN'T NEEDED IN JQUERY 3+
+
 
 function makeLiveCDNLink(fileName) {
     return "https://cdn.jsdelivr.net/gh/" + 
@@ -57,7 +61,7 @@ function populateXaeModules(ModulePaths) {
     for (const module of ModulePaths) {
         if (typeof module === 'string') {
             modules[module] = createXaeModuleObject(module)
-        } else{
+        } else {
             modules[module.name] = createXaeModuleObject(module.name, module.isActive, module.rank)
         }
     }
@@ -78,6 +82,9 @@ function fetchLastChatElement() {
 })
 
 const xaeModule = {
+    shouldModuleBeLoaded(module) {
+        return module.active && module.rank <= CLIENT.rank;
+    },
     options: {
         playlist: {
             collapse: false,
@@ -98,52 +105,51 @@ const xaeModule = {
     },
     modules: populateXaeModules(ModulePaths),
     getScript(url, success) {
-        return $.getScript({url, success});
+        return new Promise((resolve, reject) => {
+            $.getScript({
+                url: url,
+                cache: cache,
+                success: function(success) {
+                    resolve(success)
+                },
+                error: function() {
+                    reject(new Error(`Failed to load ${url}`))
+                }
+            })
+        })
     },
     async initialize() {
         if (CLIENT.modules) return;
         CLIENT.modules = this;
         window[CHANNEL.name].modulesOptions = this.options;
         console.info("[XaeModule]", "Begin Loading.");
-        this.index = Object.keys(this.modules);
+        this.moduleNames = Object.keys(this.modules);
         await this.sequencerLoader();
         this.cache = false;
     },
     async sequencerLoader() {
+        const loadPromises = [];
         if (this.state.prev) {
             setTimeout(this.modules[this.state.prev].done, 0);
             this.state.prev = "";
         }
-        if (this.state.pos >= this.index.length) {
+        if (this.state.pos >= this.moduleNames.length) {
             console.info("[XaeModule]", "Loading Complete.");
             return;
         }
-        const currKey = this.index[this.state.pos];
-        if (this.state.pos < this.index.length) {
-            if (this.modules[currKey].active) {
-                if (this.modules[currKey].rank <= CLIENT.rank) {
-                    console.info("[XaeModule]", "Loading:", currKey);
-                    this.state.prev = currKey;
-                    this.state.pos++;
-                    const cache = typeof this.modules[currKey].cache === "undefined" ? this.cache : this.modules[currKey].cache;
-                    this.getScript(this.modules[currKey].url, this.sequencerLoader.bind(this), cache);
-                } else {
-                    if (this.modules[currKey].rank === 0 && CLIENT.rank === -1) {
-                        socket.once("login", data => {
-                            if (data.success) {
-                                this.getScript(this.modules[currKey].url, false, this.cache);
-                            }
-                        });
-                    }
-                    this.state.pos++;
-                    this.sequencerLoader();
-                }
+        const moduleBeingLoaded = this.moduleNames[this.state.pos];
+        if (this.state.pos < this.moduleNames.length && this.shouldModuleBeLoaded(this.modules[moduleBeingLoaded])) {
+                console.info("[XaeModule]", "Loading:", moduleBeingLoaded);
+                this.state.prev = moduleBeingLoaded;
+                this.state.pos++;
+                const cache = typeof this.modules[moduleBeingLoaded].cache === "undefined" ? this.cache : this.modules[moduleBeingLoaded].cache;
+                this.getScript(this.modules[moduleBeingLoaded].url, this.sequencerLoader.bind(this), cache);
             } else {
                 this.state.pos++;
                 this.sequencerLoader();
             }
         }
-    },
+    ,
     state: { prev: "", pos: 0 }
 };
 

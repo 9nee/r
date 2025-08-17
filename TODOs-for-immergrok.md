@@ -22,3 +22,5 @@ if (!['[server]', '[voteskip]'].includes(username.toLowerCase()) && username !==
 
 - [HIGH PRIO] CI/CD/a method to remove all cookies on live deployment
   - mostly because it's good cv fluff.
+
+- handle errors when fetching a script that isn't found in the getscript part of xaemodules
