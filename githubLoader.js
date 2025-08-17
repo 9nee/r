@@ -142,8 +142,8 @@ const xaeModule = {
                 console.info("[XaeModule]", "Loading:", moduleBeingLoaded);
                 this.state.prev = moduleBeingLoaded;
                 this.state.pos++;
-                const cache = typeof this.modules[moduleBeingLoaded].cache === "undefined" ? this.cache : this.modules[moduleBeingLoaded].cache;
-                this.getScript(this.modules[moduleBeingLoaded].url, this.sequencerLoader.bind(this), cache);
+                const cache = this.modules[moduleBeingLoaded].cache ?? this.cache;
+                loadPromises.push(this.modules[currKey].url, this.sequencerLoader.bind(this), cache);
             } else {
                 this.state.pos++;
                 this.sequencerLoader();
