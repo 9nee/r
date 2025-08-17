@@ -107,8 +107,8 @@ const xaeModule = {
                 success: function(data) {
                     resolve(data)
                 },
-                error: function() {
-                    reject(new Error(`Failed to load ${url}`))
+                error: function(jqXHR, textStatus, errorThrown) {
+                    reject(new Error(`Failed to load ${url} ${textStatus} - ${errorThrown}`));
                 }
             })
         })
