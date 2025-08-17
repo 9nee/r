@@ -117,6 +117,7 @@ const xaeModule = {
         if (!CLIENT.modules) {
             CLIENT.modules = this;
             window[CHANNEL.name].modulesOptions = this.options;
+            await this.preloadRegistry();
             console.info("[XaeModule]", "Begin Loading.");
             this.allModulesLoaded = this.sequencerLoader();
             this.cache = this.cache ?? false;
@@ -130,10 +131,7 @@ const xaeModule = {
         this.state.pos = 0;
         this.state.prev = "";
         for (const moduleName of Object.keys(this.modules)) {
-            const moduleBeingLoaded = this.modules[moduleName]
-
-            await this.preloadRegistry();
-            
+            const moduleBeingLoaded = this.modules[moduleName]            
             if (this.shouldModuleBeLoaded(moduleBeingLoaded)) {
                 this.state.prev = moduleName;
                 this.state.pos++;
