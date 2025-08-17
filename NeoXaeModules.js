@@ -68,7 +68,7 @@ class NeoXaeModuleLoader {
     async #getScript(moduleName) {
         return new Promise((resolve, reject) => {
             $.getScript({
-                url: makeLiveCDNLink(moduleName),
+                url: moduleName,
                 cache: false,
                 success: function(data) {
                     resolve(data);
@@ -81,7 +81,7 @@ class NeoXaeModuleLoader {
     }
 
     async #preloadRegistry() {
-        return this.#getScript(MODULE_REGISTRY);
+        return this.#getScript(makeLiveCDNLink(MODULE_REGISTRY));
     }
 
     #isModuleEligibleForLoading(moduleConfig) {
