@@ -59,14 +59,11 @@ function fetchLastChatElement() {
     SOUNDPOSTS = data;
 })
 
-const ModuleLoader = (async () => {
-    const importedModule = await import(makeLiveCDNLink("NeoXaeModules.js"))
-    return new importedModule.NeoXaeModuleLoader(ModulePaths)
-})();
+const NeoXaeModuleLoader = (await import(makeLiveCDNLink("NeoXaeModules.js"))).default;
+const ModuleLoaderInstance = new NeoXaeModuleLoader(ModulePaths);
 
 (async function postModuleLoadLogic() {
 
-    const ModuleLoaderInstance = await ModuleLoader;
     ModuleLoaderInstance.initialize();
     
     await ModuleLoaderInstance.allModulesLoaded;
