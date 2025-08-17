@@ -64,14 +64,7 @@ const ModuleLoaderPromise = (async () => {
     return importedModule.default;
 })();
 
-//MessageFormatInjection.js?
-function insertFormatOnExistingMessages() {
-    $('#messagebuffer [class|="chat-msg"]').each((index, domElement) => {
-        const $jqElement = $(domElement); 
-        const $messageElement = $jqElement.children().last();
-        globalMessageFormatInjection({$message: $messageElement});
-    })
-}
+
 
 (async function loadLogic() {
 
@@ -87,8 +80,11 @@ function insertFormatOnExistingMessages() {
     //Your motherfucking life ends 5 minutes from now
     SOUNDPOST_STATE = readCookie("SOUNDPOST_STATE");;
 
-    insertFormatOnExistingMessages();
-
+    $('#messagebuffer [class|="chat-msg"]').each(async (index, domElement) => {
+        const $jqElement = $(domElement); 
+        const $messageElement = $jqElement.children().last();
+        await globalMessageFormatInjection({$message: $messageElement});
+    })
 })();
 
 
