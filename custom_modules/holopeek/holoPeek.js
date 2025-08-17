@@ -9,7 +9,7 @@ let holoPeekOptions;
         id: 'holopeek',
         class: 'holoAnim' });
 
-    $holoPeekbutton.on('click', () => {
+    $holoPeekButton.on('click', () => {
         $(this).toggleClass('holoAnim');
         $('#holoPeekBubble').toggle()
         $('#holoPeekBubbleTail').toggle()
