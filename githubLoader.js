@@ -143,7 +143,7 @@ const xaeModule = {
                 this.state.prev = moduleBeingLoaded;
                 this.state.pos++;
                 const cache = this.modules[moduleBeingLoaded].cache ?? this.cache;
-                loadPromises.push(this.modules[moduleBeingLoaded].url, this.sequencerLoader.bind(this), cache);
+                loadPromises.push(this.getScript(this.modules[moduleBeingLoaded].url, this.sequencerLoader.bind(this), cache));
             } else {
                 this.state.pos++;
                 this.sequencerLoader();
