@@ -111,7 +111,7 @@ const xaeModule = {
         holoPeek: { active: 1, rank: -1, url: makeLiveCDNLink(HOLOPEEK), done: true },
         mahjongMode: { active: 1, rank: -1, url: makeLiveCDNLink(MAHJONG_MODE), done: true },
         html2canvas: { active: 1, rank: -1, url: "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js", done: true },
-        nndChatModule: {active: 0, rank: -1, url: makeLiveCDNLink(NND_MODULE), done: true }
+        nndChatModule: {active: 0, rank: -1, url: makeLiveCDNLink(NND_MODULE), done: true },
         imgPreviewModule: {active: 0, rank: -1, url: makeLiveCDNLink(IMG_PREVIEW_MODULE), done: true }
 
     },
