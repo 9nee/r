@@ -24,26 +24,29 @@
 ### Cookies rewritten
 
 - Did you know we've always had methods exposed in the backend to manage cookies? We did. Now we even use them!
+- As a matter of fact, we really don't need cookies, we should be using localStorage, I'll see if I get around to it.
 
 ### Complete refactors
 
 - No more github417.js, it is now githubLoader.js, hopefully will never have a number again. (Name subject to change)
-- Standardized most of the plain JavaScript to JQuery. Now we pester tomboysweat to update to JQuery 3.
+- Standardized most of the plain JavaScript to JQuery. Now we pester tomboysweat to update to JQuery 3
 
 #### Custom Modules folder
 
 Since I'm moving all single responsibilities to modules, this opens up the posibility of having a menu to pick and choose which modules you want loaded. Just the possibility though, it's not implemented.
 
+- NEW: NeoXaeModules.js (Mostly rewritten!)
 - NEW: Holopeek folder with holoPeek.js
 - NEW: enhancedEmotes.js (WIP)
 - NEW: Custom CSS Injection folder! (read below)
 - NEW: rratButton.js
 - NEW: nndChatModule.js (Disabled, just leftover code moved)
 - NEW: soundpostModule.js (WIP!)
+- NEW: mahjongMode.js (Largely rewritten)
 
 #### Polkapeek rewrite
 
-- Changed the name internally to holopeek, fuck you luxes.
+- (reverted) changed the name internally to holopeek, fuck you luxes.
 - NEW: The range sliders will now update live, instead of when you refresh the checkbox.
 - NEW: Reset button now comes with an alert so you don't reset on accident.
 - Holopeek was very tightly tied to (the now rewritten) cookies and riddled with bad code. It still is, but a bit less now.
@@ -55,8 +58,10 @@ Since I'm moving all single responsibilities to modules, this opens up the posib
 - Changed the name from "Offtopic mode" to "Mahjong Mode", subject to change.
 - It... works now, kinda, mostly, go test it out.
 
-### Overhauled a bunch of the XaeModules code (thanks Xae it's actually super cool)
+### Large XaeModules rewrite
 
+- The code was pretty cool, and it forms the base of how we load modules, so I rewrote it to better standards.
+- Large shoutouts to whoever this Xae is, lots of work were put into the modules.
 - Created a function makeLiveCDNLink that should create a working CDN link as long as the following parameters are filled:
 
 ```js
@@ -85,69 +90,7 @@ Updatilia, please document this...
 
 ### Promise resolution during module loading
 
-> TW: CODE JARGON, SKIP IF UNINTERESTED
-
-Due to how we're doing things at the moment, modules are loaded synchronously, which is really good if we have a module that directly depends on another. But in code there are very often circular dependencies.
-
-E.g: Mahjong Mode depends on Holopeek to exist, because it directly gets enabled by it. Holopeek depends on MahjongMode to exist, because if you have the box ticked, it has to trigger a method that lives within the Mahjong Mode code.
-
-The solution implemented is to have Promises, Promises are part of the async/await pattern of programming from the early 2010s, first added to Javascript in 2017. That's SUPER new for what relates to patterns. (Asynchronicity is as old as the sky, but the pattern of design and implementation is newer)
-
-When there's a piece of code in a module that depends on other modules having finished loading, we'll make it await on a Promise being resolved, this involves:
-
-- Creating a global scope variable to hold the resolution itself. (e.g resolve)
-- Creating a global scope variable to hold the promise (In this case, I chose window.\<var>Promise)
-- Initializing the promise (Important, undefined promises get resolved instantly.)
-
-This looks like:
-
-`promisesAndResolutions.js`
-
-```js
-let resolveMahjong;
-window.mahjongPromise = new Promise(resolve => {
-    resolveMahjong = resolve;
-});
-
-async function resolveMahjongModePromise(){
-    if (!isMahjongModeReady) {
-        return Promise.all([window.mahjongPromise])
-            .then(() => {
-            isMahjongModeReady = true;
-        })
-    } else {
-        return Promise.resolve(true);
-    }
-} 
-```
-
-`mahjongMode.js`
-
-```js
-//At the very end of the file, meaning it has loaded
-//This COULD and SHOULD be part of the XAEMODULES ROUTINE.
-(() => {
-    resolveMahjong();
-})();
-```
-
-`holoPeek.js`
-
-```js
-//A very real function
-function featureThatDependsOnMahjongModeLoaded() {
-    if (!isMahjongModeReady) {
-      await resolveMahjongModePromise()
-    }
-    //awaits until promise is resolved
-    return ":yakuless:"
-}
-
-//does NOT await for the promise to be resolved, will execute regardless
-function otherCode() {
-  console.log("log debugging")
-}
-```
+Go read the technical-documentation if interested, but I put a bunch of effort into this...
 
 ### Miscellaneous
 
@@ -157,6 +100,12 @@ function otherCode() {
   - This of course comes with one or two minor things like the textbox not being automatically focused, but this is better than what we had (which was fucking nothing)
 - Renamed github1.css to migobote-stylesheet.css and cleaned it up of a bunch of filth
 - Removed a shit ton of JavaScript/CSS backups we had for no reason. For the love of fuck, we use git, we already have those backups by default.
+
+### I *haven't* touched
+
+Most of the XaeModules-modules are intact, completely. Even I'm scared of them for now. So: BetterPms, BetterPlaylist, customSettingsModal, customUserlist, moreLayoutOptions and soundNotifications.
+
+I'll fix them if they break, but they're each a whole dev cycle on their own to fix and keep up to standard..
 
 ---
 

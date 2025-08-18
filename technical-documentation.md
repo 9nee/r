@@ -20,7 +20,7 @@ In its current implementation reverse is a two-part piece of code
 The first is a css rule, and the second is two filter lists.
 If one must edit these, this should be taken into account, no "code" regarding the reverse addition can be found in this repo.
 
-## Module Loading
+## Module Loading (NeoXaeModules)
 
 XaeModules were how the module code was held together before, I took it upon myself to almost completely rewrite it.
 
@@ -53,7 +53,7 @@ The names are pretty self-explanatory, but the following pseudocode should expla
 
 ```js
 async function checkForScript2() {
-  await window.moduleRegistry.waitForReady("script2");
+  await window.moduleRegistry.waitForReady("script2.js");
   runLogic();
   console.log("None of this runs until the await resolves")
 }
@@ -65,13 +65,11 @@ checkForScript2();
 console.log("This does!");
 ```
 
-Whenever there's a script that needs to signal its completion, it has to do so manually, I looked everywhere for a way to not have to do this manually but it eludes me. The current way to do this is:
+Whenever there's a script that needs to signal its completion, it could do so manually and save us some miliseconds of load time, but the easy, lazy way is to have each script finish loading (largest is 12ms in cache, 400ms~ for a first load) and then signal its completion automatically, meaning that in the NeoXaeModules load script, the following line is responsible for signaling its completion:
 
 ```js
-//At the very end of script2, an IIFE
-(() => {
-    window.moduleRegistry.markReady("script2")
-})();
+//moduleName is defined in const ModulePaths (e.g: mahjongMode.js)
+window.moduleRegistry.markReady(moduleName);
 ```
 
 ### How to add a new script
