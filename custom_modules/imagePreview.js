@@ -1,5 +1,5 @@
-function isImageLink(jqChatMessage) {
-  jqChatMessage.find("a")
+function doesMessageContainALink($messageElement) {
+  return $messageElement.children().last().attr('href')
 }
 
 function createHoverImage($messageElement, xOffset = 20, yOffset = 20) {
@@ -33,7 +33,7 @@ function createHoverImage($messageElement, xOffset = 20, yOffset = 20) {
       });
     }
   });
-    
+
   $parentElement.on("mouseleave", () => {
     const imageElement = $parentElement.data('imageInstance');
     if (imageElement) { 

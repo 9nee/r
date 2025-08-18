@@ -491,11 +491,6 @@ async function globalMessageFormatInjection({ username = "undefined",
         formatCommandMessage($message);
     }
 
-    await window.moduleRegistry.waitForReady("mahjongMode.js")
-    if ($messageText.startsWith('MJ:')) {
-            formatMJMessage($message)
-    }
-
     if (!['[server]', '[voteskip]'].includes(username.toLowerCase()) && username !== "numbertrees") {
 
         if (SOUNDPOST_STATE) {
