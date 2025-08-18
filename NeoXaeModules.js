@@ -104,7 +104,7 @@ class NeoXaeModuleLoader {
                 this.#state.prev = moduleName;
                 this.#state.pos++;
 
-                const moduleImport = this.import(moduleObject.url);
+                const moduleImport = import(moduleObject.url);
 
                 window.moduleRegistry.markReady(moduleName);
 
