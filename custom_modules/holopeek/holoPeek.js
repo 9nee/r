@@ -441,7 +441,7 @@ let holoPeekOptions;
             }, 100);
         }
 
-        const label = $('<label>', {
+        $('<label>', {
             id: `${optId}_label`,
             text: holoPeekOption.desc,
             title: holoPeekOption.id,
@@ -483,7 +483,7 @@ let holoPeekOptions;
                             }).appendTo('head');
                                                     
                             if (holoPeekOption.func) {
-                                await holoPeekOption.func(holoPeekOption);
+                                holoPeekOption.func(holoPeekOption);
                             }
                         }
                     }
@@ -512,7 +512,7 @@ let holoPeekOptions;
         id: 'saveAndResetCookieButtonsDiv'
     }).appendTo($holoPeekBubble);
 
-    const saveButton = $('<button>', {
+    $('<button>', {
         id: 'saveButton',
         html: 'Save<img width="24" height="24" alt="save" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAQAAABKfvVzAAAAbUlEQVQ4y2NgGLTAk+Exw38csB6bhkc4lePQAhLGDsIZfmPTAtGAaTZOLfg0gLRguAC/BgaqacANqKuBjaGd4RkQtgNZRGnogPuggzgNT+EantJIA8lOItnTRAUr/uQNgo+Iz0Ag+JjBY9BmfgAjpbf/V5agRgAAAABJRU5ErkJggg==">',
         click: () => {
@@ -542,7 +542,7 @@ let holoPeekOptions;
         }
     }).appendTo(saveAndResetCookieButtonsDiv);
 
-    const resetButton = $('<button>', {
+    $('<button>', {
         id: 'resetButton',
         html: 'Reset<img width="24" height="24" alt="save" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAQAAABKfvVzAAAAPElEQVQ4y2NgGAJAgeE+w38ovA/k4QH/8UDqaCADkGw+WRqIERvVMNQ1PMKaMB7h1uDB8BhD+WOg6OAGADZZd6fzGEl6AAAAAElFTkSuQmCC">',
         click: () => {
@@ -555,7 +555,6 @@ let holoPeekOptions;
                     location.reload();
                 });
             }
-
         }
     }).appendTo(saveAndResetCookieButtonsDiv);
 
