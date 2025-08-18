@@ -28,7 +28,7 @@ function createHoverImage2(jqChatMessage) {
     .querySelectorAll("a")
     .forEach(a =>{
         a.addEventListener("mouseenter", ({target}) => {
-            var img = target.parentElement.querySelector("img")
+            var img = target.parentElement.querySelector(":scope > img")
             if (!img) {
                 img = new Image();
                 img.style.position = "fixed";
