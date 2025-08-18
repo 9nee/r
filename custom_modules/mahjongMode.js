@@ -56,7 +56,7 @@ async function canReadMJMessages() {
     let mahjongModeCookie = readCookie("MahjongMode");
     let mahjongLurkCookie = readCookie("MahjongLurk");
   
-    await window.moduleRegistry.waitForReady("holoPeek.js")
+    await window.moduleRegistry.waitForReady("holopeek/holoPeek.js")
   
     return mahjongLurkCookie || 
           mahjongModeCookie || 

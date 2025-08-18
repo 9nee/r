@@ -23,7 +23,7 @@ window.moduleRegistry = (() => {
       const timeoutPromise = new Promise((_, reject) => {
         const id = setTimeout(() => {
           clearTimeout(id);
-          reject(new Error(`Timeout: Module ${moduleName} wasn't ready in 5 seconds. Did you disable a dependency?`))
+          reject(new Error(`Timeout: Module ${moduleName} wasn't ready in 5 seconds. Did you disable a dependency? Check for the name of the waitForReady await, make sure it's the FULL RELATIVE PATH! (e.g holopeek/holoPeek.js)`))
         }, timeoutMs)
       })
 
