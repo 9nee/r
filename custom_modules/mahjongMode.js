@@ -11,6 +11,8 @@ async function injectSecretMahjongEmotes(username, $messageElement) {
       const escapedEmotes = Object.keys(secretMJEmotes)
                                   .map( secretEmote => 
                                         secretEmote.replace(/[-\/\\^$.*+?()[\]{}|]/g, '\\$&'));
+      
+      let combinedRegex = null; 
       if (escapedEmotes.length > 0) {
         combinedRegex = new RegExp(escapedEmotes.join('|'), 'g');
       }
