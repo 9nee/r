@@ -1,9 +1,9 @@
-if (!this[CHANNEL.name]) {
-    this[CHANNEL.name] = {};
+if (![CHANNEL.name]) {
+    [CHANNEL.name] = {};
 }
 
-if (!this[CHANNEL.name].favicon) {
-    this[CHANNEL.name].favicon = $("<link/>")
+if (![CHANNEL.name].favicon) {
+    [CHANNEL.name].favicon = $("<link/>")
         .prop("id", "favicon")
         .attr("rel", "shortcut icon")
         .attr("type", "image/png")
@@ -12,7 +12,7 @@ if (!this[CHANNEL.name].favicon) {
         .appendTo("head");
 }
 
-const CURRENT_COMMIT = "a755dd54913fb87dfd48f570163143a8ff535f9d"
+const CURRENT_COMMIT = "9e3470551fe15f18250ff6f440011fb7a033dda5"
 //Change to om3tcw on live
 const CURRENT_REPO = "immergrok"
 
