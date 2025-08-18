@@ -64,8 +64,6 @@ const ModuleLoaderPromise = (async () => {
     return importedModule.default;
 })();
 
-
-
 (async function loadLogic() {
 
     const ModuleLoaderClass = await ModuleLoaderPromise;
@@ -382,11 +380,6 @@ $('#messagebuffer').off('click').click(e => {
         $('#chatline').val((i, v) => v + e.target.title + " ").focus();
 });
 
-// Slav's Enhancements
-// let html2canvasScript = document.createElement('script');
-// html2canvasScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
-// document.head.appendChild(html2canvasScript);
-
 function runescape($message) {
 
     const text = $message.text().replace('/runescape', '');
@@ -414,7 +407,6 @@ function runescape($message) {
 
     $message.html(html);
 }
-
 
 function yayConfetti($message) {
     
@@ -508,7 +500,6 @@ function playSoundpost(emote, additionalPlayTime = defaultAdditionalPlayTime) {
         soundpost.totalPlayTime = 0;
     }, playDuration * 1000);
 }
-
 
 function cleanupSoundpostPlaybackState() {
     const limit = 40; 
@@ -608,5 +599,4 @@ function playBooSound() {
         myaudio.play();
     }
 }
-
 
