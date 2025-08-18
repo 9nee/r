@@ -1,15 +1,15 @@
-"use strict";
-if (!window[CHANNEL.name]) {
-    window[CHANNEL.name] = {}
-}(function(CyTube_Notifications) {
-    return CyTube_Notifications(window, document, window.jQuery)
-})(function(window, document, $, undefined) {
+function isItHalloween() {
+    const currentYear = new Date().getFullYear();
+    const HALLOWEEN_START = new Date(`${currentYear}-10-31T04:00:00Z`);
+    const HALLOWEEN_END = new Date(`${currentYear}-11-01T04:00:00Z`);
+    const currentTimestamp = Date.now();
+    return (currentTimestamp > HALLOWEEN_START && currentTimestamp < HALLOWEEN_END)
+}
+
+((async () => {
     if (typeof Storage === "undefined") {
         console.error("[XaeTube: Audio Notifier]", "localStorage not supported. Aborting load.");
         return
-    } else if (typeof window.playlist !== "function") {
-        console.error("[XaeTube: Audio Notifier]", "Playlist parser unavailable. Aborting load.");
-        return;
     }
     if (typeof window[CHANNEL.name].audioLibrary === "undefined") {
         console.warn("[XaeTube: Audio Notifier]", "WARNING: Audio library module not loaded.")
@@ -17,135 +17,138 @@ if (!window[CHANNEL.name]) {
     if (!$("#customSettingsStaging").length) {
         console.warn("[XaeTube: Audio Notifier]", "WARNING: Settings module not loaded.")
     }
+
+    await window.moduleRegistry.waitForReady("betterPlaylist.js")
+
     class AudioNotifier {
-        constructor() {
-            this.Squee = {
-                timeSinceLast: 0,
-                toggleState: true,
-                volume: .35,
-                id: "squee"
-            };
-            this.Poll = {
-                timeSinceLast: 0,
-                toggleState: true,
-                volume: .2,
-                id: "votingpoll"
-            };
-            this.Priv = {
-                timeSinceLast: 0,
-                toggleState: true,
-                volume: .15,
-                id: "uhoh"
-            };
-            this.Video = {
-                timeSinceLast: 0,
-                toggleState: true,
-                volume: .35,
-                id: "fairywand"
-            };
-            this.Marked = {
-                timeSinceLast: 0,
-                toggleState: true,
-                volume: .4,
-                id: "bell"
-            };
-            this.typeNames = {
-                Squee: "Username",
-                Poll: "Poll",
-                Priv: "Private Message",
-                Video: "Queued Video",
-                Marked: "Marked Video"
-            };
-            this.choices = Object.assign({}, {
-                squee: "",
-                votingpoll: "https://cdn.jsdelivr.net/gh/om3tcw/r@emotes/soundposts/sounds/ogeyrrat.ogg",
-                uhoh: "https://cdn.jsdelivr.net/gh/om3tcw/r@emotes/soundposts/sounds/sharkmail.ogg",
-                fairywand: "https://cdn.jsdelivr.net/gh/om3tcw/r@emotes/soundposts/sounds/morinayeah.ogg",
-                bell: "https://cdn.jsdelivr.net/gh/om3tcw/r@emotes/soundposts/sounds/fairywand.ogg"
-            }, window[CHANNEL.name].audioLibrary ? window[CHANNEL.name].audioLibrary.squees : undefined);
-            this.handler = {
-                Squee: function (data) {
-                    var squee;
-                    if (!this.Squee.toggleState) {
-                        return;
-                    }
-                    if (!CHANNEL.opts.chat_antiflood) {
-                        console.info("[XaeTube: Audio Notifier]", "User ping ignored: Chat throttle off.");
-                        return;
-                    }
-                    if (Date.now() - this.Squee.timeSinceLast < 7e3) return;
-                    squee = $(".nick-highlight:not( .parsed )");
-                    if (!squee.length) return;
-                    squee.addClass("parsed");
-                    var start = Date.parse("2015-10-31T04:00:00Z"), end = Date.parse("2015-11-01T04:00:00Z"), current = Date.now();
-                    current > start && end > current ? function () {
-                        toot = new Audio("/skulltrumpet.wav");
-                        toot.volume = .33;
-                        toot.play();
-                    } () : this.Squee.audio[0].play();
+        Squee = {
+            timeSinceLast: 0,
+            toggleState: true,
+            volume: .35,
+            id: "squee"
+        };
+        Poll = {
+            timeSinceLast: 0,
+            toggleState: true,
+            volume: .2,
+            id: "votingpoll"
+        };
+        Priv = {
+            timeSinceLast: 0,
+            toggleState: true,
+            volume: .15,
+            id: "uhoh"
+        };
+        Video = {
+            timeSinceLast: 0,
+            toggleState: true,
+            volume: .35,
+            id: "fairywand"
+        };
+        Marked = {
+            timeSinceLast: 0,
+            toggleState: true,
+            volume: .4,
+            id: "bell"
+        };
+        typeNames = {
+            Squee: "Username",
+            Poll: "Poll",
+            Priv: "Private Message",
+            Video: "Queued Video",
+            Marked: "Marked Video"
+        };
+        choices = {
+            squee: "",
+            votingpoll: "https://cdn.jsdelivr.net/gh/om3tcw/r@emotes/soundposts/sounds/ogeyrrat.ogg",
+            uhoh: "https://cdn.jsdelivr.net/gh/om3tcw/r@emotes/soundposts/sounds/sharkmail.ogg",
+            fairywand: "https://cdn.jsdelivr.net/gh/om3tcw/r@emotes/soundposts/sounds/morinayeah.ogg",
+            bell: "https://cdn.jsdelivr.net/gh/om3tcw/r@emotes/soundposts/sounds/fairywand.ogg",
+            ...window[CHANNEL.name].audioLibrary ? window[CHANNEL.name].audioLibrary.squees : undefined
+        };
+        handler = {
+            Squee: () => {
+                let squee;
+                if (!this.Squee.toggleState) {
+                    return;
+                }
+                if (!CHANNEL.opts.chat_antiflood) {
+                    console.info("[XaeTube: Audio Notifier]", "User ping ignored: Chat throttle off.");
+                    return;
+                }
+                if (Date.now() - this.Squee.timeSinceLast < 7e3) return;
+                squee = $(".nick-highlight:not( .parsed )");
+                if (!squee.length) return;
+                squee.addClass("parsed");
+
+                if (isItHalloween()) {
+                    let toot = new Audio("/skulltrumpet.wav");
+                    toot.volume = .33;
+                    toot.play();
+                } else {
+                    this.Squee.audio[0].play();
                     this.Squee.timeSinceLast = Date.now();
-                }.bind(this),
-                Poll: function (data) {
-                    if (!this.Poll.toggleState) return;
-                    if (CLIENT.rank < CHANNEL.perms.pollvote) return;
-                    if (Date.now() - this.Poll.timeSinceLast < 6e4) return;
-                    this.Poll.audio[0].play();
-                    this.Poll.timeSinceLast = Date.now();
-                }.bind(this),
-                Priv: function (data) {
-                    if (!this.Priv.toggleState) return;
-                    if (data.username == CLIENT.name) return;
-                    if (window.IGNORED.includes(data.username)) return;
-                    if ($(document.activeElement).hasClass("pm-input")) return;
-                    if (Date.now() - this.Priv.timeSinceLast < 18e4) return;
-                    this.Priv.audio[0].play();
-                    this.Priv.timeSinceLast = Date.now();
-                    $("div.chat-msg-\\\\\\$server\\\\\\$:contains(Direct Message Notification)").remove();
-                    $("#messagebuffer").trigger("whisper", `Direct Message Notification: ${data.username}`);
-                }.bind(this),
-                Video: function (data) {
-                    var addedby;
-                    if (!this.Video.toggleState) return;
-                    if (CLIENT.rank < CHANNEL.perms.seeplaylist) return;
-                    addedby = playlist(true).addedby == CLIENT.name;
-                    if (addedby && this.Video.last) {
-                        this.Video.timeSinceLast = Date.now();
-                        return;
-                    }
-                    this.Video.last = false;
-                    if (!addedby) return;
-                    if (Date.now() - this.Video.timeSinceLast < 6e5) return;
-                    this.Video.audio[0].play();
+                }
+            },
+            Poll: () => {
+                if (!this.Poll.toggleState) return;
+                if (CLIENT.rank < CHANNEL.perms.pollvote) return;
+                if (Date.now() - this.Poll.timeSinceLast < 6e4) return;
+                this.Poll.audio[0].play();
+                this.Poll.timeSinceLast = Date.now();
+            },
+            Priv: () => {
+                if (!this.Priv.toggleState) return;
+                if (data.username == CLIENT.name) return;
+                if (window.IGNORED.includes(data.username)) return;
+                if ($(document.activeElement).hasClass("pm-input")) return;
+                if (Date.now() - this.Priv.timeSinceLast < 18e4) return;
+                this.Priv.audio[0].play();
+                this.Priv.timeSinceLast = Date.now();
+                $("div.chat-msg-\\\\\\$server\\\\\\$:contains(Direct Message Notification)").remove();
+                $("#messagebuffer").trigger("whisper", `Direct Message Notification: ${data.username}`);
+            },
+            Video: () => {
+                let addedby;
+                if (!this.Video.toggleState) return;
+                if (CLIENT.rank < CHANNEL.perms.seeplaylist) return;
+                addedby = playlist(true).addedby == CLIENT.name;
+                if (addedby && this.Video.last) {
                     this.Video.timeSinceLast = Date.now();
-                    this.Video.last = true;
-                    $("div.chat-msg-\\\\\\$server\\\\\\$:contains(Video Notification)").remove();
-                    $("#messagebuffer").trigger("whisper", "Video Notification: Your video is now playing!");
-                }.bind(this),
-                Marked: function (uid) {
-                    if (!this.Marked.toggleState) return;
-                    if (CLIENT.rank < CHANNEL.perms.seeplaylist) return;
-                    if (Date.now() - this.Marked.timeSinceLast < 1 * 1e3) return;
-                    var item = $(`.pluid-${uid}`);
-                    var marked = $("#queue").data("marked");
-                    var isMarked = marked.includes(uid);
-                    if (!isMarked) {
-                        return;
-                    }
-                    marked.splice(marked.indexOf(uid), 1);
-                    item.find(".qbtn-mark").removeClass("btn-warning").addClass("btn-default disabled");
-                    this.Marked.audio[0].play();
-                    this.Marked.timeSinceLast = Date.now();
-                    this.Marked.last = true;
-                    $("div.chat-msg-\\\\\\$server\\\\\\$:contains(Video Notification)").remove();
-                    $("#messagebuffer").trigger("whisper", "Video Notification: A video you marked is now playing!");
-                }.bind(this)
-            };
-            return this;
+                    return;
+                }
+                this.Video.last = false;
+                if (!addedby) return;
+                if (Date.now() - this.Video.timeSinceLast < 6e5) return;
+                this.Video.audio[0].play();
+                this.Video.timeSinceLast = Date.now();
+                this.Video.last = true;
+                $("div.chat-msg-\\\\\\$server\\\\\\$:contains(Video Notification)").remove();
+                $("#messagebuffer").trigger("whisper", "Video Notification: Your video is now playing!");
+            },
+            Marked: (uid) => {
+                if (!this.Marked.toggleState) return;
+                if (CLIENT.rank < CHANNEL.perms.seeplaylist) return;
+                if (Date.now() - this.Marked.timeSinceLast < 1 * 1e3) return;
+                let item = $(`.pluid-${uid}`);
+                let marked = $("#queue").data("marked");
+                let isMarked = marked.includes(uid);
+                if (!isMarked) {
+                    return;
+                }
+                marked.splice(marked.indexOf(uid), 1);
+                item.find(".qbtn-mark").removeClass("btn-warning").addClass("btn-default disabled");
+                this.Marked.audio[0].play();
+                this.Marked.timeSinceLast = Date.now();
+                this.Marked.last = true;
+                $("div.chat-msg-\\\\\\$server\\\\\\$:contains(Video Notification)").remove();
+                $("#messagebuffer").trigger("whisper", "Video Notification: A video you marked is now playing!");
+            },
         }
     }
     Object.assign(AudioNotifier.prototype, {
         pushNoticeChange: function(change) {
-            var type, id, silent;
+            let type, id, silent;
             type = change.type;
             id = change.id;
             silent = change.silent;
@@ -160,8 +163,8 @@ if (!window[CHANNEL.name]) {
                 $("#messagebuffer").trigger("whisper", this.typeNames[type] + " Notification Changed to: " + id)
             }
         },
-        pushVolume: function(change) {
-            var type, volume;
+        pushVolume: (change) => {
+            let type, volume;
             type = change.type;
             volume = change.volume;
             if (volume == "up") {
@@ -179,7 +182,7 @@ if (!window[CHANNEL.name]) {
                 this[type].indicator.html(Math.floor(volume * 100))
             }
         },
-        toggle: function(type) {
+        toggle: (type) => {
             this[type].toggleState = !this[type].toggleState;
             localStorage.setItem(`${CHANNEL.name}_AudioNotice${type}Toggle`, +this[type].toggleState);
             if (this[type].toggleButton) {
@@ -187,7 +190,7 @@ if (!window[CHANNEL.name]) {
             }
             this[type].panel.toggleClass("btn-danger btn-success")
         },
-        createToggles: function() {
+        createToggles: () => {
             this.Squee.toggleButton = $("<span/>").html('Sq<span class="toggle-label">uee</span>').prop("id", "AudioNoticeSqueeToggle").attr("title", "Toggle Username Audio Notices").addClass("pointer label label-info pull-right").on("click", (() => {
                 this.toggle("Squee")
             }));
@@ -196,44 +199,43 @@ if (!window[CHANNEL.name]) {
             }
         },
         createControls: function(types) {
-            var self = this;
             this.controls = $("<div>").addClass("customSettings").attr("id", "AudioNoticeControls").attr("data-title", "Audio Notifications Settings").prependTo("#customSettingsStaging").data("column-class", "col-sm-6");
             while (types.length) {
-                var type = types.shift();
-                var form = $("<form>").prop("action", "javascript:void(0)").addClass("form-horizontal");
-                var wrapper = $("<div>").addClass("form-group").prop("id", "AudioNoticeControls" + type).appendTo(form);
-                var label = $("<span>").addClass("label label-info col-sm-3").text(this.typeNames[type] + " Notice").appendTo(wrapper);
-                var buttongroup = $("<div>").addClass("btn-group col-sm-8").attr("data-control", type).appendTo(wrapper);
-                var toggle = this[type].panel = $("<button/>").prop("id", "AudioNoticeControls" + type + "Toggle").addClass("btn btn-sm btn-success").attr("title", "Toggle " + this.typeNames[type] + " Notices").html('<span class="glyphicon glyphicon-bell"></span>').on("click", function() {
-                    self.toggle($(this).parent().data().control)
+                let type = types.shift();
+                let form = $("<form>").prop("action", "javascript:void(0)").addClass("form-horizontal");
+                let wrapper = $("<div>").addClass("form-group").prop("id", "AudioNoticeControls" + type).appendTo(form);
+                $("<span>").addClass("label label-info col-sm-3").text(this.typeNames[type] + " Notice").appendTo(wrapper);
+                let buttongroup = $("<div>").addClass("btn-group col-sm-8").attr("data-control", type).appendTo(wrapper);
+                let toggle = this[type].panel = $("<button/>").prop("id", "AudioNoticeControls" + type + "Toggle").addClass("btn btn-sm btn-success").attr("title", "Toggle " + this.typeNames[type] + " Notices").html('<span class="glyphicon glyphicon-bell"></span>').on("click", function() {
+                    this.toggle($(this).parent().data().control)
                 }).prependTo(buttongroup);
-                var sounds = $("<div/>").addClass("btn-group").prop("id", "AudioNoticeControls" + type + "Sounds").appendTo(buttongroup);
-                var volumeDown = $("<button/>").prop("id", "AudioNoticeControls" + type + "VolumeDown").addClass("btn btn-sm btn-default").attr("title", this.typeNames[type] + " Volume Down").on("click", function() {
-                    self.pushVolume({
+                let sounds = $("<div/>").addClass("btn-group").prop("id", "AudioNoticeControls" + type + "Sounds").appendTo(buttongroup);
+                $("<button/>").prop("id", "AudioNoticeControls" + type + "VolumeDown").addClass("btn btn-sm btn-default").attr("title", this.typeNames[type] + " Volume Down").on("click", function() {
+                    this.pushVolume({
                         type: $(this).parent().data().control,
                         volume: "down"
                     })
                 }).html('<span class="glyphicon glyphicon-volume-down"></span>').appendTo(buttongroup);
-                var indicator = this[type].indicator = $("<button/>").prop("id", "AudioNoticeControls" + type + "Indicator").addClass("btn btn-sm btn-default").attr("title", this.typeNames[type] + " Volume").html(this[type].volume * 100).appendTo(buttongroup);
-                var volumeUp = $("<button/>").prop("id", "AudioNoticeControls" + type + "VolumeUp").addClass("btn btn-sm btn-default").attr("title", this.typeNames[type] + " Volume Up").on("click", function() {
-                    self.pushVolume({
+                this[type].indicator = $("<button/>").prop("id", "AudioNoticeControls" + type + "Indicator").addClass("btn btn-sm btn-default").attr("title", this.typeNames[type] + " Volume").html(this[type].volume * 100).appendTo(buttongroup);
+                $("<button/>").prop("id", "AudioNoticeControls" + type + "VolumeUp").addClass("btn btn-sm btn-default").attr("title", this.typeNames[type] + " Volume Up").on("click", function() {
+                    this.pushVolume({
                         type: $(this).parent().data().control,
                         volume: "up"
                     })
                 }).html('<span class="glyphicon glyphicon-volume-up"></span>').appendTo(buttongroup);
-                var play = $("<button/>").prop("id", "AudioNoticeControls" + type + "Play").addClass("btn btn-sm btn-default").attr("title", "Play Notification").on("click", function() {
-                    self[$(this).parent().data().control].audio[0].play()
+                $("<button/>").prop("id", "AudioNoticeControls" + type + "Play").addClass("btn btn-sm btn-default").attr("title", "Play Notification").on("click", function() {
+                    this[$(this).parent().data().control].audio[0].play()
                 }).html('<span class="glyphicon glyphicon-play"></span>').appendTo(buttongroup);
-                var dropdown = $("<button/>").addClass("btn btn-default btn-sm dropdown-toggle").attr("type", "button").attr("href", "javascript:void(0)").attr("data-toggle", "dropdown").html("<span class='glyphicon glyphicon-music'></span> Sound <span class='caret'></span>").appendTo(sounds);
-                var sound_content = $("<ul/>").addClass("dropdown-menu").addClass("columns").attr("role", "menu").appendTo(sounds);
-                var keys = Object.keys(this.choices);
+                $("<button/>").addClass("btn btn-default btn-sm dropdown-toggle").attr("type", "button").attr("href", "javascript:void(0)").attr("data-toggle", "dropdown").html("<span class='glyphicon glyphicon-music'></span> Sound <span class='caret'></span>").appendTo(sounds);
+                let sound_content = $("<ul/>").addClass("dropdown-menu").addClass("columns").attr("role", "menu").appendTo(sounds);
+                let keys = Object.keys(this.choices);
                 while (keys.length) {
-                    var populate_list = $("<li/>").appendTo(sound_content);
+                    let populate_list = $("<li/>").appendTo(sound_content);
                     void
                     function(key) {
                         $("<a/>").text(key).attr("href", "javascript:void(0)").attr("data-notice", key).attr("data-type", type).on("click", function() {
                             console.log($(this).data().type, $(this).data().notice);
-                            self.pushNoticeChange({
+                            this.pushNoticeChange({
                                 type: $(this).data().type,
                                 id: $(this).data().notice,
                                 silent: false
@@ -266,17 +268,17 @@ if (!window[CHANNEL.name]) {
             }));
             if (window[CHANNEL.name].modulesOptions && window[CHANNEL.name].modulesOptions.audioNotice) {
                 this.choices = Object.assign(this.choices, window[CHANNEL.name].modulesOptions.audioNotice.choices);
-                var notices = Object.keys(window[CHANNEL.name].modulesOptions.audioNotice.notices);
-                for (var i = notices.length - 1; i >= 0; i--) {
+                let notices = Object.keys(window[CHANNEL.name].modulesOptions.audioNotice.notices);
+                for (let i = notices.length - 1; i >= 0; i--) {
                     this[notices[i]]["id"] = window[CHANNEL.name].modulesOptions.audioNotice.notices[notices[i]]
                 }
             }
-            var types = Object.keys(this.typeNames);
+            let types = Object.keys(this.typeNames);
             while (types.length) {
-                var type = types.shift();
-                var toggle = localStorage.getItem(`${CHANNEL.name}_AudioNotice${type}Toggle`);
-                var id = localStorage.getItem(`${CHANNEL.name}_AudioNotice${type}ID`);
-                var volume = localStorage.getItem(`${CHANNEL.name}_AudioNotice${type}Volume`);
+                let type = types.shift();
+                let toggle = localStorage.getItem(`${CHANNEL.name}_AudioNotice${type}Toggle`);
+                let id = localStorage.getItem(`${CHANNEL.name}_AudioNotice${type}ID`);
+                let volume = localStorage.getItem(`${CHANNEL.name}_AudioNotice${type}Volume`);
                 if (toggle) {
                     this[type].toggleState = parseInt(toggle)
                 }
@@ -299,4 +301,4 @@ if (!window[CHANNEL.name]) {
         }
     });
     window[CHANNEL.name].audioNotice = (new AudioNotifier).initialize()
-});
+}))();

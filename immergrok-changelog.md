@@ -103,7 +103,7 @@ Go read the technical-documentation if interested, but I put a bunch of effort i
 
 ### I *haven't* touched
 
-Most of the XaeModules-modules are intact, completely. Even I'm scared of them for now. So: BetterPms, BetterPlaylist, customSettingsModal, customUserlist, moreLayoutOptions and soundNotifications.
+Most of the XaeModules-modules are intact, completely. Even I'm scared of them for now. So: BetterPms, BetterPlaylist, customSettingsModal, customUserlist, moreLayoutOptions and ~~soundNotifications~~.
 
 I'll fix them if they break, but they're each a whole dev cycle on their own to fix and keep up to standard..
 

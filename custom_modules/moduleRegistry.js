@@ -18,8 +18,19 @@ window.moduleRegistry = (() => {
   }
 
   return {
-    waitForReady: (moduleName) => {
-      return manageReadinessState(moduleName).promise
+    waitForReady: (moduleName, timeoutMs = 5000) => {
+      const modulePromise = manageReadinessState(moduleName).promise
+      const timeoutPromise = new Promise((_, reject) => {
+        const id = setTimeout(() => {
+          clearTimeout(id);
+          reject(new Error(`Timeout: Module ${moduleName} wasn't ready in 5 seconds. Did you disable a dependency?`))
+        }, timeoutMs)
+      })
+
+      return Promise.race([
+        modulePromise,
+        timeoutPromise
+      ]);
     },
     markReady: (moduleName) => {
       const moduleState = manageReadinessState(moduleName)
