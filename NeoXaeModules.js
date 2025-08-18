@@ -23,7 +23,6 @@ class NeoXaeModuleLoader {
     #options;
     #state;
     #clientRank;
-    #moduleRegistryInstance;
 
     constructor(modulePaths) {
         this.#modulePaths = modulePaths
@@ -59,25 +58,10 @@ class NeoXaeModuleLoader {
         CLIENT.modules = this.#moduleObjects;
         window[CHANNEL.name].modulesOptions = this.#options;
         
-        this.#moduleRegistryInstance = await this.#preloadRegistry();
+        await this.#preloadRegistry();
 
         this.#turnPathsIntoModuleObjects(this.#modulePaths)
         this.allModulesLoaded = this.#sequencerLoader();
-    }
-
-    async #getScript(moduleName) {
-        return new Promise((resolve, reject) => {
-            $.getScript({
-                url: moduleName,
-                cache: false,
-                success: function(data) {
-                    resolve(data);
-                },
-                error: function(_, textStatus, errorThrown) {
-                    reject(new Error(`Failed to load module registry: ${textStatus} - ${errorThrown}`));
-                }
-            });
-        });
     }
 
     async #preloadRegistry() {
