@@ -18,7 +18,7 @@ async function formatMJMessage($messageElement) {
     }
 } 
 
-async function injectSecretMahjongEmotes(username, $messageElement) {
+async function injectSecretMahjongEmotes($messageElement) {
   const canRead = await canReadMJMessages();
   if (canRead) {
     Object.keys(secretMJEmotes)
