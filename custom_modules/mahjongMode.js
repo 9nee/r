@@ -3,7 +3,7 @@ socket.on("chatMsg", async () => {
   if ($message.text().startsWith('MJ:')) {
     await formatMJMessage($message)
   }
-  injectSecretMahjongEmotes(username, fetchLastChatElement());
+  injectSecretMahjongEmotes(fetchLastChatElement());
 })
 
 async function formatMJMessage($messageElement) {
@@ -21,20 +21,18 @@ async function formatMJMessage($messageElement) {
 async function injectSecretMahjongEmotes(username, $messageElement) {
   const canRead = await canReadMJMessages();
   if (canRead) {
-    //TODO: what why
-    if (!['[server]', '[voteskip]'].includes(username.toLowerCase())) {
-      Object.keys(secretMJEmotes)
-        .map(secretEmote => {
-          return secretEmote.replace(/[-/\\^$.*+?()[\]{}|]/g, '\\$&');
-      }).forEach(secretEmote => {
-          const escapedEmote = secretEmote.replace(/[-/\\^$.*+?()[\]{}|]/g, '\\$&');
-          const regex = new RegExp(escapedEmote, 'g'); 
-          $messageElement.html($messageElement.html().replace(regex,
-            `<img class="channel-emote" title="${secretEmote}" src="${secretMJEmotes[secretEmote]}">`));
-          });
-        }
+    Object.keys(secretMJEmotes)
+      .map(secretEmote => {
+        return secretEmote.replace(/[-/\\^$.*+?()[\]{}|]/g, '\\$&');
+    }).forEach(secretEmote => {
+        const escapedEmote = secretEmote.replace(/[-/\\^$.*+?()[\]{}|]/g, '\\$&');
+        const regex = new RegExp(escapedEmote, 'g'); 
+        $messageElement.html($messageElement.html().replace(regex,
+          `<img class="channel-emote" title="${secretEmote}" src="${secretMJEmotes[secretEmote]}">`));
+      });
     }
   }
+
 
 const secretMJEmotes = {
     ":nyaggernap:": "https://raw.githubusercontent.com/puchigire/r/emotes/emotes/nyaggernap.jpg",
