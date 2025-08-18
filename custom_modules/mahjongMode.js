@@ -1,5 +1,5 @@
 async function waitForHoloPeek() {
-  if (!window.moduleRegistry.isReady('holoPeek')) {
+  if (!window.moduleRegistry.isReady("holopeek/holoPeek.js")) {
     await window.moduleRegistry.waitForReady("holopeek/holoPeek.js")
   }
 }
@@ -10,7 +10,7 @@ socket.on("chatMsg", async () => {
   if ($messageElement.text().startsWith('MJ:')) {
     formatMJMessage($messageElement);
     injectSecretMahjongEmotes($messageElement, canRead)
-    toggleSingleMJMessage($messageElement)
+    toggleSingleMJMessage($messageElement, canRead)
   } 
 })
 
@@ -47,16 +47,16 @@ function prependMessagesWithMJ() {
 }
 
 async function canReadMJMessages() {
-  await isHoloPeekReady();
+  await waitForHoloPeek();
   return $('#holopeek_MahjongMode').is(':checked') ||
     $('#holopeek_MahjongLurk').is(':checked');
 }
 
-function toggleSingleMJMessage(canRead) {
+function toggleSingleMJMessage($messageElement, canRead) {
   if (canRead) {
-    element.parentElement.style.display = 'block';
+    $messageElement.parentElement.style.display = 'block';
   } else {
-    element.parentElement.style.display = 'none';
+    $messageElement.parentElement.style.display = 'none';
   }
 }
 
