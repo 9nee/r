@@ -64,6 +64,22 @@ class NeoXaeModuleLoader {
         this.allModulesLoaded = this.#sequencerLoader();
     }
 
+    //This makes loading a bit slower, but ensures that the modules are loaded without having to add a promise to every single module.
+    async #getScript(moduleName) {
+        return new Promise((resolve, reject) => {
+            $.getScript({
+                url: moduleName,
+                cache: false,
+                success: function(data) {
+                    resolve(data);
+                },
+                error: function(_, textStatus, errorThrown) {
+                    reject(new Error(`Failed to load module registry: ${textStatus} - ${errorThrown}`));
+                }
+            });
+        });
+    }
+
     async #preloadRegistry() {
         return new Promise((resolve, reject) => {
             $.getScript({
@@ -104,7 +120,7 @@ class NeoXaeModuleLoader {
                 this.#state.prev = moduleName;
                 this.#state.pos++;
 
-                const moduleImport = import(moduleObject.url);
+                const moduleImport = this.#getScript(moduleObject.url);
 
                 window.moduleRegistry.markReady(moduleName);
 
