@@ -409,7 +409,8 @@ let holoPeekOptions;
             type: 'checkbox',
             click: async () => {
                 if (holoPeekOption.func) {
-                    holoPeekOption.func(holoPeekOption);
+                    //KEEP THIS AWAIT UNTIL A FULL REWRITE IS CONSIDERED
+                    await holoPeekOption.func(holoPeekOption);
                 } 
 
                 //this helps in case the function has created unremoved styles
