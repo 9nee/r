@@ -97,7 +97,7 @@ function isItHalloween() {
                 this.Poll.audio[0].play();
                 this.Poll.timeSinceLast = Date.now();
             },
-            Priv: () => {
+            Priv: (data) => {
                 if (!this.Priv.toggleState) return;
                 if (data.username == CLIENT.name) return;
                 if (window.IGNORED.includes(data.username)) return;
