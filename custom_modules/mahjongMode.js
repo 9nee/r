@@ -1,38 +1,75 @@
-socket.on("chatMsg", async () => {
-  let $message = fetchLastChatElement()
-  if ($message.text().startsWith('MJ:')) {
-    await formatMJMessage($message)
+async function waitForHoloPeek() {
+  if (!window.moduleRegistry.isReady('holoPeek')) {
+    await window.moduleRegistry.waitForReady("holopeek/holoPeek.js")
   }
-  await injectSecretMahjongEmotes(fetchLastChatElement());
+}
+
+socket.on("chatMsg", async () => {
+  let $messageElement = fetchLastChatElement();
+  const canRead = await canReadMJMessages()
+  if ($messageElement.text().startsWith('MJ:')) {
+    formatMJMessage($messageElement);
+    injectSecretMahjongEmotes($messageElement, canRead)
+    toggleSingleMJMessage($messageElement)
+  } 
 })
 
-async function formatMJMessage($messageElement) {
-    const canRead = await canReadMJMessages();
-    let $timestampElement = $messageElement.parent().find('.timestamp')
-    $($messageElement).addClass("MahjongMessage")
-    $timestampElement.css("background-image", "url('https://raw.githubusercontent.com/om3tcw/r/refs/heads/emotes/eyes/nyagger.png')")
-    $messageElement.text($messageElement.text().replace(/^MJ: /, ''));
-
-    if (!canRead) {
-        $messageElement.parent().css('display','none')
-    }
+function formatMJMessage($messageElement) {
+  let $timestampElement = $messageElement.parent().find('.timestamp')
+  $($messageElement).addClass("MahjongMessage")
+  $timestampElement.css("background-image", "url('https://raw.githubusercontent.com/om3tcw/r/refs/heads/emotes/eyes/nyagger.png')")
+  $messageElement.text($messageElement.text().replace(/^MJ: /, ''));
 } 
 
-async function injectSecretMahjongEmotes($messageElement) {
-  const canRead = await canReadMJMessages();
+function injectSecretMahjongEmotes($messageElement, canRead) {
   if (canRead) {
+    let messageHtml = $messageElement.html();
     Object.keys(secretMJEmotes)
-      .map(secretEmote => {
-        return secretEmote.replace(/[-/\\^$.*+?()[\]{}|]/g, '\\$&');
-    }).forEach(secretEmote => {
-        const escapedEmote = secretEmote.replace(/[-/\\^$.*+?()[\]{}|]/g, '\\$&');
-        const regex = new RegExp(escapedEmote, 'g'); 
-        $messageElement.html($messageElement.html().replace(regex,
-          `<img class="channel-emote" title="${secretEmote}" src="${secretMJEmotes[secretEmote]}">`));
+          .map(secretEmote => {
+      return {
+        original: secretEmote,
+        escaped: secretEmote.replace(/[-/\\^$.*+?()[\]{}|]/g, '\\$&')
+      }}
+    ).forEach(({ original, escaped }) => {
+        const regex = new RegExp(escaped, 'g');
+        messageHtml = messageHtml.replace(regex,
+          `<img class="channel-emote" title="${original}" src="${secretMJEmotes[original]}">`);
       });
+    $messageElement.html(messageHtml);
     }
   }
 
+function prependMessagesWithMJ() {
+  const chatInput = $('#chatline');
+  if (chatInput.val() && !chatInput.val().startsWith('MJ: ')) {
+      chatInput.val('MJ: ' + chatInput.val());
+  }
+}
+
+async function canReadMJMessages() {
+  await isHoloPeekReady();
+  return $('#holopeek_MahjongMode').is(':checked') ||
+    $('#holopeek_MahjongLurk').is(':checked');
+}
+
+function toggleSingleMJMessage(canRead) {
+  if (canRead) {
+    element.parentElement.style.display = 'block';
+  } else {
+    element.parentElement.style.display = 'none';
+  }
+}
+
+
+function toggleMJMessages(canRead) {
+  document.querySelectorAll('#messagebuffer [class|="MahjongMessage"]').forEach(element => {
+      if (canRead) {
+          element.parentElement.style.display = 'block';
+      } else {
+          element.parentElement.style.display = 'none';
+      }
+  })
+}
 
 const secretMJEmotes = {
     ":nyaggernap:": "https://raw.githubusercontent.com/puchigire/r/emotes/emotes/nyaggernap.jpg",
@@ -44,27 +81,3 @@ const secretMJEmotes = {
     ":nyaggerfed:": "https://raw.githubusercontent.com/puchigire/r/emotes/emotes/nyaggerfed.png",
     ":nyaggerfish:": "https://raw.githubusercontent.com/puchigire/r/emotes/emotes/nyaggerfish.png"
 };
-
-function prependMessagesWithMJ() {
-    const chatInput = $('#chatline');
-    if (chatInput.val() && !chatInput.val().startsWith('MJ: ')) {
-        chatInput.val('MJ: ' + chatInput.val());
-    }
-}
-
-async function canReadMJMessages() {
-    await window.moduleRegistry.waitForReady("holopeek/holoPeek.js")
-    return $('#holopeek_MahjongMode').is(':checked') ||
-          $('#holopeek_MahjongLurk').is(':checked');
-}
-
-async function toggleMJMessages() {
-    const canRead = await canReadMJMessages();
-    document.querySelectorAll('#messagebuffer [class|="MahjongMessage"]').forEach(element => {
-        if (canRead) {
-            element.parentElement.style.display = 'block';
-        } else {
-            element.parentElement.style.display = 'none';
-        }
-    })
-}

@@ -79,6 +79,11 @@ const ModuleLoaderPromise = (async () => {
     $('#messagebuffer [class|="chat-msg"]').each(async (index, domElement) => {
         const $jqElement = $(domElement); 
         const $messageElement = $jqElement.children().last();
+
+        if (typeof toggleMJMessages === 'function') {
+            
+        }
+        
         await globalMessageFormatInjection({$message: $messageElement});
     })
 })();

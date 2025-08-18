@@ -71,15 +71,15 @@ let holoPeekOptions;
                     }
                 }
                 
-                await toggleMJMessages();
+                toggleMJMessages(await canReadMJMessages());
             }
         },
         {
             id: 'MahjongLurk',
             desc: 'Mahjong Lurk',
-            func: async self => {
+            func: async () => {
                 await window.moduleRegistry.waitForReady("mahjongMode.js")
-                toggleMJMessages();
+                toggleMJMessages(await canReadMJMessages());
             }
         },
         {
