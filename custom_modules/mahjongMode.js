@@ -72,7 +72,14 @@ const secretMJEmotes = {
     ":nyaggerfish:": "https://raw.githubusercontent.com/puchigire/r/emotes/emotes/nyaggerfish.png"
 };
 
-socket.on("chatMsg", async (msgObject) => {
+(async function runOnceAfterLoad() {
+  if (allModulesReady) {
+    await allModulesReady
+  } else {
+    console.error("Something has gone horribly wrong and you've either moved allModulesReady out of scope or the way the modules load has changed completely.")
+  }
+
+  socket.on("chatMsg", async (msgObject) => {
   if (msgObject.msg.startsWith('MJ:')) {
     let $messageElement = fetchLastChatElement();
     const canRead = await canReadMJMessages()
@@ -80,13 +87,6 @@ socket.on("chatMsg", async (msgObject) => {
     injectSecretMahjongEmotes($messageElement, canRead)
   }
 })
-
-(async function runOnceAfterLoad() {
-  if (allModulesReady) {
-    await allModulesReady
-  } else {
-    console.error("Something has gone horribly wrong and you've either moved allModulesReady out of scope or the way the modules load has changed completely.")
-  }
 
   $('#messagebuffer [class|="chat-msg"]').each(async (index, element) => {
     const $jqElement = $(element); 
