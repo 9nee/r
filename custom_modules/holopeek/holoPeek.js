@@ -4,7 +4,7 @@ let $holoPeekBubbleTail;
 let $holoPeekButton;
 let holoPeekOptions; 
 
-(function createHoloPeek() {
+(async function createHoloPeek() {
     $holoPeekButton = $('<button>', {
         id: 'holopeek',
         class: 'holoAnim' });
@@ -432,7 +432,7 @@ let holoPeekOptions;
             const valueElem = holoPeekOption.textarea ? 'textarea' : holoPeekOption.range ? 'range' : holoPeekOption.text ? 'text' : null;
             if (valueElem) holoPeekOption[valueElem].value = cookieValue;
             $checkboxElem.prop('checked', true);
-            const interval = setInterval(() => {
+            const interval = setInterval(async () => {
                 //TODO: this is what executes every "clicked" option change
                 if ($(".userlist_item").length) {
                     clearInterval(interval);
