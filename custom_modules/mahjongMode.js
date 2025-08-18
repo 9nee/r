@@ -2,31 +2,20 @@ socket.on("chatMsg", ({username, msg, meta, time}) => {
   injectSecretMahjongEmotes(username, fetchLastChatElement());
 })
 
-//This function executes too much garbage every message that shouldn't be executed
 async function injectSecretMahjongEmotes(username, $messageElement) {
-
   const canRead = await canReadMJMessages();
   if (canRead) {
     if (!['[server]', '[voteskip]'].includes(username.toLowerCase())) {
-      const escapedEmotes = Object.keys(secretMJEmotes)
-                                  .map( secretEmote => 
-                                        secretEmote.replace(/[-\/\\^$.*+?()[\]{}|]/g, '\\$&'));
-      
-      let combinedRegex = null; 
-      if (escapedEmotes.length > 0) {
-        combinedRegex = new RegExp(escapedEmotes.join('|'), 'g');
-      }
-      Object.keys(secretMJEmotes).forEach(secretEmote => {
-            const escapedEmote = secretEmote.replace(/[-\/\\^$.*+?()[\]{}|]/g, '\\$&');
-            const regex = new RegExp(escapedEmote, 'g'); 
+      Object.keys(secretMJEmotes)
+        .map(secretEmote => {
+          return secretEmote.replace(/[-/\\^$.*+?()[\]{}|]/g, '\\$&');
+      }).forEach(secretEmote => {
+          const escapedEmote = secretEmote.replace(/[-/\\^$.*+?()[\]{}|]/g, '\\$&');
+          const regex = new RegExp(escapedEmote, 'g'); 
           $messageElement.html($messageElement.html().replace(regex,
             `<img class="channel-emote" title="${secretEmote}" src="${secretMJEmotes[secretEmote]}">`));
           });
-        } else {
-        if (combinedRegex) {
-          $messageElement.html($messageElement.html().replace(regex, ''));
         }
-      }
     }
   }
 
