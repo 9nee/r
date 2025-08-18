@@ -7,18 +7,19 @@ async function waitForHoloPeek() {
 socket.on("chatMsg", async () => {
   let $messageElement = fetchLastChatElement();
   const canRead = await canReadMJMessages()
-  if ($messageElement.text().startsWith('MJ:')) {
-    formatMJMessage($messageElement);
-    injectSecretMahjongEmotes($messageElement, canRead)
-    toggleSingleMJMessage($messageElement, canRead)
-  } 
+  formatMJMessage($messageElement, canRead);
+  injectSecretMahjongEmotes($messageElement, canRead)
 })
 
-function formatMJMessage($messageElement) {
+function formatMJMessage($messageElement, canRead) {
+  if (!$messageElement.text().startsWith('MJ:')) {
+    return
+  }
   let $timestampElement = $messageElement.parent().find('.timestamp')
   $($messageElement).addClass("MahjongMessage")
   $timestampElement.css("background-image", "url('https://raw.githubusercontent.com/om3tcw/r/refs/heads/emotes/eyes/nyagger.png')")
   $messageElement.text($messageElement.text().replace(/^MJ: /, ''));
+  toggleSingleMJMessage($messageElement, canRead)
 } 
 
 function injectSecretMahjongEmotes($messageElement, canRead) {
@@ -62,8 +63,8 @@ function toggleSingleMJMessage($messageElement, canRead) {
 
 function toggleMJMessages(canRead) {
   $('#messagebuffer [class|="MahjongMessage"]').each((_, element) => {
-    let $messageElement = $(element)
-    toggleSingleMJMessage($messageElement, canRead);
+    let $jqElement = $(element)
+    toggleSingleMJMessage($jqElement, canRead);
   })
 }
 

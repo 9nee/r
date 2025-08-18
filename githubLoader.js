@@ -76,11 +76,12 @@ const ModuleLoaderPromise = (async () => {
     //Your motherfucking life ends 5 minutes from now
     SOUNDPOST_STATE = readCookie("SOUNDPOST_STATE");;
 
-    $('#messagebuffer [class|="chat-msg"]').each(async (index, domElement) => {
-        const $jqElement = $(domElement); 
+    $('#messagebuffer [class|="chat-msg"]').each(async (index, element) => {
+        const $jqElement = $(element); 
         const $messageElement = $jqElement.children().last();
 
-        //This shit ain't modular brother
+        //This shit ain't what I'd call modular brother
+        formatMJMessage($messageElement)
         toggleMJMessages(await canReadMJMessages());
         await globalMessageFormatInjection({$message: $messageElement});
     })
