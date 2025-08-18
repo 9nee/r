@@ -28,7 +28,8 @@ function createHoverImage2(jqChatMessage) {
     .querySelectorAll("a")
     .forEach(a =>{
         a.addEventListener("mouseenter", ({target}) => {
-            var img = target.parentElement.querySelector(":scope > img")
+            let msgElement = target.parentElement.parentElement;
+            var img = msgElement.querySelector(":scope > img")
             if (!img) {
                 img = new Image();
                 img.style.position = "fixed";
@@ -45,20 +46,18 @@ function createHoverImage2(jqChatMessage) {
 
                     img.src = videoId ? `https://i.ytimg.com/vi/${videoId}/mqdefault.jpg` : img.src;
                 }
-
-
-                target.parentElement.appendChild(img);
+                msgElement.appendChild(img);
             }
             img.style.display = "";
         });
 
         a.addEventListener("mouseout", ({target}) =>{
-            target.parentElement.querySelector("img").style.display = "none";
+            target.parentElement.parentElement.querySelector(":scope > img").style.display = "none";
         });
 
         a.addEventListener("mousemove", ({target, clientX, clientY}) =>{
             let offset = 30;
-            let img = target.parentElement.querySelector("img");
+            let img = target.parentElement.parentElement.querySelector(":scope > img");
             if (img.clientWidth + clientX + offset > window.innerWidth) {
                 clientX -= (img.clientWidth + offset * 2.0);
             }
