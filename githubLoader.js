@@ -64,14 +64,16 @@ const ModuleLoaderPromise = (async () => {
     return importedModule.default;
 })();
 
+let allModulesReady = null;
+
 (async function loadLogic() {
 
     const ModuleLoaderClass = await ModuleLoaderPromise;
     const ModuleLoaderInstance = new ModuleLoaderClass(ModulePaths);
 
     await ModuleLoaderInstance.initialize();
-    
-    await ModuleLoaderInstance.allModulesLoaded;
+    allModulesReady = ModuleLoaderInstance.allModulesLoaded;
+    await allModulesReady;
     
     //Your motherfucking life ends 5 minutes from now
     SOUNDPOST_STATE = readCookie("SOUNDPOST_STATE");;
@@ -79,10 +81,6 @@ const ModuleLoaderPromise = (async () => {
     $('#messagebuffer [class|="chat-msg"]').each(async (index, element) => {
         const $jqElement = $(element); 
         const $messageElement = $jqElement.children().last();
-
-        //This shit ain't what I'd call modular brother
-        formatMJMessage($messageElement)
-        toggleMJMessages(await canReadMJMessages());
         await globalMessageFormatInjection({$message: $messageElement});
     })
 })();

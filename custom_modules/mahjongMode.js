@@ -78,3 +78,19 @@ const secretMJEmotes = {
     ":nyaggerfed:": "https://raw.githubusercontent.com/puchigire/r/emotes/emotes/nyaggerfed.png",
     ":nyaggerfish:": "https://raw.githubusercontent.com/puchigire/r/emotes/emotes/nyaggerfish.png"
 };
+
+(async function runOnceAfterLoad() {
+
+  if (allModulesReady) {
+    await allModulesReady
+  } else {
+    console.error("Something has gone horribly wrong and you've either moved allModulesReady out of scope or the way the modules load has changed completely.")
+  }
+
+  $('#messagebuffer [class|="chat-msg"]').each(async (index, element) => {
+    const $jqElement = $(element); 
+    const $messageElement = $jqElement.children().last();  
+    formatMJMessage($messageElement)
+    toggleMJMessages(await canReadMJMessages());
+  })
+})()
