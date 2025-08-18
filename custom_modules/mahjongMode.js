@@ -1,5 +1,6 @@
-socket.on("chatMsg", async ({username}) => {
-  if ($messageText.startsWith('MJ:')) {
+socket.on("chatMsg", async () => {
+  let $message = fetchLastChatElement()
+  if ($message.text().startsWith('MJ:')) {
     await formatMJMessage($message)
   }
   injectSecretMahjongEmotes(username, fetchLastChatElement());
@@ -20,6 +21,7 @@ async function formatMJMessage($messageElement) {
 async function injectSecretMahjongEmotes(username, $messageElement) {
   const canRead = await canReadMJMessages();
   if (canRead) {
+    //TODO: what why
     if (!['[server]', '[voteskip]'].includes(username.toLowerCase())) {
       Object.keys(secretMJEmotes)
         .map(secretEmote => {
