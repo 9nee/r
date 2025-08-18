@@ -54,20 +54,17 @@ async function canReadMJMessages() {
 
 function toggleSingleMJMessage($messageElement, canRead) {
   if (canRead) {
-    $messageElement.parentElement.style.display = 'block';
+    $messageElement.parent().css('display', 'block');
   } else {
-    $messageElement.parentElement.style.display = 'none';
+    $messageElement.parent().css('display', 'none');
   }
 }
 
 
 function toggleMJMessages(canRead) {
-  document.querySelectorAll('#messagebuffer [class|="MahjongMessage"]').forEach(element => {
-      if (canRead) {
-          element.parentElement.style.display = 'block';
-      } else {
-          element.parentElement.style.display = 'none';
-      }
+  $('#messagebuffer [class|="MahjongMessage"]').each(() => {
+    let $messageElement = $(this);
+    toggleSingleMJMessage($messageElement, canRead);
   })
 }
 
