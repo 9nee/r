@@ -60,10 +60,9 @@ function toggleSingleMJMessage($messageElement, canRead) {
   }
 }
 
-
 function toggleMJMessages(canRead) {
-  $('#messagebuffer [class|="MahjongMessage"]').each(() => {
-    let $messageElement = $(this);
+  $('#messagebuffer [class|="MahjongMessage"]').each((_, element) => {
+    let $messageElement = $(element)
     toggleSingleMJMessage($messageElement, canRead);
   })
 }
