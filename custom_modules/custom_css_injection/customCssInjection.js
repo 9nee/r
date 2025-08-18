@@ -4,7 +4,7 @@ const STYLES = {
 }
 
 $(document).ready(() => {
-    for (const styleURL in STYLES) {
+    for (const styleURL of Object.values(STYLES)) {
         import(makeLiveCDNLink(styleURL));
     }
 })
