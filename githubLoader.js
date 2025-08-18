@@ -12,7 +12,7 @@ if (![CHANNEL.name].favicon) {
         .appendTo("head");
 }
 
-const CURRENT_COMMIT = "72d5dde5ca1e3de5737c56e12b6cacc7f39583e6"
+const CURRENT_COMMIT = "e67b24be0c5ff43109d5741ac03d6f8d4244bb96"
 //Change to om3tcw on live
 const CURRENT_REPO = "immergrok"
 
@@ -80,10 +80,8 @@ const ModuleLoaderPromise = (async () => {
         const $jqElement = $(domElement); 
         const $messageElement = $jqElement.children().last();
 
-        if (typeof toggleMJMessages === 'function') {
-            
-        }
-        
+        //This shit ain't modular brother
+        toggleMJMessages(await canReadMJMessages());
         await globalMessageFormatInjection({$message: $messageElement});
     })
 })();
