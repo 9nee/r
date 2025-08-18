@@ -4,13 +4,6 @@ async function waitForHoloPeek() {
   }
 }
 
-socket.on("chatMsg", async () => {
-  let $messageElement = fetchLastChatElement();
-  const canRead = await canReadMJMessages()
-  formatMJMessage($messageElement, canRead);
-  injectSecretMahjongEmotes($messageElement, canRead)
-})
-
 function formatMJMessage($messageElement, canRead) {
   if (!$messageElement.text().startsWith('MJ:')) {
     return
@@ -79,8 +72,16 @@ const secretMJEmotes = {
     ":nyaggerfish:": "https://raw.githubusercontent.com/puchigire/r/emotes/emotes/nyaggerfish.png"
 };
 
-(async function runOnceAfterLoad() {
+socket.on("chatMsg", async (msgObject) => {
+  if (msgObject.msg.startsWith('MJ:')) {
+    let $messageElement = fetchLastChatElement();
+    const canRead = await canReadMJMessages()
+    formatMJMessage($messageElement, canRead);
+    injectSecretMahjongEmotes($messageElement, canRead)
+  }
+})
 
+(async function runOnceAfterLoad() {
   if (allModulesReady) {
     await allModulesReady
   } else {

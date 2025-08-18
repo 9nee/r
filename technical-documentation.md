@@ -72,6 +72,20 @@ Whenever there's a script that needs to signal its completion, it could do so ma
 window.moduleRegistry.markReady(moduleName);
 ```
 
+Alternatively, and because you know you're a lazy POS (I'm writing this for myself)
+
+You can just do the following
+
+```js
+  if (allModulesReady) {
+    await allModulesReady
+  } else {
+    console.error("Something has gone horribly wrong and you've either moved allModulesReady out of scope or the way the modules load has changed completely.")
+  }
+```
+
+This is... not as good, but it works, until I inevitably break it.
+
 ### How to add a new script
 
 **You add it to the ModulePaths constant**, that's kind of it. At least for right now, the way in which it will be done (and for the foreseeable future unless we get 20 more modules) will just be adding the name of the file, and putting said file in the custom_modules folder.
@@ -87,3 +101,46 @@ The formatter accepts either a string or an Object, if it's a string it's simple
 **rank**: That's the cytube rank, -1 is Anonymous IIRC. If you want to make a script *only* available for purples, for whatever reason.
 
 If you need the script to interact with any other script, refer to the Module Registry example
+
+## Socket.on('chatMsg', ())
+
+The message object we get from this tap into the socket is kinda bad, it's plaintext and of course it is, because otherwise imagine sending the whole DOM object to the server, thankfully this was done before the age of vibecoders...
+
+Anyway, since we still get some information from the plain text message, we don't need to instantly call fetchLastChatMsg() and then extract the text from it.
+
+If we have multiple modules, each of them adding their own tap into the socket, we'll have:
+
+- New message in chat! The following will iterate through the ENTIRE DOM
+  - Mahjong mode wants to know if it starts with 'MJ:'
+  - Image Previews wants to know if it's a link
+  - The soundposts module wants to know if it's a soundpost
+  - Etc, etc
+
+The solution is simple, since we've already received the plain text message from the tap, just use a short regex ".test"
+
+Look, even gemini knows how to do it:
+
+```js
+let messageText = "MJ: This is a test message.";
+
+if (/^MJ:/.test(messageText)) {
+  console.log("The message starts with 'MJ:'.");
+} else {
+  console.log("The message does not start with 'MJ:'.");
+}
+```
+
+This way we avoid DOM overhead which is really expensive. In the end we still need to call for the last Message on every message that *matches*  but this limits unnecessary overhead, specially for those modules that aren't going to load every time.
+
+In the end, the whole socket tap looks like this:
+
+```js
+//We keep this constant outside so it doesn't get created every time (minor)
+const linkRegex = /href="(.*?)"/;
+socket.on("chatMsg", async (msgObject)=> {
+  const match = linkRegex.test(msgObject.msg)
+  if (match) {
+    createHoverImage(fetchLastChatElement())
+  }
+})
+```
