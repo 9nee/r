@@ -24,3 +24,6 @@ if (!['[server]', '[voteskip]'].includes(username.toLowerCase()) && username !==
 - CURRENT BUGS:
   - EMOTES DON'T SCROLL THE SCREEN
   - XAEMODULES DON'T USE PROMISES
+
+- You can turn a discord external CDN image into the original source
+- <https://images-ext-1.discordapp.net/external/1EaJOBLrzSlcPgd5UaEtPplZ6cZRIGCotFchDrYWFPE/%3Fformat%3Djpg%26name%3Dsmall/https/pbs.twimg.com/media/GyifgfgXsAA0iPx?format=webp&width=745&height=672> finding "https/pbs.twimg" turns it into <https://pbs.twimg.com/media/GyifgfgXsAA0iPx> which then when you add ?format=jpg&name=small turns into a visible image

@@ -231,41 +231,6 @@ $(window).bind('keydown', function (event) {
     }
 });
 
-// Image Hover
-const ImageHoverEnable = false;
-
-//TODO: broken for like 4 years now
-function createHoverImage(jqChatMessage) {
-    jqChatMessage.find("a").bind("mouseenter", function () {
-        if (ImageHoverEnable) {
-            const messageAfter = $(this).parent().next();
-            if (!messageAfter.is("img")) {
-                const newImg = new Image();
-                newImg.style.display = "none";
-                newImg.onload = function () {
-                    this.classList.add("imageHoverPreview", "imageLoaded");
-                };
-                newImg.src = $(this).html();
-                $(this).parent().after(newImg);
-            }
-            $("#messagebuffer div:hover .imageHoverPreview").stop(true, false).slideDown(100);
-            $("#messagebuffer div:hover").one("mouseout", function () {
-                $(this).children(".imageHoverPreview").stop(true, true).slideUp(100).delay(100).removeAttr("style");
-            });
-        }
-    });
-}
-
-$("#messagebuffer").bind('DOMNodeInserted', function (event) {
-    $(event.target).find("a").parent().parent().each(function () {
-        createHoverImage($(this));
-    });
-});
-
-$("#messagebuffer a").parent().parent().each(function () {
-    createHoverImage($(this));
-});
-
 // UI Enhancements
 (() => {
     'use strict';
@@ -516,12 +481,10 @@ function cleanupSoundpostPlaybackState() {
     }
 }
 
-//TODO: I don't like this destructuring assignment
 async function globalMessageFormatInjection({ username = "undefined", 
                                         $message = "undefined", 
                                         meta = undefined, 
-                                        time = undefined
-                                    }) {
+                                        time = undefined}) {
     const $messageText = $message.text()
 
     if ($messageText.startsWith('/')) {
