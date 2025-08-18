@@ -12,7 +12,7 @@ if (![CHANNEL.name].favicon) {
         .appendTo("head");
 }
 
-const CURRENT_COMMIT = "8f4c5ebfa35ef331def3b2e37e7561a5e1cc25f6"
+const CURRENT_COMMIT = "495aa5e0f2699c1ae5af4627631bf1cafad48494"
 //Change to om3tcw on live
 const CURRENT_REPO = "immergrok"
 
@@ -36,6 +36,7 @@ const ModulePaths = [
     `enhancedEmotes.js`,
     `holopeek/holoPeek.js`,
     `mahjongMode.js`,
+    `imagePreview.js`,
     { name: `nndChatModule.js`, isActive: 0, rank: -1}
 ]
 
