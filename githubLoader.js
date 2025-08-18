@@ -1,5 +1,5 @@
-if (![CHANNEL.name]) {
-    [CHANNEL.name] = {};
+if (!window[CHANNEL.name]) {
+    window[CHANNEL.name] = {};
 }
 
 if (![CHANNEL.name].favicon) {
