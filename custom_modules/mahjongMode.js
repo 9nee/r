@@ -3,7 +3,7 @@ socket.on("chatMsg", async () => {
   if ($message.text().startsWith('MJ:')) {
     await formatMJMessage($message)
   }
-  injectSecretMahjongEmotes(fetchLastChatElement());
+  await injectSecretMahjongEmotes(fetchLastChatElement());
 })
 
 async function formatMJMessage($messageElement) {
@@ -53,14 +53,8 @@ function prependMessagesWithMJ() {
 }
 
 async function canReadMJMessages() {
-    let mahjongModeCookie = readCookie("MahjongMode");
-    let mahjongLurkCookie = readCookie("MahjongLurk");
-  
     await window.moduleRegistry.waitForReady("holopeek/holoPeek.js")
-  
-    return mahjongLurkCookie || 
-          mahjongModeCookie || 
-          $('#holopeek_MahjongMode').is(':checked') ||
+    return $('#holopeek_MahjongMode').is(':checked') ||
           $('#holopeek_MahjongLurk').is(':checked');
 }
 
