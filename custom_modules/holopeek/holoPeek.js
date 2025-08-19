@@ -394,9 +394,11 @@ let holoPeekOptions;
 
 async function loadStoredValueForHolopeek(holoPeekItem, $checkboxForItem) {
     let cookieValue = readCookie(holoPeekItem.id)
+    console.log(cookieValue)
     if (cookieValue) {
         const foundElemType = validOptionTypes.find(type => holoPeekItem[type]);
 
+        console.log(foundElemType, holoPeekItem.id)
         if (foundElemType) {
             holoPeekItem[foundElemType].value = cookieValue;
         }
@@ -440,7 +442,7 @@ function createCheckboxForItem(holoPeekItem, optId) {
         const $div = $('<div>').appendTo(holoPeekOptionsContainer);
 
         const optId = `holopeek_${holoPeekItem.id}`;
-        
+
         const $checkboxElem = createCheckboxForItem(holoPeekItem, optId).appendTo($div);
 
         $('<label>', {
