@@ -31,8 +31,8 @@
             to { background-position: 0px 60px; }
         }
         #holoPeekBubble {
-            padding: 1.1vh 0.8vw;
-            z-index: 2147483647;
+            padding: 1.1vh 12px;
+            z-index: 4000;
             position: fixed;
             bottom: 6.5vh;
             right: 6.5vw;
@@ -41,22 +41,25 @@
             height: 50%;
         }
         #holoPeekBubbleTail {
-            width: 14vw;
-            height: 7vh;
+            width: 12vw;
+            height: 9vh;
             z-index: 2147483647;
             position: fixed;
             bottom: 5.8vh;
-            right: 17.5vw;
+            right: 9.5vw;
             background: #fff;
             transform: skew(15deg, 15deg);
+            z-index: 5;
         }
         #holoPeekBubble button {
             color: #000;
+            z-index: 50;
         }
         #holoPeekBubble textarea {
             min-height: 128px;
         }
         #holoPeekBubble label {
+            z-index: 50;
             color: #888;
         }
         #holoPeekBubble input:not([type="checkbox"]) {
@@ -85,7 +88,7 @@
             overflow-y: scroll;
             display: flex;
             flex-direction: column;
-            max-height: 75%;
+            max-height: 83%;
         }
         #resetButton {
             margin-left: 16px;

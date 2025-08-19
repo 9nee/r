@@ -21,7 +21,7 @@ let holoPeekItems;
         id: "holoPeekBubble"
     })
     $holoPeekBubble.hide();
-    $('body').append($holoPeekBubble);
+    $($holoPeekButton).append($holoPeekBubble);
 
     $holoPeekBubbleTail = $('<div>', {
         id: "holoPeekBubbleTail" 
