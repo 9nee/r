@@ -44,11 +44,14 @@
         #holoPeekBubble button {
             color: #000;
         }
+        #holoPeekBubble text,  
         #holoPeekBubble textarea {
             width: 100%;
-            min-height: 128px;
             margin-bottom: 5px;
             resize: both;
+        },
+        #holoPeekBubble textarea {
+            min-height: 128px;
         }
         #holoPeekBubble label {
             color: #888;
