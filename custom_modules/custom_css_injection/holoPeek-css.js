@@ -83,7 +83,7 @@
         #saveAndResetCookieButtonsDiv button img {
             margin-left: 4px;
         }
-        #holoPeekOptionsContainer {
+        #holoPeekItemsContainer {
             overflow-y: scroll;
             display: flex;
             flex-direction: column;
