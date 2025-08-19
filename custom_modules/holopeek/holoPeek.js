@@ -58,7 +58,7 @@ let holoPeekOptions;
             func: async () => {
 
                 await window.moduleRegistry.waitForReady("mahjongMode.js")
-                debugger;
+
                 const $chatInput = $('#chatline');
                 if ($(`#holopeek_MahjongMode`).is(':checked')) {
                     $chatInput.on('input', prependMessagesWithMJ)

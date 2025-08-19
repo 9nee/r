@@ -61,7 +61,7 @@ function fetchLastChatElement() {
 })
 
 const ModuleLoaderPromise = (async () => {
-    const importedModule = await import(makeLiveCDNLink("NeoXaeModules.js"));
+    const importedModule = await import(makeLiveCDNLink("ModuleLoader.js"));
     return importedModule.default;
 })();
 
