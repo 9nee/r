@@ -11,7 +11,7 @@
             border: none;
             outline: none;
             background: none;
-            background-image: url('https:///raw.githubusercontent.com/om3tcw/r/emotes/custom_modules/holopeek/polkapeek.png');
+            background-image: url('https:///raw.githubusercontent.com/${CURRENT_BRANCH}/r/emotes/custom_modules/holopeek/polkapeek.png');
             background-repeat: no-repeat;
             image-rendering: crisp-edges;
         }

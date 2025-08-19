@@ -1,4 +1,4 @@
-const validValues = ['textarea', 'range', 'text', 'dropdown'];
+const validOptionTypes = ['textarea', 'range', 'text', 'dropdown'];
 let $holoPeekBubble;
 let $holoPeekBubbleTail;
 let $holoPeekButton;
@@ -45,7 +45,7 @@ let holoPeekOptions;
                 
             },
             text: {
-                value: `https://raw.githubusercontent.com/om3tcw/r/emotes/custom_modules/holopeek/black.png`,
+                value: `https://raw.githubusercontent.com/${CURRENT_BRANCH}/r/emotes/custom_modules/holopeek/black.png`,
                 inputEvent: self => {
                     $(`#holopeek_${self.id}`).is(':checked') = false;
                     self.text.value = $(`holopeek_${self.id}_text`).value;
@@ -160,7 +160,7 @@ let holoPeekOptions;
             #lunaButton {
                 width: 46px;
                 height: 100px;
-                background: url('https://raw.githubusercontent.com/om3tcw/r/emotes/custom_modules/holopeek/lunapeek.png');
+                background: url('https://raw.githubusercontent.com/${CURRENT_BRANCH}/r/emotes/custom_modules/holopeek/lunapeek.png');
                 position: absolute;
                 right: 0;
                 top: 0;
@@ -392,6 +392,42 @@ let holoPeekOptions;
     ];
 })();
 
+async function loadStoredValueForHolopeek(holoPeekItem, $checkboxForItem) {
+    let cookieValue = readCookie(holoPeekItem.id)
+    if (cookieValue) {
+        const foundElemType = validOptionTypes.find(type => holoPeekItem[type]);
+
+        if (foundElemType) {
+            holoPeekItem[foundElemType].value = cookieValue;
+        }
+
+        $checkboxForItem.prop('checked', true);
+        await window.allModulesReady;
+        $checkboxForItem.triggerHandler('click');
+    }
+}
+
+function createCheckboxForItem(holoPeekItem) {
+    return $('<input>', {
+            id: optId,
+            type: 'checkbox',
+            click: async () => {
+                if (holoPeekItem.func) {
+                    //KEEP THIS AWAIT UNTIL A FULL REWRITE IS CONSIDERED
+                    await holoPeekItem.func(holoPeekItem);
+                } 
+                //this helps in case the function has created unremoved styles
+                $(`style[id="${optId}_style"]`).remove()
+                if (holoPeekItem.css && $checkboxElem.prop('checked')) {
+                    $('<style>', {
+                        id: `${optId}_style`,
+                        text: holoPeekItem.css
+                    }).appendTo('head');
+                }
+            }
+        })
+}
+
 (() => {
     const optionsLegendParagraph = $('<p>').html('Options').css('text-align', 'center');
     $holoPeekBubble.append(optionsLegendParagraph);
@@ -400,112 +436,77 @@ let holoPeekOptions;
     $holoPeekBubble.append(holoPeekOptionsContainer);
 
     //* HoloPeek prototype-esque definition
-    holoPeekOptions.forEach(async (holoPeekOption) => {
-        const div = $('<div>').appendTo(holoPeekOptionsContainer);
+    holoPeekOptions.forEach(async (holoPeekItem) => {
+        const $div = $('<div>').appendTo(holoPeekOptionsContainer);
 
-        const optId = `holopeek_${holoPeekOption.id}`;
-        const $checkboxElem = $('<input>', {
-            id: optId,
-            type: 'checkbox',
-            click: async () => {
-                if (holoPeekOption.func) {
-                    //KEEP THIS AWAIT UNTIL A FULL REWRITE IS CONSIDERED
-                    await holoPeekOption.func(holoPeekOption);
-                } 
-
-                //this helps in case the function has created unremoved styles
-                $(`style[id="${optId}_style"]`).remove()
-
-                if (holoPeekOption.css && $checkboxElem.prop('checked')) {
-                    
-                    $('<style>', {
-                        id: `${optId}_style`,
-                        text: holoPeekOption.css
-                    }).appendTo('head');
-                }
-            }
-        }).appendTo(div);
-
-        // Load cookie option
-        let cookieValue = readCookie(holoPeekOption.id)
-        if (cookieValue) {
-            const valueElem = holoPeekOption.textarea ? 'textarea' : holoPeekOption.range ? 'range' : holoPeekOption.text ? 'text' : null;
-            if (valueElem) holoPeekOption[valueElem].value = cookieValue;
-            $checkboxElem.prop('checked', true);
-            const interval = setInterval(async () => {
-                //TODO: this is what executes every "clicked" option change
-                if ($(".userlist_item").length) {
-                    clearInterval(interval);
-                    $checkboxElem.triggerHandler('click');
-                }
-            }, 100);
-        }
+        const optId = `holopeek_${holoPeekItem.id}`;
+        const $checkboxElem = createCheckboxForItem(holoPeekItem).appendTo($div);
 
         $('<label>', {
             id: `${optId}_label`,
-            text: holoPeekOption.desc,
-            title: holoPeekOption.id,
+            text: holoPeekItem.desc,
+            title: holoPeekItem.id,
             for: optId
-        }).appendTo(div);
+        }).appendTo($div);
 
-        if (holoPeekOption.textarea) {
+        if (holoPeekItem.textarea) {
             const textareaElem = $('<textarea>', {
                 id: `${optId}_textarea`,
-                val: holoPeekOption.textarea.value,
+                val: holoPeekItem.textarea.value,
                 on: {
                     input: () => {
                         $checkboxElem.prop('checked', false);
-                        holoPeekOption.textarea.value = textareaElem.val();
+                        holoPeekItem.textarea.value = textareaElem.val();
                     }
                 }
             }).appendTo(holoPeekOptionsContainer);
         }
 
-        if (holoPeekOption.range) {
+        if (holoPeekItem.range) {
             const rangeElem = $('<input>', {
                 id: `${optId}_range`,
                 type: 'range',
                 css: { display: 'inline-block' },
-                min: holoPeekOption.range.min,
-                max: holoPeekOption.range.max,
-                step: holoPeekOption.range.step,
-                val: holoPeekOption.range.value,
+                min: holoPeekItem.range.min,
+                max: holoPeekItem.range.max,
+                step: holoPeekItem.range.step,
+                val: holoPeekItem.range.value,
                 on: {
                     input: async () => {
                         const styleId = `${optId}_style` 
-                        holoPeekOption.range.value = rangeElem.val();
+                        holoPeekItem.range.value = rangeElem.val();
                             if ($(`#${styleId}`).length > 0) {
                                 $(`#${styleId}`).remove();
                             }
                             $('<style>', {
                                 id: styleId,
-                                text: holoPeekOption.css
+                                text: holoPeekItem.css
                             }).appendTo('head');
                                                     
-                            if (holoPeekOption.func) {
-                                holoPeekOption.func(holoPeekOption);
+                            if (holoPeekItem.func) {
+                                holoPeekItem.func(holoPeekItem);
                             }
                         }
                     }
             }).appendTo(holoPeekOptionsContainer);
         }
 
-        if (holoPeekOption.text) {
+        if (holoPeekItem.text) {
             const textElem = $('<input>', {
                 id: `${optId}_text`,
                 type: 'text',
-                val: holoPeekOption.text.value,
+                val: holoPeekItem.text.value,
                 on: {
                     input: () => {
                         $(`style[id="${optId}_style"]`).remove()
                         $checkboxElem.prop('checked', false);
-                        holoPeekOption.text.value = textElem.val();
+                        holoPeekItem.text.value = textElem.val();
                     }
                 }
             }).appendTo(holoPeekOptionsContainer);
         }
 
-        if (holoPeekOption.setupFunc) holoPeekOption.setupFunc(holoPeekOption);
+        if (holoPeekItem.setupFunc) holoPeekItem.setupFunc(holoPeekItem);
     });
 
     const saveAndResetCookieButtonsDiv = $('<div>', {
@@ -520,7 +521,7 @@ let holoPeekOptions;
                 const optionName = holoPeekOption.id;
                 const $jqSelector = $(`#holopeek_${optionName}`)
                 let valueElem = null;
-                for (const type of validValues) {
+                for (const type of validOptionTypes) {
                     if (holoPeekOption[type]) {
                         valueElem = type;
                         break;

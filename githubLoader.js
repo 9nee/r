@@ -14,6 +14,9 @@ if (![CHANNEL.name].favicon) {
 
 const CURRENT_COMMIT = "347e9cd357e179cfd89d7a83105a1d3485b24f15"
 
+//Change to om3tcw when live
+const CURRENT_BRANCH = "immergrok"
+
 let SOUNDPOSTS = {}
 let SOUNDPOST_STATE = "false";
 let SOUNDPOST_PLAYBACK_STATE = {};
@@ -63,7 +66,7 @@ const ModuleLoaderPromise = (async () => {
     return importedModule.default;
 })();
 
-let allModulesReady = null;
+window.allModulesReady = null;
 
 (async function loadLogic() {
 
@@ -71,8 +74,8 @@ let allModulesReady = null;
     const ModuleLoaderInstance = new ModuleLoaderClass(ModulePaths);
 
     await ModuleLoaderInstance.initialize();
-    allModulesReady = ModuleLoaderInstance.allModulesLoaded;
-    await allModulesReady;
+    window.allModulesReady = ModuleLoaderInstance.allModulesLoaded;
+    await window.allModulesReady;
     
     //Your motherfucking life ends 5 minutes from now
     SOUNDPOST_STATE = readCookie("SOUNDPOST_STATE");;

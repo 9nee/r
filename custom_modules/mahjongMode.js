@@ -73,8 +73,8 @@ const secretMJEmotes = {
 };
 
 (async function runOnceAfterLoad() {
-  if (allModulesReady) {
-    await allModulesReady
+  if (window.allModulesReady) {
+    await window.allModulesReady
   } else {
     console.error("Something has gone horribly wrong and you've either moved allModulesReady out of scope or the way the modules load has changed completely.")
   }
