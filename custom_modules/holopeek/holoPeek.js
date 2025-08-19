@@ -539,6 +539,7 @@ function createShortTextElement(holoPeekItem, optId, $checkboxElem) {
             }
         }
 
+        //TODO WHEN I WAKE UP: Maybe it's just this line? append to something else?
         if (holoPeekInputElement) {
             holoPeekInputElement.appendTo(holoPeekItemsContainer)
         }
