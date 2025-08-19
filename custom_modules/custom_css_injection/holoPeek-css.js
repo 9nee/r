@@ -64,6 +64,10 @@
             display: inline-block;
             margin-bottom: 5px;
         }
+        #holoPeekBubble input[type=text] {
+            display: block;
+            margin-bottom: 5px;
+        }
         #holoPeekBubbleTail {
             width: 50px;
             height: 25px;
