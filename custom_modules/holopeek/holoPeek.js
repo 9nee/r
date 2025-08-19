@@ -517,7 +517,7 @@ function createShortTextElement(holoPeekItem, optId, $checkboxElem) {
 
         let holoPeekItemType;
         for (const type of validOptionTypes) {
-            if (holoKeepItem[type]) {
+            if (holoPeekItem[type]) {
                 holoPeekItemType = type;
                 break;
             }
