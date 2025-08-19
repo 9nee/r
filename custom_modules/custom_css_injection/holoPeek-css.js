@@ -1,8 +1,9 @@
 (function injectHoloPeekStyle() {
     const cssHoloPeek = `
         #holopeek {
-            width: 3vw;
-            height: 5.55vh;
+        /* I guess this is the w/h of future holopeeks too */
+            width: 60px;
+            height: 60px;
             z-index: 2147483647;
             position: fixed;
             padding: 0;
@@ -30,16 +31,24 @@
             to { background-position: 0px 60px; }
         }
         #holoPeekBubble {
-            flex-grow: 0;
-            flex-direction: column;
-            padding: 1.1vh 0.85vw;
+            padding: 1.1vh 0.8vw;
             z-index: 2147483647;
             position: fixed;
-            bottom: 4.45vh;
-            right: 4.75px;
+            bottom: 6.5vh;
+            right: 6.5vw;
             background: #fff;
             border-radius: 8px;
             height: 50%;
+        }
+        #holoPeekBubbleTail {
+            width: 14vw;
+            height: 7vh;
+            z-index: 2147483647;
+            position: fixed;
+            bottom: 5.8vh;
+            right: 17.5vw;
+            background: #fff;
+            transform: skew(15deg, 15deg);
         }
         #holoPeekBubble button {
             color: #000;
@@ -58,16 +67,6 @@
         #holoPeekBubble input[type=checkbox] {
             margin-right: 8px;
             margin-left: 5px
-        }
-        #holoPeekBubbleTail {
-            width: 2.6vw;
-            height: 2.3vh;
-            z-index: 2147483647;
-            position: fixed;
-            bottom: 3.9vh;
-            right: 6.35vw;
-            background: #fff;
-            transform: skew(15deg, 15deg);
         }
         #saveAndResetCookieButtonsDiv {
             margin-top: 12px;

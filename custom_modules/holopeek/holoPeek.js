@@ -17,17 +17,17 @@ let holoPeekItems;
     
     $('body').append($holoPeekButton);
 
-    $holoPeekBubbleTail = $('<div>', {
-        id: "holoPeekBubbleTail" 
-    });
-    $holoPeekBubbleTail.hide();
-    $('body').append($holoPeekBubbleTail);
-
     $holoPeekBubble = $('<div>', {
         id: "holoPeekBubble"
     })
     $holoPeekBubble.hide();
     $('body').append($holoPeekBubble);
+
+    $holoPeekBubbleTail = $('<div>', {
+        id: "holoPeekBubbleTail" 
+    });
+    $holoPeekBubbleTail.hide();
+    $($holoPeekBubble).append($holoPeekBubbleTail);
 
     holoPeekItems = [
         {
