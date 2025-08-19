@@ -32,11 +32,11 @@
         #holoPeekBubble {
             flex-grow: 0;
             flex-direction: column;
-            padding: 12px 16px;
+            padding: 1.1vh 0.85vw;
             z-index: 2147483647;
             position: fixed;
-            bottom: 48px;
-            right: 90px;
+            bottom: 4.45vh;
+            right: 4.70px;
             background: #fff;
             border-radius: 8px;
             height: 50%;
@@ -44,29 +44,19 @@
         #holoPeekBubble button {
             color: #000;
         }
-        #holoPeekBubble text,  
-        #holoPeekBubble textarea {
-            width: 100%;
-            margin-bottom: 5px;
-            resize: both;
-            display: block;
-        },
         #holoPeekBubble textarea {
             min-height: 128px;
         }
         #holoPeekBubble label {
             color: #888;
         }
-        #holoPeekBubble input[type=checkbox] {
-            margin-right: 8px;
-        }
-        #holoPeekBubble input[type=range] {
-            display: inline-block;
-            margin-bottom: 5px;
-        }
-        #holoPeekBubble input[type=text] {
+        #holoPeekBubble input:not([type="checkbox"]) {
             display: block;
             margin-bottom: 5px;
+            width: 95%
+        }
+        #holoPeekBubble input[type=checkbox] {
+            margin-right: 8px;
         }
         #holoPeekBubbleTail {
             width: 50px;
