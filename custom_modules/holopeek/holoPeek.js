@@ -407,7 +407,7 @@ async function loadStoredValueForHolopeek(holoPeekItem, $checkboxForItem) {
     }
 }
 
-function createCheckboxForItem(holoPeekItem) {
+function createCheckboxForItem(holoPeekItem, optId) {
     return $('<input>', {
             id: optId,
             type: 'checkbox',
@@ -440,7 +440,8 @@ function createCheckboxForItem(holoPeekItem) {
         const $div = $('<div>').appendTo(holoPeekOptionsContainer);
 
         const optId = `holopeek_${holoPeekItem.id}`;
-        const $checkboxElem = createCheckboxForItem(holoPeekItem).appendTo($div);
+        
+        const $checkboxElem = createCheckboxForItem(holoPeekItem, optId).appendTo($div);
 
         $('<label>', {
             id: `${optId}_label`,
