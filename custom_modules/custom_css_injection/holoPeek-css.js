@@ -1,13 +1,13 @@
 (function injectHoloPeekStyle() {
     const cssHoloPeek = `
         #holopeek {
-            width: 57px;
-            height: 60px;
+            width: 3vw;
+            height: 5.55vh;
             z-index: 2147483647;
             position: fixed;
             padding: 0;
             bottom: 0;
-            right: 42px;
+            right: 2.2vw;
             border: none;
             outline: none;
             background: none;
@@ -36,7 +36,7 @@
             z-index: 2147483647;
             position: fixed;
             bottom: 4.45vh;
-            right: 4.70px;
+            right: 4.75px;
             background: #fff;
             border-radius: 8px;
             height: 50%;
@@ -57,14 +57,15 @@
         }
         #holoPeekBubble input[type=checkbox] {
             margin-right: 8px;
+            margin-left: 5px
         }
         #holoPeekBubbleTail {
-            width: 50px;
-            height: 25px;
+            width: 2.6vw;
+            height: 2.3vh;
             z-index: 2147483647;
             position: fixed;
-            bottom: 42px;
-            right: 122px;
+            bottom: 3.9vh;
+            right: 6.35vw;
             background: #fff;
             transform: skew(15deg, 15deg);
         }
