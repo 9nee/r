@@ -3883,6 +3883,7 @@ textarea.form-control {
 #motd {
     padding-left: 100px;
     background-color: transparent;
+    font-weight: bold;
 }
 
 .imageHoverPreview {
@@ -3997,7 +3998,9 @@ textarea.form-control {
 }
 
 form input#chatline {
-    background-size: auto
+    padding: 0 0 0 5px;
+    height: 32px;
+    background-size: auto;
 }
 
 #messagebuffer .username {
