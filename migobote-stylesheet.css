@@ -3633,10 +3633,12 @@ textarea.form-control {
     padding-bottom: 1px;
 }
 
+/* This was originally implemented, then broken, then reimplemented, now commented.
 #messagebuffer > div:nth-child(2n):not(.nick-highlight) {
     background-color: rgba(0, 0, 0, 0.1);
     box-shadow: 0 0 5px 3px rgba(0, 0, 0, 0.3);
 }
+*/
 
 #messagebuffer>div:hover>.timestamp,
 .pm-buffer>div:hover>.timestamp {

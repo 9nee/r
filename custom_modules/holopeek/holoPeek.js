@@ -496,7 +496,7 @@ function createShortTextElement(holoPeekItem, optId, $checkboxElem) {
     })
 }
 
-(function holoPeekBuilder() {
+(async function holoPeekBuilder() {
     const optionsLegendParagraph = $('<p>').html('Options').css('text-align', 'center');
     $holoPeekBubble.append(optionsLegendParagraph);
 
@@ -509,7 +509,7 @@ function createShortTextElement(holoPeekItem, optId, $checkboxElem) {
 
         const optId = `holopeek_${holoPeekItem.id}`;
 
-        const $checkboxElem = createCheckboxForItem(holoPeekItem, optId).appendTo($div);
+        const $checkboxElem = await createCheckboxForItem(holoPeekItem, optId).appendTo($div);
 
         await loadStoredValueForHolopeek(holoPeekItem, $checkboxElem);
 
