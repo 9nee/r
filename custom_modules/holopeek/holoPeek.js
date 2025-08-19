@@ -444,6 +444,7 @@ function createCheckboxForItem(holoPeekItem, optId) {
         const optId = `holopeek_${holoPeekItem.id}`;
 
         const $checkboxElem = createCheckboxForItem(holoPeekItem, optId).appendTo($div);
+        await loadStoredValueForHolopeek();
 
         $('<label>', {
             id: `${optId}_label`,
