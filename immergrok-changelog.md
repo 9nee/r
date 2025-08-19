@@ -70,8 +70,7 @@ Example of local config
 Note that this doesn't have to be changed for every update to the commit, just has to be changed when there's relevant changes to be pulled to the JS files. So not when you make a new emote. 
 */
 const CURRENT_COMMIT = "37889849fb28717747828d795c9e5af24fa01f34"
-//Change to om3tcw when live
-const CURRENT_REPO = "immergrok"
+
 ```
 
 Similarly, whenever you want to update the js file in the bote, just change the @\<hash> using the last commit hash.

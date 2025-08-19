@@ -13,8 +13,6 @@ if (![CHANNEL.name].favicon) {
 }
 
 const CURRENT_COMMIT = "07f25fca6c746d3bdaad11b0b7bb811a9eb25940"
-//Change to om3tcw on live
-const CURRENT_REPO = "immergrok"
 
 let SOUNDPOSTS = {}
 let SOUNDPOST_STATE = "false";
@@ -42,7 +40,7 @@ const ModulePaths = [
 
 function makeLiveCDNLink(fileName) {
     return "https://cdn.jsdelivr.net/gh/" + 
-            CURRENT_REPO +
+            "om3tcw" +
             "/r@" +
             CURRENT_COMMIT +
             "/" +

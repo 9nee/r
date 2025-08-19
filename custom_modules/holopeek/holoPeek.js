@@ -45,7 +45,7 @@ let holoPeekOptions;
                 
             },
             text: {
-                value: `https://raw.githubusercontent.com/${CURRENT_REPO}/r/emotes/custom_modules/holopeek/black.png`,
+                value: `https://raw.githubusercontent.com/om3tcw/r/emotes/custom_modules/holopeek/black.png`,
                 inputEvent: self => {
                     $(`#holopeek_${self.id}`).is(':checked') = false;
                     self.text.value = $(`holopeek_${self.id}_text`).value;
@@ -160,7 +160,7 @@ let holoPeekOptions;
             #lunaButton {
                 width: 46px;
                 height: 100px;
-                background: url('https://raw.githubusercontent.com/${CURRENT_REPO}/r/emotes/custom_modules/holopeek/lunapeek.png');
+                background: url('https://raw.githubusercontent.com/om3tcw/r/emotes/custom_modules/holopeek/lunapeek.png');
                 position: absolute;
                 right: 0;
                 top: 0;
