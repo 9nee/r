@@ -12,7 +12,7 @@ if (![CHANNEL.name].favicon) {
         .appendTo("head");
 }
 
-const CURRENT_COMMIT = "07f25fca6c746d3bdaad11b0b7bb811a9eb25940"
+const CURRENT_COMMIT = "347e9cd357e179cfd89d7a83105a1d3485b24f15"
 
 let SOUNDPOSTS = {}
 let SOUNDPOST_STATE = "false";
