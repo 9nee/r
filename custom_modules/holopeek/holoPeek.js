@@ -411,15 +411,16 @@ function createCheckboxForItem(holoPeekItem, optId) {
     return $('<input>', {
             id: optId,
             type: 'checkbox',
-            click: async () => {
+            click: async function() {
                 if (holoPeekItem.func) {
                     //KEEP THIS AWAIT UNTIL A FULL REWRITE IS CONSIDERED
                     await holoPeekItem.func(holoPeekItem);
                 } 
+                
                 //this helps in case the function has created unremoved styles
                 //Check if this actually ever triggers
                 $(`style[id="${optId}_style"]`).remove()
-                if (holoPeekItem.css && $checkboxElem.prop('checked')) {
+                if (holoPeekItem.css && $(this).prop('checked')) {
                     $('<style>', {
                         id: `${optId}_style`,
                         text: holoPeekItem.css
@@ -463,9 +464,9 @@ function createRangeElement(holoPeekItem, optId) {
         step: holoPeekItem.range.step,
         val: holoPeekItem.range.value,
         on: {
-            input: async () => {
+            input: async function() {
                 const styleId = `${optId}_style` 
-                holoPeekItem.range.value = rangeElem.val();
+                holoPeekItem.range.value = $(this).val();
                     if ($(`#${styleId}`).length > 0) {
                         $(`#${styleId}`).remove();
                     }
@@ -509,7 +510,7 @@ function createShortTextElement(holoPeekItem, optId, $checkboxElem) {
 
         const optId = `holopeek_${holoPeekItem.id}`;
 
-        const $checkboxElem = await createCheckboxForItem(holoPeekItem, optId).appendTo($div);
+        const $checkboxElem = createCheckboxForItem(holoPeekItem, optId).appendTo($div);
 
         await loadStoredValueForHolopeek(holoPeekItem, $checkboxElem);
 
@@ -530,7 +531,7 @@ function createShortTextElement(holoPeekItem, optId, $checkboxElem) {
                 break;
             } 
             case 'range' : {
-                holoPeekInputElement = createRangeElement(holoPeekItem, optId);
+                holoPeekInputElement = createRangeElement(holoPeekItem, optId, $checkboxElem);
                 break;
             }
             case 'text': {
@@ -539,7 +540,6 @@ function createShortTextElement(holoPeekItem, optId, $checkboxElem) {
             }
         }
 
-        //TODO WHEN I WAKE UP: Maybe it's just this line? append to something else?
         if (holoPeekInputElement) {
             holoPeekInputElement.appendTo($div)
         }
