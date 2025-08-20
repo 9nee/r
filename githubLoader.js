@@ -12,39 +12,37 @@ if (![CHANNEL.name].favicon) {
         .appendTo("head");
 }
 
-const LOCAL_CDN_URL = "https://monthly-shut-authorized-wa.trycloudflare.com/immergrok-cytube-fork/";
+const LOCAL_CDN_URL = "https://monthly-shut-authorized-wa.trycloudflare.com/immergrok-cytube-fork";
+
+//For live jsdelivr usage
 const JSDELIVR_CDN_URL = "https://cdn.jsdelivr.net/gh/om3tcw/r@"
-const CURRENT_COMMIT = "cd27a0b9632e8edcb967a5c1d98fdeae8bc1c2f2"
+const CURRENT_COMMIT = ""
+const CURRENT_BRANCH = "immergrok" //Change to om3tcw when live
 
-//Change to om3tcw when live
-const CURRENT_BRANCH = "immergrok"
-
-let SOUNDPOSTS = {}
-let SOUNDPOST_STATE = "false";
-let SOUNDPOST_PLAYBACK_STATE = {};
-let PLAYED_SOUNDPOSTS = [];
-const defaultVolume = 0.1;
-const defaultAdditionalPlayTime = 3;
+//CHANGE TO JSDELIVR_CDN_URL WHEN LIVE
+const CURRENT_CDN = LOCAL_CDN_URL;
 
 const MODULES_FOLDER = "custom_modules/";
 const MODULE_REGISTRY = `${MODULES_FOLDER}moduleRegistry.js`
 const ModulePaths = [
-    `custom_css_injection/customCssInjection.js`,
-    `customSettingsModal.js`,
-    `betterPlaylist.js`,
-    `betterPms.js`,
-    `soundNotifications.js`,
-    `moreLayoutOptions.js`,
-    `customUserlist.js`,
-    `enhancedEmotes.js`,
-    `holopeek/holoPeek.js`,
-    `mahjongMode.js`,
-    `imagePreview.js`,
-    { name: `nndChatModule.js`, isActive: 0, rank: -1}
+    { CSSInjection: `custom_css_injection/customCssInjection.js`},
+    { TabsBelowVideo: `ui_modules/tabsBelowVideo.js`}, //I wouldn't disable this one
+    { CustomSettings:`ui_modules/customSettingsModal.js` },
+    { BetterPlaylist: `ui_modules/betterPlaylist.js` },
+    { BetterPms: `ui_modules/betterPms.js` },
+    { SoundNotifications: `soundNotifications.js` },
+    { MoreLayoutOptions: `ui_modules/moreLayoutOptions.js` },
+    { CustomUserList: `ui_modules/customUserlist.js` },
+    { HoloPeek: `holopeek/holoPeek.js` },
+    { MahjongMode: `chat_modules/mahjongMode.js` },
+    { EnhancedEmotes: `chat_modules/enhancedEmotes.js` },
+    { ImagePreview: `chat_modules/imagePreview.js` },
+    { Soundposts: `chat_modules/soundpostModule.js` },
+    { NNDChatModule: `chat_modules/nndChatModule.js`, isActive: 0, rank: -1}
 ]
 
-function makeLiveCDNLink(fileName, currentCommit = "", ) {
-    return  +
+function makeLiveCDNLink(fileName) {
+    return  CURRENT_CDN +
             CURRENT_COMMIT +
             "/" +
             fileName
@@ -53,13 +51,6 @@ function makeLiveCDNLink(fileName, currentCommit = "", ) {
 function fetchLastChatElement() {
     return $('#messagebuffer').children().last().children().last();
 }
-
-(async function loadSoundposts() {
-    const response = await fetch('https://raw.githubusercontent.com/om3tcw/r/emotes/soundposts/soundposts.json');
-    return await response.json();
-})().then((data) => {
-    SOUNDPOSTS = data;
-})
 
 const ModuleLoaderPromise = (async () => {
     const importedModule = await import(makeLiveCDNLink("ModuleLoader.js"));
@@ -77,13 +68,10 @@ window.allModulesReady = null;
     window.allModulesReady = ModuleLoaderInstance.allModulesLoaded;
     await window.allModulesReady;
     
-    //Your motherfucking life ends 5 minutes from now
-    SOUNDPOST_STATE = readCookie("SOUNDPOST_STATE");;
-
     $('#messagebuffer [class|="chat-msg"]').each(async (index, element) => {
         const $jqElement = $(element); 
         const $messageElement = $jqElement.children().last();
-        await globalMessageFormatInjection({$message: $messageElement});
+        globalMessageFormatInjection({$message: $messageElement});
     })
 })();
 
@@ -97,143 +85,67 @@ $(document).ready(function () {
 
 });
 
-// Tabs
-{
-    const tabContainer = $('<div id="MainTabContainer"></div>').appendTo('#videowrap');
-    const tabList = $('<ul class="nav nav-tabs" role="tablist"></ul>').appendTo(tabContainer);
-    const tabContent = $('<div class="tab-content"></div>').appendTo(tabContainer);
 
-    // Playlist Tab
-    $('<div role="tabpanel" class="tab-pane active" id="playlistTab"></div>')
-        .appendTo(tabContent)
-        .append($('#rightcontrols').detach())
-        .append($('#playlistrow').detach().removeClass('row'));
-    const playlistButton = $('<li class="active" role="presentation"><a role="tab" data-toggle="tab" aria-expanded="false" href="#playlistTab">Playlist</a></li>').appendTo(tabList);
-
-    if (getOrDefault(CHANNEL.name + "chinkspy", false)) {
-        $('body').append('<span id="pnl_options" style="position:absolute;display:none;left:0;top:30px;padding-top:10px;width:100%;background:rgba(0,0,0,0.5);z-index:2;"></span>');
-        $('<li><a id="btn_playList" class="pointer">Playlist</a></li>').insertAfter('#settingsMenu')
-            .click(function () {
-                if ($('#pnl_options').css('display') === 'none') {
-                    $('#rightcontrols').detach().appendTo('#pnl_options');
-                    $('#playlistrow').detach().appendTo('#pnl_options');
-                    $('#pnl_options').slideDown();
-                } else {
-                    $('#pnl_options').slideUp();
-                }
-            });
-        playlistButton.on('mousedown', function () {
-            $('#rightcontrols').detach().appendTo('#playlistTab');
-            $('#playlistrow').detach().appendTo('#playlistTab');
-        });
-    }
-
-    // Polls Tab
-    $('<li role="presentation"><a role="tab" data-toggle="tab" aria-expanded="false" href="#pollsTab">Polls <span id="pollsbadge" class="badge" style="background-color:#FFF;color:#000;"></span></a></li>')
-        .appendTo(tabList).click(function () {
-            $('#pollsbadge').text('');
-        });
-    $('<div role="tabpanel" class="tab-pane" id="pollsTab"><div class="col-lg-12 col-md-12" id="pollhistory"></div></div>')
-        .appendTo(tabContent).prepend($('#newpollbtn').detach());
-
-    const redoPollwrap = function () {
-        $('#pollwrap').detach().insertBefore('#MainTabContainer');
-        $('#pollwrap .well span.label.pull-right').detach().insertBefore('#pollwrap .well h3');
-        $('#pollwrap button.close').off("click").click(function () {
-            $('#pollwrap').detach().insertBefore('#pollhistory');
-            if (!$('#pollsTab').hasClass('active')) {
-                const badgeTxt = $('#pollsbadge').text();
-                $('#pollsbadge').text((badgeTxt ? parseInt(badgeTxt) : 0) + 1);
-            }
-        });
-    };
-
-    const base_newPoll = Callbacks.newPoll;
-    Callbacks.newPoll = function (data) {
-        base_newPoll(data);
-        if (!$('#pollsTab').hasClass('active') && $('#MainTabContainer #pollwrap').length === 0) {
-            const badgeTxt = $('#pollsbadge').text();
-            const pollCnt = $('#pollwrap .well.muted').length + (badgeTxt ? parseInt(badgeTxt) : 0);
-            $('#pollsbadge').text(pollCnt);
+function surroundTextSelection($textField, leftSurroundString, rightSurroundString) {
+    let textFieldDOM = $textField[0]
+    const caretPositionStart = textFieldDOM.selectionStart;
+    const caretPositionEnd = textFieldDOM.selectionEnd;
+    const textValue = $textField.val();
+    if (textFieldDOM === document.activeElement) {
+        if (caretPositionStart === caretPositionEnd) {
+            $textField.val(
+                textValue.substring(0, caretPositionStart) + 
+                leftSurroundString + 
+                textValue.substring(caretPositionStart, caretPositionEnd) + 
+                rightSurroundString + 
+                textValue.substring(caretPositionEnd, textValue.length));
+            textFieldDOM.setSelectionRange(
+                caretPositionStart + leftSurroundString.length,
+                caretPositionStart + leftSurroundString.length);
+        } else if (caretPositionStart < caretPositionEnd) {
+            $textField.val(
+                textValue.substring(0, caretPositionStart) + 
+                leftSurroundString + 
+                textValue.substring(caretPositionStart, caretPositionEnd) + 
+                rightSurroundString + 
+                textValue.substring(caretPositionEnd, textValue.length));
+            textFieldDOM.setSelectionRange(
+                caretPositionEnd + (leftSurroundString.length + rightSurroundString.length), 
+                caretPositionEnd + (leftSurroundString.length + rightSurroundString.length));
         }
-
-        $('#pollwrap .well.muted').detach().prependTo('#pollhistory');
-        redoPollwrap();
-    };
-    redoPollwrap();
-
-    // oshieyes google
-
-    $('<div role="tabpanel" class="tab-pane" id="calendarTab"><iframe width="100%" height="600" frameborder="0" scrolling="auto"></iframe></div>').appendTo(tabContent);
-    $('<li role="presentation"><a role="tab" data-toggle="tab" aria-expanded="false" href="#calendarTab">Oshi Eyes</a></li>').appendTo(tabList);
-    const baseCalendarUrl = 'https://docs.google.com/forms/d/1oqO8DIIyxuKVPvhXSAmxNCy5zCkS8XQAhEKi8a9BK1g/viewform?';
-
-    let calendars = getOrDefault(CHANNEL.name + '_CALENDARS', null);
-    if (!Array.isArray(calendars)) {
-        setOpt(CHANNEL.name + '_CALENDARS', calendars = [{ src: 'd426h89oqa3krrq8cj00kbasgo%40group.calendar.google.com', color: '2952A3' }]);
     }
-    window.AddCalendar = function (src, color) {
-        setOpt(CHANNEL.name + '_CALENDARS', getOrDefault(CHANNEL.name + '_CALENDARS', []).concat([{ src, color }]));
-    };
-
-    $('#calendarTab iframe').attr('src', baseCalendarUrl + '&');
-    $('#leftpane').remove();
 }
 
-// Keybinds
-let keyHeld = false;
-$(window).bind('keyup', function () { keyHeld = false; });
-$(window).bind('keydown', function (event) {
-    const inputBox = $("#chatline");
-    const inputVal = inputBox.value;
+$(window).on('keydown', (event) => {
+    const $chatBox = $("#chatline");
+    const chatBoxDOM = $chatBox[0]
+
     if (event.ctrlKey && !event.shiftKey) {
-        switch (String.fromCharCode(event.which).toLowerCase()) {
-            case 'a':
-                if (!keyHeld) {
-                    if (inputVal.length )
-                    keyHeld = true;
-                    inputBox.focus();
-                    inputBox.setSelectionRange(0, inputVal.length);
+        switch (event.key) {
+            case 'a': 
+                if ($chatBox.val().length) {
+                    chatBoxDOM.focus();
+                    chatBoxDOM.setSelectionRange(0, $chatBox.val().length);
                 }
                 break;
-            case 's':
-                if (!keyHeld) {
-                    keyHeld = true;
-                    event.preventDefault();
-                    const selSt = inputBox.selectionStart;
-                    const selEnd = inputBox.selectionEnd;
-                    if (inputBox === document.activeElement) {
-                        if (inputBox.selectionStart === inputBox.selectionEnd) {
-                            inputBox.value = inputVal.substring(0, selSt) + "[sp]" + inputVal.substring(selSt, selEnd) + "[/sp]" + inputVal.substring(selEnd, inputVal.length);
-                            inputBox.setSelectionRange(selSt + 4, selSt + 4);
-                        } else if (inputBox.selectionStart < inputBox.selectionEnd) {
-                            inputBox.value = inputVal.substring(0, selSt) + "[sp]" + inputVal.substring(selSt, selEnd) + "[/sp]" + inputVal.substring(selEnd, inputVal.length);
-                            inputBox.setSelectionRange(selEnd + 9, selEnd + 9);
-                        }
-                    }
-                }
+            case 's':   
+                event.preventDefault();
+                event.stopPropagation(event);
+                surroundTextSelection($chatBox, "[sp]", "[/sp]")
                 break;
-            case 'r':
-                if (!keyHeld) {
-                    keyHeld = true;
-                    event.preventDefault();
-                    event.stopPropagation();
-                    const selSt = inputBox.selectionStart;
-                    const selEnd = inputBox.selectionEnd;
-                    if (inputBox === document.activeElement) {
-                        if (inputBox.selectionStart === inputBox.selectionEnd) {
-                            inputBox.value = inputVal.substring(0, selSt) + "[r] " + inputVal.substring(selSt, selEnd) + " [/r]" + inputVal.substring(selEnd, inputVal.length);
-                            inputBox.setSelectionRange(selSt + 4, selSt + 4);
-                        } else if (inputBox.selectionStart < inputBox.selectionEnd) {
-                            inputBox.value = inputVal.substring(0, selSt) + "[r] " + inputVal.substring(selSt, selEnd) + " [/r]" + inputVal.substring(selEnd, inputVal.length);
-                            inputBox.setSelectionRange(selEnd + 9, selEnd + 9);
-                        }
-                    }
-                }
+            case 'r': 
+            if (document.activeElement === chatBoxDOM) {
+                event.preventDefault();
+                event.stopPropagation(event);
+                event.returnValue = false;
+                surroundTextSelection($chatBox, "[r]", "[/r]");
                 break;
+            }
         }
     }
 });
+
+
 
 // UI Enhancements
 (() => {
@@ -342,11 +254,30 @@ $(window).bind('keydown', function (event) {
 
 })();
 
-$('#messagebuffer').off('click').click(e => {
-    let t = e.target, p = t.parentElement;
-    if (e.button != 0) return;
-    if (t.className == 'channel-emote')
-        $('#chatline').val((i, v) => v + e.target.title + " ").focus();
+let currentChatboxCaret = 0;
+
+$('#chatline').on('click keydown', (event) => {
+    setTimeout(function () {
+        currentChatboxCaret = event.target.selectionStart;
+    }, 0);
+})
+
+//Improved emote click
+$('#messagebuffer').click(event => {
+    let target = event.target;
+    if (event.button != 0) { 
+        return;
+    }
+    if (target.className == 'channel-emote') {
+        let curChatVal = $('#chatline').val();
+        let emoteName = event.target.title;
+        let firstHalf = curChatVal.substring(0, currentChatboxCaret);
+        let secondHalf = curChatVal.substring(currentChatboxCaret);
+        let newChatVal = firstHalf + emoteName + " ";
+        currentChatboxCaret = newChatVal.length;
+        newChatVal = newChatVal + secondHalf;
+        $('#chatline').val(newChatVal).focus()[0].setSelectionRange(currentChatboxCaret, currentChatboxCaret);
+    }
 });
 
 function runescape($message) {
@@ -429,63 +360,7 @@ function yayConfetti($message) {
     }
 }
 
-function initializeSoundpost(emote, soundurl, preload = false) {
-    if (!SOUNDPOST_PLAYBACK_STATE[emote]) {
-        SOUNDPOST_PLAYBACK_STATE[emote] = {
-            audio: new Audio(soundurl),
-            totalPlayTime: 0,
-            isPlaying: false,
-            timeout: null,
-            isPreloaded: false
-        };
-
-        SOUNDPOST_PLAYBACK_STATE[emote].audio.volume = defaultVolume;
-        if (preload) {
-            SOUNDPOST_PLAYBACK_STATE[emote].audio.addEventListener('canplaythrough', () => {
-                SOUNDPOST_PLAYBACK_STATE[emote].isPreloaded = true;
-            }, { once: true });
-        }
-    }
-}
-
-function playSoundpost(emote, additionalPlayTime = defaultAdditionalPlayTime) {
-    const soundpost = SOUNDPOST_PLAYBACK_STATE[emote];
-    soundpost.totalPlayTime += additionalPlayTime;
-
-    if (!soundpost.isPlaying && soundpost.isPreloaded) {
-        soundpost.isPlaying = true;
-        soundpost.audio.play();
-    }
-
-    clearTimeout(soundpost.timeout);
-
-    const remainingTime = soundpost.audio.duration - soundpost.audio.currentTime;
-    const playDuration = Math.min(soundpost.totalPlayTime, remainingTime);
-
-    soundpost.timeout = setTimeout(() => {
-        soundpost.audio.pause();
-        soundpost.isPlaying = false;
-        soundpost.audio.currentTime = 0;
-        soundpost.totalPlayTime = 0;
-    }, playDuration * 1000);
-}
-
-function cleanupSoundpostPlaybackState() {
-    const limit = 40; 
-    const keys = Object.keys(SOUNDPOST_PLAYBACK_STATE);
-    if (keys.length > limit) {
-        const toDelete = keys.slice(0, keys.length - limit);
-        toDelete.forEach(key => {
-            if (SOUNDPOST_PLAYBACK_STATE[key].audio) {
-                SOUNDPOST_PLAYBACK_STATE[key].audio.pause();
-                SOUNDPOST_PLAYBACK_STATE[key].audio.src = "";
-            }
-            delete SOUNDPOST_PLAYBACK_STATE[key];
-        });
-    }
-}
-
-async function globalMessageFormatInjection({ username = "undefined", 
+function globalMessageFormatInjection({ username = "undefined", 
                                         $message = "undefined", 
                                         meta = undefined, 
                                         time = undefined}) {
@@ -496,38 +371,8 @@ async function globalMessageFormatInjection({ username = "undefined",
     }
 
     if (!['[server]', '[voteskip]'].includes(username.toLowerCase()) && username !== "numbertrees") {
-
-        if (SOUNDPOST_STATE) {
-            const $emotes = $message.find('.channel-emote[title]');
-            $emotes.each((index, element) => {
-                const $emote = $(element)
-                const emoteTitle = $emote.attr('title')
-                const soundpost = SOUNDPOSTS[emoteTitle];
-
-                const longEmotes = [":homuhomu:", ":rratate:", "bakushin", "calliboy"]
-
-                if (soundpost) {
-                    const preload = longEmotes.includes(emoteTitle);
-                    initializeSoundpost(emoteTitle, soundpost.soundurl, preload);
-
-                    if (preload && SOUNDPOST_PLAYBACK_STATE[emoteTitle].isPreloaded) {
-                        playSoundpost(emoteTitle, 5);
-                    } else if (preload) {
-                        SOUNDPOST_PLAYBACK_STATE[emoteTitle].audio.addEventListener('canplaythrough', () => {
-                            playSoundpost(emoteTitle, 3);
-                        }, { once: true });
-                    } else if (!PLAYED_SOUNDPOSTS.includes(soundpost.soundurl)) {
-                        const myaudio = new Audio(soundpost.soundurl);
-                        myaudio.volume = defaultVolume;
-                        myaudio.play();
-                        PLAYED_SOUNDPOSTS.push(soundpost.soundurl);
-                    }
-                }
-            });
-        }
-        PLAYED_SOUNDPOSTS = [];
+        soundpostInjection($message)
     }
-cleanupSoundpostPlaybackState();
 }
 
 socket.on("chatMsg", ({username, msg, meta, time}) =>{

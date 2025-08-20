@@ -1,6 +1,6 @@
 async function waitForHoloPeek() {
-  if (!window.moduleRegistry.isReady("holopeek/holoPeek.js")) {
-    await window.moduleRegistry.waitForReady("holopeek/holoPeek.js")
+  if (!window.moduleRegistry.isReady("HoloPeek")) {
+    await window.moduleRegistry.waitForReady("HoloPeek")
   }
 }
 

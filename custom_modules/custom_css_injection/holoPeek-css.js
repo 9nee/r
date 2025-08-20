@@ -72,17 +72,18 @@
             margin-right: 8px;
             margin-left: 5px
         }
-        #saveAndResetCookieButtonsDiv {
+        #localStorageButtonsDiv {
             margin-top: 12px;
             display: flex;
         }
-        #saveAndResetCookieButtonsDiv button {
+        #localStorageButtonsDiv button {
+            position: relative;
             width: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
         }
-        #saveAndResetCookieButtonsDiv button img {
+        #localStorageButtonsDiv button img {
             margin-left: 4px;
         }
         #holoPeekItemsContainer {

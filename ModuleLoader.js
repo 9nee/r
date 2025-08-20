@@ -40,11 +40,11 @@ class ModuleLoader {
     #turnPathsIntoModuleObjects(modulePaths) {
         let moduleObjects = {}
         for (const module of modulePaths) {
-            if (typeof module === 'string') {
-                moduleObjects[module] = this.#createModuleObject(module)
-            } else {
-                moduleObjects[module.name] = this.#createModuleObject(module.name, module.isActive, module.rank)
-            }
+            const modName = Object.keys(module)[0];
+            const modUrl = module[modName]
+            let isActive = module.isActive ?? 1;
+            let rank = module.rank ?? -1;
+            moduleObjects[modName] = this.#createModuleObject(modUrl, isActive, rank) 
         }
         this.#moduleObjects = moduleObjects
     }
@@ -65,16 +65,16 @@ class ModuleLoader {
     }
 
     //This makes loading a bit slower, but ensures that the modules are loaded without having to add a promise to every single module.
-    async #getScript(moduleName) {
+    async #getScript(moduleUrl) {
         return new Promise((resolve, reject) => {
             $.getScript({
-                url: moduleName,
+                url: moduleUrl,
                 cache: false,
                 success: function(data) {
                     resolve(data);
                 },
                 error: function(_, textStatus, errorThrown) {
-                    reject(new Error(`Failed to load module registry: ${textStatus} - ${errorThrown}`));
+                    console.error(`Failed to load module registry: ${textStatus} - ${errorThrown}`);
                 }
             });
         });
@@ -86,15 +86,14 @@ class ModuleLoader {
                 url: makeLiveCDNLink(MODULE_REGISTRY),
                 cache: false,
                 success: function(data) {
-                    resolve(data);
                     if (window.moduleRegistry) {
                         resolve(window.moduleRegistry);
                     } else {
                         reject(new Error("Module registry script loaded but window.moduleRegistry was not found."));
                     }
                 },
-                error: function(_, textStatus, errorThrown) {
-                    reject(new Error(`Failed to load module registry: ${textStatus} - ${errorThrown}`));
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error(`Failed to load module registry: ${textStatus} - ${errorThrown}`);
                 }
             });
         });
@@ -121,9 +120,7 @@ class ModuleLoader {
                 this.#state.pos++;
 
                 const moduleImport = this.#getScript(moduleObject.url);
-
                 window.moduleRegistry.markReady(moduleName);
-
                 moduleLoadPromises.push(moduleImport);
             }
         }

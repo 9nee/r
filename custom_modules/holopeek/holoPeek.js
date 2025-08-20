@@ -57,7 +57,7 @@ let holoPeekItems;
             desc: 'Mahjong Mode',
             func: async () => {
 
-                await window.moduleRegistry.waitForReady("mahjongMode.js")
+                await window.moduleRegistry.waitForReady("MahjongMode")
 
                 const $chatInput = $('#chatline');
                 if ($(`#holopeek_MahjongMode`).is(':checked')) {
@@ -78,7 +78,7 @@ let holoPeekItems;
             id: 'MahjongLurk',
             desc: 'Mahjong Lurk',
             func: async () => {
-                await window.moduleRegistry.waitForReady("mahjongMode.js")
+                await window.moduleRegistry.waitForReady("MahjongMode")
                 toggleMJMessages(await canReadMJMessages());
             }
         },
@@ -393,12 +393,12 @@ let holoPeekItems;
 })();
 
 async function loadStoredValueForHolopeek(holoPeekItem, $checkboxForItem) {
-    let cookieValue = readCookie(holoPeekItem.id)
-    if (cookieValue) {
+    let localStorageValue = localStorage.getItem(holoPeekItem.id)
+    if (localStorageValue) {
         const foundElemType = validOptionTypes.find(type => holoPeekItem[type]);
 
         if (foundElemType) {
-            holoPeekItem[foundElemType].value = cookieValue;
+            holoPeekItem[foundElemType].value = localStorageValue;
         }
 
         $checkboxForItem.prop('checked', true);
@@ -549,8 +549,8 @@ function createShortTextElement(holoPeekItem, optId, $checkboxElem) {
         }
     });
 
-    const saveAndResetCookieButtonsDiv = $('<div>', {
-        id: 'saveAndResetCookieButtonsDiv'
+    const localStorageButtonsDiv = $('<div>', {
+        id: 'localStorageButtonsDiv'
     }).appendTo($holoPeekBubble);
 
     $('<button>', {
@@ -575,13 +575,13 @@ function createShortTextElement(holoPeekItem, optId, $checkboxElem) {
                 }
                 
                 if ($jqSelector.prop('checked')) {
-                    createCookie(optionName, value, 365)
+                    localStorage.setValue(optionName, value)
                 } else {
-                    eraseCookie(optionName)
+                    localStorage.removeItem(optionName)
                 }
             });
         }
-    }).appendTo(saveAndResetCookieButtonsDiv);
+    }).appendTo(localStorageButtonsDiv);
 
     $('<button>', {
         id: 'resetButton',
@@ -591,12 +591,12 @@ function createShortTextElement(holoPeekItem, optId, $checkboxElem) {
                 holoPeekItems.forEach(holoPeekItem => {
                     const optionName = holoPeekItem.id;
                     const $jqSelector = $(`#holopeek_${optionName}`)
-                    eraseCookie(optionName)
+                    localStorage.removeItem(optionName)
                     $jqSelector.prop('checked', false);
                     location.reload();
                 });
             }
         }
-    }).appendTo(saveAndResetCookieButtonsDiv);
+    }).appendTo(localStorageButtonsDiv);
 
 })();

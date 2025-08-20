@@ -18,7 +18,7 @@ function isItHalloween() {
         console.warn("[XaeTube: Audio Notifier]", "WARNING: Settings module not loaded.")
     }
 
-    await window.moduleRegistry.waitForReady("betterPlaylist.js")
+    await window.moduleRegistry.waitForReady("BetterPlaylist")
 
     class AudioNotifier {
         Squee = {
