@@ -59,6 +59,7 @@
             min-height: 128px;
         }
         #holoPeekBubble label {
+            position: relative;
             z-index: 50;
             color: #888;
         }

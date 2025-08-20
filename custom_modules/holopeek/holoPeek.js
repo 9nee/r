@@ -532,6 +532,7 @@ function createShortTextElement(holoPeekItem, optId, $checkboxElem) {
             } 
             case 'range' : {
                 holoPeekInputElement = createRangeElement(holoPeekItem, optId);
+                debugger;
                 break;
             }
             case 'text': {
