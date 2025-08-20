@@ -541,7 +541,7 @@ function createShortTextElement(holoPeekItem, optId, $checkboxElem) {
         }
 
         if (holoPeekInputElement) {
-            holoPeekInputElement.appendTo(holoPeekItemsContainer)
+            holoPeekInputElement.after($div)
         }
 
         if (holoPeekItem.setupFunc) {
