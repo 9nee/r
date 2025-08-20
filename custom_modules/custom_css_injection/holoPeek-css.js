@@ -41,11 +41,11 @@
             height: 50%;
         }
         #holoPeekBubbleTail {
-            width: 12vw;
+            width: 7vw;
             height: 9vh;
             z-index: 2147483647;
             position: fixed;
-            bottom: 5.8vh;
+            bottom: 6vh;
             right: 9.5vw;
             background: #fff;
             transform: skew(15deg, 15deg);
