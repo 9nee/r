@@ -85,9 +85,11 @@
             margin-left: 4px;
         }
         #holoPeekItemsContainer {
+            align-items: flex-start;
             overflow-y: scroll;
-            display: flex;
+            display: inline-flex;
             flex-direction: column;
+            height: 80%;
             max-height: 83%;
         }
         #resetButton {

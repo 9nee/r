@@ -531,7 +531,7 @@ function createShortTextElement(holoPeekItem, optId, $checkboxElem) {
                 break;
             } 
             case 'range' : {
-                holoPeekInputElement = createRangeElement(holoPeekItem, optId, $checkboxElem);
+                holoPeekInputElement = createRangeElement(holoPeekItem, optId);
                 break;
             }
             case 'text': {
@@ -541,7 +541,7 @@ function createShortTextElement(holoPeekItem, optId, $checkboxElem) {
         }
 
         if (holoPeekInputElement) {
-            holoPeekInputElement.appendTo($div)
+            holoPeekInputElement.appendTo(holoPeekItemsContainer)
         }
 
         if (holoPeekItem.setupFunc) {
