@@ -12,7 +12,9 @@ if (![CHANNEL.name].favicon) {
         .appendTo("head");
 }
 
-const CURRENT_COMMIT = "0a88316d896515b6310cd9e215a01122154b8998"
+const LOCAL_CDN_URL = "https://monthly-shut-authorized-wa.trycloudflare.com/immergrok-cytube-fork/";
+const JSDELIVR_CDN_URL = "https://cdn.jsdelivr.net/gh/om3tcw/r@"
+const CURRENT_COMMIT = "cd27a0b9632e8edcb967a5c1d98fdeae8bc1c2f2"
 
 //Change to om3tcw when live
 const CURRENT_BRANCH = "immergrok"
@@ -41,10 +43,8 @@ const ModulePaths = [
     { name: `nndChatModule.js`, isActive: 0, rank: -1}
 ]
 
-function makeLiveCDNLink(fileName) {
-    return "https://cdn.jsdelivr.net/gh/" + 
-            "om3tcw" +
-            "/r@" +
+function makeLiveCDNLink(fileName, currentCommit = "", ) {
+    return  +
             CURRENT_COMMIT +
             "/" +
             fileName
