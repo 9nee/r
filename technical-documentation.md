@@ -1,18 +1,6 @@
 # Notes for further development
 
-If there's a large css constant somewhere in the additions, move it to custom_modules/custom_css_injection following the existing format.
-
-try to keep githubLoader non-loader code to a minimum, staging-phase can be held there but ideally it then gets moved to a module loaded by XaeModules.
-
-XaeModules are order-sensitive.
-
-Mahjong mode adds a new socket listener so it might be a good idea to allow disabling it.
-
-If you have a circular dependency, or a dependency that appears on a module loaded way later on (or even appears on any module, really, because of good practices) at the end of the module that provides that dependency, you should include a resolved promise like so:
-
-TODO: write code example for it
-
-A good example can be found in mahjongMode.js
+Just kidding this is documentation written for non developers at this point
 
 ## Reverse
 
@@ -20,71 +8,72 @@ In its current implementation reverse is a two-part piece of code
 The first is a css rule, and the second is two filter lists.
 If one must edit these, this should be taken into account, no "code" regarding the reverse addition can be found in this repo.
 
-## Module Loading (NeoXaeModules)
+## Module Loading (Synchronizing states)
 
-XaeModules were how the module code was held together before, I took it upon myself to almost completely rewrite it.
+XaeModules are the most held-together-by-spit-hopes-and-dreams piece of code I've ever encountered, so I've rewritten the way the modules are loaded in its entirety. We still use some legacy XaeModules and I'm genuinely scared to touch them, but the load and orchestration logic is entirely new.
 
 The current load logic is the following:
 
 1. Base Cytube JS is loaded, HTML is called but loads later.
 2. Our JS file is called
-3. The const ModuleLoaderPromise (subject to change) is called, this loads the remote file NeoXaeModules.js
+3. The const ModuleLoaderPromise (subject to change) is called, this loads the remote file ModuleLoader.js
 4. The loadLogic async IIFE is run, this does the following:
-   1. Instantiate the XaeModules with a list of paths
-   2. Load every single module
-   3. Wait until they're loaded
-   4. Run the rest of the logic.
+   1. Instantiate the Modules with an array of paths.
+   2. Load the Module Registry module.
+   3. Load every other module.
+   4. Wait until they're loaded*
+   5. Run the rest of the logic.
 
-The way the XaeModules work is reworked to include Promises and resolutions.
-This means the following:
+(*) They may very well be loaded as a script within the DOM, but they might not be accessible in the global scope.
+
+So now posing the following scenario:
 
 - Module 1 Requires Holopeek to exist
 - When pressing a button in Holopeek, it runs a function from module 1.
 
-If Holopeek or Module 1 haven't loaded by the time that the code is *parsed* Not executed! the whole module will crash.
+If Holopeek or Module 1 haven't loaded by the time that the code is *read* (Not executed!) the whole module will crash.
 
-I made a module registry that can be accessed through
+I made a module registry that can be accessed through:
 
-- window.moduleRegistry.waitForReady("moduleName.js") //Returns Promise
-- window.moduleRegistry.isReady("moduleName.js") //Returns Boolean
-- window.moduleRegistry.markReady("moduleName.js") //Resolves the Promise
+- `window.moduleRegistry.waitForReady("ModuleName") //Returns Promise`
+- `window.moduleRegistry.isReady("ModuleName") //Returns Boolean`
+- `window.moduleRegistry.markReady("ModuleName") //Resolves the Promise`
 
-The names are pretty self-explanatory, but the following pseudocode should explain the usage:
+Or, the more robust and preferred solution:
 
-```js
-async function checkForScript2() {
-  await window.moduleRegistry.waitForReady("script2.js");
-  runLogic();
-  console.log("None of this runs until the await resolves")
-}
+- `window.waitForModule("ModuleName", function) //Returns Promise`
 
-//Runs the function above
-checkForScript2();
-
-//This (and below) executes even if the logic from the above script hasn't executed
-console.log("This does!");
-```
-
-Whenever there's a script that needs to signal its completion, it could do so manually and save us some miliseconds of load time, but the easy, lazy way is to have each script finish loading (largest is 12ms in cache, 400ms~ for a first load) and then signal its completion automatically, meaning that in the NeoXaeModules load script, the following line is responsible for signaling its completion:
+`moduleRegistry.js`
 
 ```js
-//moduleName is defined in const ModulePaths (e.g: mahjongMode.js)
-window.moduleRegistry.markReady(moduleName);
-```
-
-Alternatively, and because you know you're a lazy POS (I'm writing this for myself)
-
-You can just do the following
-
-```js
-  if (allModulesReady) {
-    await allModulesReady
-  } else {
-    console.error("Something has gone horribly wrong and you've either moved allModulesReady out of scope or the way the modules load has changed completely.")
+window.waitForModule = (async (name, functionalityWanted = null) => {
+  if (!window.moduleRegistry.isReady(name)) {
+    await window.moduleRegistry.waitForReady(name);
   }
+
+  if (functionalityWanted) {
+    while (typeof window[functionalityWanted] === 'undefined') {
+      await new Promise(resolve => setTimeout(resolve, 5));
+    }
+  }
+})
 ```
 
-This is... not as good, but it works, until I inevitably break it.
+`mahjongMode.js`
+
+```js
+//This adds the Mahjong Mode toggles to Holopeek.
+await window.waitForModule("HoloPeek", "addItemToHoloPeek")
+window.addItemToHoloPeek(...)
+```
+
+Alternatively, and because sometimes you need multiple things loaded at the same time, you also have access to the following:
+
+`chatMessageProcessor.js`
+
+```js
+await window.allModulesReady;
+```
 
 ### How to add a new script
 
@@ -94,7 +83,13 @@ This folder is already getting bloated, but for now it's fine 🙂
 
 The formatter accepts either a string or an Object, if it's a string it's simple enough, if it's an object it has to have the following syntax:
 
-```{ name: `nndChatModule.js`, isActive: 0, rank: -1}```
+```js
+const ModulePaths = [
+  { ANormalModule: `modulePath.js`}, 
+  { ... },
+  { NNDChatModule: `chat_modules/nndChatModule.js`, isActive: 0, rank: -1}
+]
+```
 
 **isActive**: provides another way of disabling the script other than removing its name, this is nice in the case in the future I decide that the scripts should be loaded by looping through a folder's contents. Which will probably be the case.
 
@@ -102,45 +97,25 @@ The formatter accepts either a string or an Object, if it's a string it's simple
 
 If you need the script to interact with any other script, refer to the Module Registry example
 
-## Socket.on('chatMsg', ())
+## Socket.on('chatMsg', ()); chatMessageProcessor.js
 
-The message object we get from this tap into the socket is kinda bad, it's plaintext and of course it is, because otherwise imagine sending the whole DOM object to the server, thankfully this was done before the age of vibecoders...
+Originally, while writing the first draft of this documentation, I realized that the current implementation was bad.
+So I rewrote all of that, now we have `chatMessageProcessor.js`
 
-Anyway, since we still get some information from the plain text message, we don't need to instantly call fetchLastChatMsg() and then extract the text from it.
+If you have a module that effects changes onto a DOM element after a chat message is sent (e.g: starts with MJ:, starts with /, contains a specific stirng), the way you want to make this change take effect is by tapping onto the socket.
 
-If we have multiple modules, each of them adding their own tap into the socket, we'll have:
+The socket emits events whenever certain actions are done, one of them is the server emitting a "chatMsg" so that the code can translate that into the messages seen in the chat.
 
-- New message in chat! The following will iterate through the ENTIRE DOM
-  - Mahjong mode wants to know if it starts with 'MJ:'
-  - Image Previews wants to know if it's a link
-  - The soundposts module wants to know if it's a soundpost
-  - Etc, etc
+By tapping into this socket, with a `socket.on('chatMsg', ()=>{})`, we can then call an util function `fetchLastChatMessage()` and edit the message on the HTML itself.
 
-The solution is simple, since we've already received the plain text message from the tap, just use a short regex ".test"
+But instead of having `n` modules doing this and tapping the socket, we instead use a single function that acts as an orchestrator.
 
-Look, even gemini knows how to do it:
+In `chatMessageProcessor.js` we expose the array `window.chatMsgSocketTapFunctions = []`, and if we push a function onto it, it will be ran in the following loop:
 
 ```js
-let messageText = "MJ: This is a test message.";
-
-if (/^MJ:/.test(messageText)) {
-  console.log("The message starts with 'MJ:'.");
-} else {
-  console.log("The message does not start with 'MJ:'.");
-}
-```
-
-This way we avoid DOM overhead which is really expensive. In the end we still need to call for the last Message on every message that *matches*  but this limits unnecessary overhead, specially for those modules that aren't going to load every time.
-
-In the end, the whole socket tap looks like this:
-
-```js
-//We keep this constant outside so it doesn't get created every time (minor)
-const linkRegex = /href="(.*?)"/;
-socket.on("chatMsg", async (msgObject)=> {
-  const match = linkRegex.test(msgObject.msg)
-  if (match) {
-    createHoverImage(fetchLastChatElement())
+  for (const func of window.chatMsgSocketTapFunctions) {
+    func($messageElement);
   }
-})
 ```
+
+This functionality can be extended and added at will for anything relating to DOM message manipulation, including a currently unused `window.postMessageTapFunctions` and an IIAFE that runs the very same loop as before when every module loads.

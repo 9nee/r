@@ -67,8 +67,7 @@ const secretMJEmotes = {
 const MahjongModeHoloPeekItem = {
   id: 'MahjongMode',
   desc: 'Mahjong Mode',
-  func: async () => {
-      await window.moduleRegistry.waitForReady("MahjongMode")
+  func: () => {
       const $chatInput = $('#chatline');
       if ($(`#holopeek_MahjongMode`).is(':checked')) {
           $chatInput.on('input', prependMessagesWithMJ)
@@ -88,34 +87,29 @@ const MahjongModeHoloPeekItem = {
 const MahjongLurkHoloPeekItem = {
   id: 'MahjongLurk',
   desc: 'Mahjong Lurk',
-  func: async () => {
-      await window.moduleRegistry.waitForReady("MahjongMode");
-      //This will ensure that this gets pressed if needed
+  func: () => {
       toggleMJMessages();
   }
 };
 
 (async () => {
-  if (!window.moduleRegistry.isReady("ChatMessageProcessor")) {
-    await window.moduleRegistry.waitForReady("ChatMessageProcessor")
-  }
+  await window.waitForModule("ChatMessageProcessor", "chatMsgSocketTapFunctions")
 
   window.chatMsgSocketTapFunctions.push(formatMJMessage)
   window.chatMsgSocketTapFunctions.push(injectSecretMahjongEmotes)
 })();
 
 (async function insertMahjongModeIntoHoloPeek() {
-  if (!window.moduleRegistry.isReady("HoloPeek")) {
-    await window.moduleRegistry.waitForReady("HoloPeek")
-  } 
+
+  await window.waitForModule("HoloPeek", "addItemToHoloPeek")
 
   const container = $('#holoPeekItemsContainer');
-  await addItemToHoloPeek(
+  window.addItemToHoloPeek(
     MahjongLurkHoloPeekItem, 
     container,
     true);
 
-  await addItemToHoloPeek(
+  window.addItemToHoloPeek(
     MahjongModeHoloPeekItem,
     container,
     true);

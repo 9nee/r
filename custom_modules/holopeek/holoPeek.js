@@ -4,17 +4,31 @@ let $holoPeekBubbleTail;
 let $holoPeekButton;
 let holoPeekItems; 
 
-(async function createHoloPeek() {
+function setupOnClickForHoloPeek($holoPeekButton, $holoPeekBubble, $holoPeekBubbleTail) {
+    $holoPeekButton.on('click', (event) => {
+        if ($(event.target).is($holoPeekButton)) {
+            $(this).toggleClass('holoAnim');
+            $holoPeekBubble.toggle();
+            $holoPeekBubbleTail.toggle();
+            $(document).off('click.holoPeekRemove');
+        } 
+
+        event.stopPropagation();
+
+        $(document).one('click.holoPeekRemove', (event) => {
+            if ($(event.target).not($holoPeekButton)) {
+                $holoPeekBubble.hide();
+                $holoPeekBubbleTail.hide();
+            }
+        })
+    });
+}
+
+(async function createHoloPeekDOMElements() {
     $holoPeekButton = $('<button>', {
         id: 'holopeek',
         class: 'holoAnim' });
 
-    $holoPeekButton.on('click', () => {
-        $(this).toggleClass('holoAnim');
-        $('#holoPeekBubble').toggle()
-        $('#holoPeekBubbleTail').toggle()
-    });
-    
     $('body').append($holoPeekButton);
 
     $holoPeekBubble = $('<div>', {
@@ -28,6 +42,8 @@ let holoPeekItems;
     });
     $holoPeekBubbleTail.hide();
     $($holoPeekBubble).append($holoPeekBubbleTail);
+
+    setupOnClickForHoloPeek($holoPeekButton, $holoPeekBubble, $holoPeekBubbleTail);
 
     holoPeekItems = [
         {
@@ -69,13 +85,13 @@ let holoPeekItems;
             desc: '>chat:video ratio',
             func: self => {
                 const $checkboxElem = $(`#holopeek_${self.id}`);
-                const $rangeElem = $(`#holopeek_${self.id}_range`);
+                checkAndDestroyDuplicateStyles(`${self.id}_style` );
                 if ($checkboxElem.is(':checked')) {
                     self.css = 
-                        `#videowrap { width: ${100 - $rangeElem.val()}% !important; }
+                        `#videowrap { width: ${100 - self.range.value}% !important; }
                         #videowrap-header { display: none; }
-                        #chatwrap { width: ${$rangeElem.val()}% !important; }}` 
-                    } else {
+                        #chatwrap { width: ${self.range.value}% !important; }}` 
+                } else {
                     self.css = null;
                 }
             },
@@ -92,9 +108,9 @@ let holoPeekItems;
             desc: 'Chat Transparency',
             func: self => {
                 const $checkboxElem = $(`#holopeek_${self.id}`);
-                const $rangeElem = $(`#holopeek_${self.id}_range`);
-                if ($checkboxElem && $rangeElem) {
-                    const alpha = 1 - $rangeElem.val();
+                checkAndDestroyDuplicateStyles(`${self.id}_style` );
+                if ($checkboxElem.is(':checked')) {
+                    const alpha = 1 - self.range.value;
                     const bgColor = `rgba(0, 0, 0, ${alpha})`;
                     if ($checkboxElem.is(':checked')) {
                         self.css = `#userlist, #messagebuffer { background-color: ${bgColor} !important; }
@@ -362,7 +378,14 @@ let holoPeekItems;
     ];
 })();
 
-async function loadStoredValueForHolopeek(holoPeekItem, $checkboxForItem) {
+function checkAndDestroyDuplicateStyles(holoPeekItemName) {
+    //holoPeekItemName should be something like holopeek_x_y_z_style
+    if ($(`#${holoPeekItemName}`).length > 0) {
+        $(`#${holoPeekItemName}`).remove();
+    }
+}
+
+function loadStoredValueForHolopeek(holoPeekItem, $checkboxForItem) {
     let localStorageValue = localStorage.getItem(holoPeekItem.id);
     if (localStorageValue) {
         const foundElemType = validOptionTypes.find(type => holoPeekItem[type]);
@@ -372,7 +395,6 @@ async function loadStoredValueForHolopeek(holoPeekItem, $checkboxForItem) {
         }
 
         $checkboxForItem.prop('checked', true);
-        await window.allModulesReady;
         $checkboxForItem.triggerHandler('click');
     }
 }
@@ -381,15 +403,11 @@ function createCheckboxForItem(holoPeekItem, optId) {
     return $('<input>', {
             id: optId,
             type: 'checkbox',
-            click: async function() {
+            click: function() {
+                checkAndDestroyDuplicateStyles(`holopeek_${holoPeekItem.id}_style` );
                 if (holoPeekItem.func) {
-                    //KEEP THIS AWAIT UNTIL A FULL REWRITE IS CONSIDERED
-                    await holoPeekItem.func(holoPeekItem);
+                    holoPeekItem.func(holoPeekItem);
                 } 
-                
-                //this helps in case the function has created unremoved styles
-                //Check if this actually ever triggers
-                $(`style[id="${optId}_style"]`).remove()
                 if (holoPeekItem.css && $(this).prop('checked')) {
                     $('<style>', {
                         id: `${optId}_style`,
@@ -434,19 +452,20 @@ function createRangeElement(holoPeekItem, optId) {
         step: holoPeekItem.range.step,
         val: holoPeekItem.range.value,
         on: {
-            input: async function() {
-                const styleId = `${optId}_style` 
-                holoPeekItem.range.value = $(this).val();
-                    if ($(`#${styleId}`).length > 0) {
-                        $(`#${styleId}`).remove();
+            input: function(event) {
+                    //It's important to keep the object (holopeek) 
+                    // and the object (input) values synchronized
+                    holoPeekItem.range.value = event.currentTarget.value;
+
+                    const styleId = `${optId}_style` 
+                    checkAndDestroyDuplicateStyles(styleId);
+                    if (holoPeekItem.func) {
+                        holoPeekItem.func(holoPeekItem);
                     }
                     $('<style>', {
                         id: styleId,
                         text: holoPeekItem.css
                     }).appendTo('head');            
-                    if (holoPeekItem.func) {
-                        holoPeekItem.func(holoPeekItem);
-                    }
                 }
             }
     })
@@ -478,7 +497,7 @@ function createShortTextElement(holoPeekItem, optId, $checkboxElem) {
         id: 'localStorageButtonsDiv'
     }).appendTo($holoPeekBubble);
 
-    holoPeekItems.forEach(async (holoPeekItem) => {
+    holoPeekItems.forEach((holoPeekItem) => {
         appendItemToHoloPeekContainer(holoPeekItem, holoPeekItemsContainer)
     });
 
@@ -490,22 +509,20 @@ function createShortTextElement(holoPeekItem, optId, $checkboxElem) {
             holoPeekItems.forEach(holoPeekItem => {
                 const optionName = holoPeekItem.id;
                 const $jqSelector = $(`#holopeek_${optionName}`)
-                let valueElem = null;
-                for (const type of validOptionTypes) {
-                    if (holoPeekItem[type]) {
-                        valueElem = type;
-                        break;
-                    }
-                }
-                let value = 0;
-                if (valueElem) {
-                    value = holoPeekItem[valueElem].value
-                } else if ($jqSelector.is(':checked')) {
-                    value = 1;
-                }
-                debugger;
-                
                 if ($jqSelector.prop('checked')) {
+                    let valueElem = null;
+                    for (const type of validOptionTypes) {
+                        if (holoPeekItem[type]) {
+                            valueElem = type;
+                            break;
+                        }
+                    }
+                    let value = 0;
+                    if (valueElem) {
+                        value = holoPeekItem[valueElem].value
+                    } else if ($jqSelector.is(':checked')) {
+                        value = 1;
+                    }
                     localStorage.setItem(optionName, value)
                 } else {
                     localStorage.removeItem(optionName)
@@ -532,12 +549,12 @@ function createShortTextElement(holoPeekItem, optId, $checkboxElem) {
 
 })();
 
-async function addItemToHoloPeek(holoPeekItem, holoPeekItemsContainer, prepend) {
+function addItemToHoloPeek(holoPeekItem, holoPeekItemsContainer, prepend) {
     holoPeekItems.push(holoPeekItem);
-    await appendItemToHoloPeekContainer(holoPeekItem, holoPeekItemsContainer, prepend)
+    appendItemToHoloPeekContainer(holoPeekItem, holoPeekItemsContainer, prepend)
 }
 
-async function appendItemToHoloPeekContainer(holoPeekItem, holoPeekItemsContainer, prepend = false) {
+function appendItemToHoloPeekContainer(holoPeekItem, holoPeekItemsContainer, prepend = false) {
     const $div = $('<div>')
     if (prepend) {
         $div.prependTo(holoPeekItemsContainer);
@@ -549,7 +566,7 @@ async function appendItemToHoloPeekContainer(holoPeekItem, holoPeekItemsContaine
 
     const $checkboxElem = createCheckboxForItem(holoPeekItem, optId).appendTo($div);
 
-    await loadStoredValueForHolopeek(holoPeekItem, $checkboxElem);
+    loadStoredValueForHolopeek(holoPeekItem, $checkboxElem);
 
     createLabelForItem(holoPeekItem, optId).appendTo($div);
 
@@ -584,4 +601,5 @@ async function appendItemToHoloPeekContainer(holoPeekItem, holoPeekItemsContaine
     if (holoPeekItem.setupFunc) {
         holoPeekItem.setupFunc(holoPeekItem);
     }
+
 }

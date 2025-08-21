@@ -27,9 +27,6 @@ function playlist(active) {
         console.error("[XaeTube: Enhanced Playlist]", "localStorage not supported. Aborting load.");
         return
     }
-    if (!window[CHANNEL.name]) {
-        window[CHANNEL.name] = {}
-    }
     const options = Object.assign({}, {
         collapse: true,
         hidePlaylist: false,

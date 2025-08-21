@@ -12,7 +12,7 @@ const ModuleLoaderOptions =
         thumbnails: true,
         timeEstimates: true,
         userlist: { autoHider: true },
-        smartScroll: false,
+        smartScroll: true,
         maxMessages: 120
     },
 }
@@ -66,7 +66,7 @@ class ModuleLoader {
 
     //This makes loading a bit slower, but ensures that the modules are loaded without having to add a promise to every single module.
     async #getScript(moduleUrl) {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             $.getScript({
                 url: moduleUrl,
                 cache: false,
@@ -119,8 +119,9 @@ class ModuleLoader {
                 this.#state.prev = moduleName;
                 this.#state.pos++;
 
-                const moduleImport = this.#getScript(moduleObject.url);
-                window.moduleRegistry.markReady(moduleName);
+                const moduleImport = await this.#getScript(moduleObject.url).then(() => {
+                    window.moduleRegistry.markReady(moduleName);
+                })
                 moduleLoadPromises.push(moduleImport);
             }
         }

@@ -128,9 +128,5 @@ $(soundpostButton).on("click", () => {
 
 $("#chatinputrow").append(soundpostButton);
 
+window.chatMsgSocketTapFunctions.push(injectSoundpost)
 
-socket.on("chatMsg", ({_, username}) => {
-    if (!['[server]', '[voteskip]'].includes(username.toLowerCase()) && username !== "numbertrees") {
-        injectSoundpost(fetchLastChatElement())
-    }}
-)

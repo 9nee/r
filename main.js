@@ -1,7 +1,9 @@
+//XaeModules leftover
 if (!window[CHANNEL.name]) {
     window[CHANNEL.name] = {};
 }
 
+//XaeModules leftover
 if (![CHANNEL.name].favicon) {
     [CHANNEL.name].favicon = $("<link/>")
         .prop("id", "favicon")
@@ -12,7 +14,7 @@ if (![CHANNEL.name].favicon) {
         .appendTo("head");
 }
 
-const LOCAL_CDN_URL = "https://monthly-shut-authorized-wa.trycloudflare.com/immergrok-cytube-fork";
+const LOCAL_CDN_URL = "https://immergrok.mikobotecdn.win/immergrok-cytube-fork";
 
 //For live jsdelivr usage
 const JSDELIVR_CDN_URL = "https://cdn.jsdelivr.net/gh/om3tcw/r@"
@@ -27,6 +29,7 @@ const MODULE_REGISTRY = `${MODULES_FOLDER}module_orchestration/moduleRegistry.js
 const MODULE_LOADER = `${MODULES_FOLDER}module_orchestration/ModuleLoader.js`
 const ModulePaths = [
     { CSSInjection: `custom_css_injection/customCssInjection.js`},
+    { MahjongMode: `chat_modules/mahjongMode.js` },
     { ChatMessageProcessor: `module_orchestration/chatMessageProcessor.js`},
     { TabsBelowVideo: `ui_modules/tabsBelowVideo.js`}, //I wouldn't disable this one
     { CustomSettings:`ui_modules/customSettingsModal.js` },
@@ -37,13 +40,13 @@ const ModulePaths = [
     { CustomUserList: `ui_modules/customUserlist.js` },
     { HoloPeek: `holopeek/holoPeek.js` },
     { MessageModifications: `chat_modules/messageModifications.js`},
-    { MahjongMode: `chat_modules/mahjongMode.js` },
     { EnhancedEmotes: `chat_modules/enhancedEmotes.js` },
     { ImagePreview: `chat_modules/imagePreview.js` },
     { Soundposts: `chat_modules/soundpostModule.js` },
     { NNDChatModule: `chat_modules/nndChatModule.js`, isActive: 0, rank: -1}
 ]
 
+//candidate to move to util.js
 function makeLiveCDNLink(fileName) {
     return  CURRENT_CDN +
             CURRENT_COMMIT +
@@ -51,6 +54,7 @@ function makeLiveCDNLink(fileName) {
             fileName
 }
 
+//candidate to move to util.js
 function fetchLastChatElement() {
     return $('#messagebuffer').children().last().children().last();
 }

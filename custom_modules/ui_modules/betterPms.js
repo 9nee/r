@@ -11,9 +11,6 @@
         console.error("[XaeTube: Better PMs]", "Client is an anonymous user. Aborting load.");
         return
     }
-    if (!window[CHANNEL.name]) {
-        window[CHANNEL.name] = {}
-    }
     class BetterPrivateMessages {
         constructor() {
             if (localStorage.getItem(`${CHANNEL.name}_BetterPM_PrevOpen_${CLIENT.name}`) === null) {
