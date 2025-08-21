@@ -1,10 +1,4 @@
-async function waitForHoloPeek() {
-  if (!window.moduleRegistry.isReady("HoloPeek")) {
-    await window.moduleRegistry.waitForReady("HoloPeek")
-  }
-}
-
-function formatMJMessage($messageElement, canRead) {
+function formatMJMessage($messageElement) {
   if (!$messageElement.text().startsWith('MJ:')) {
     return
   }
@@ -12,25 +6,23 @@ function formatMJMessage($messageElement, canRead) {
   $($messageElement).addClass("MahjongMessage")
   $timestampElement.css("background-image", "url('https://raw.githubusercontent.com/om3tcw/r/refs/heads/emotes/eyes/nyagger.png')")
   $messageElement.text($messageElement.text().replace(/^MJ: /, ''));
-  toggleSingleMJMessage($messageElement, canRead)
+  toggleSingleMJMessage($messageElement, canReadMJMessages())
 } 
 
-function injectSecretMahjongEmotes($messageElement, canRead) {
-  if (canRead) {
-    let messageHtml = $messageElement.html();
-    Object.keys(secretMJEmotes)
-          .map(secretEmote => {
-      return {
-        original: secretEmote,
-        escaped: secretEmote.replace(/[-/\\^$.*+?()[\]{}|]/g, '\\$&')
-      }}
-    ).forEach(({ original, escaped }) => {
-        const regex = new RegExp(escaped, 'g');
-        messageHtml = messageHtml.replace(regex,
-          `<img class="channel-emote" title="${original}" src="${secretMJEmotes[original]}">`);
-      });
-    $messageElement.html(messageHtml);
-    }
+function injectSecretMahjongEmotes($messageElement) {
+  let messageHtml = $messageElement.html();
+  Object.keys(secretMJEmotes)
+        .map(secretEmote => {
+    return {
+      original: secretEmote,
+      escaped: secretEmote.replace(/[-/\\^$.*+?()[\]{}|]/g, '\\$&')
+    }}
+  ).forEach(({ original, escaped }) => {
+      const regex = new RegExp(escaped, 'g');
+      messageHtml = messageHtml.replace(regex,
+        `<img class="channel-emote" title="${original}" src="${secretMJEmotes[original]}">`);
+    });
+  $messageElement.html(messageHtml);
   }
 
 function prependMessagesWithMJ() {
@@ -40,10 +32,9 @@ function prependMessagesWithMJ() {
   }
 }
 
-async function canReadMJMessages() {
-  await waitForHoloPeek();
-  return $('#holopeek_MahjongMode').is(':checked') ||
-    $('#holopeek_MahjongLurk').is(':checked');
+function canReadMJMessages() {
+  return  $('#holopeek_MahjongMode').is(':checked') ||
+          $('#holopeek_MahjongLurk').is(':checked');
 }
 
 function toggleSingleMJMessage($messageElement, canRead) {
@@ -54,7 +45,8 @@ function toggleSingleMJMessage($messageElement, canRead) {
   }
 }
 
-function toggleMJMessages(canRead) {
+function toggleMJMessages() {
+  let canRead = canReadMJMessages();
   $('#messagebuffer [class|="MahjongMessage"]').each((_, element) => {
     let $jqElement = $(element)
     toggleSingleMJMessage($jqElement, canRead);
@@ -72,26 +64,60 @@ const secretMJEmotes = {
     ":nyaggerfish:": "https://raw.githubusercontent.com/puchigire/r/emotes/emotes/nyaggerfish.png"
 };
 
-(async function runOnceAfterLoad() {
-  if (window.allModulesReady) {
-    await window.allModulesReady
-  } else {
-    console.error("Something has gone horribly wrong and you've either moved allModulesReady out of scope or the way the modules load has changed completely.")
+const MahjongModeHoloPeekItem = {
+  id: 'MahjongMode',
+  desc: 'Mahjong Mode',
+  func: async () => {
+      await window.moduleRegistry.waitForReady("MahjongMode")
+      const $chatInput = $('#chatline');
+      if ($(`#holopeek_MahjongMode`).is(':checked')) {
+          $chatInput.on('input', prependMessagesWithMJ)
+          $chatInput.on('focus', prependMessagesWithMJ)
+      } else {
+          $chatInput.off('input', prependMessagesWithMJ)
+          $chatInput.off('focus', prependMessagesWithMJ)
+          if ($chatInput.val().startsWith('MJ:')) {
+              $chatInput.val($chatInput.val().replace(/^MJ: /, ''));
+          }
+      }
+      //This will ensure that this gets pressed if needed as they get executed on load
+      toggleMJMessages();
+  }
+};
+
+const MahjongLurkHoloPeekItem = {
+  id: 'MahjongLurk',
+  desc: 'Mahjong Lurk',
+  func: async () => {
+      await window.moduleRegistry.waitForReady("MahjongMode");
+      //This will ensure that this gets pressed if needed
+      toggleMJMessages();
+  }
+};
+
+(async () => {
+
+  if (!window.moduleRegistry.isReady("ChatMessageProcessor")) {
+    await window.moduleRegistry.waitForReady("ChatMessageProcessor")
   }
 
-  socket.on("chatMsg", async (msgObject) => {
-  if (msgObject.msg.startsWith('MJ:')) {
-    let $messageElement = fetchLastChatElement();
-    const canRead = await canReadMJMessages()
-    formatMJMessage($messageElement, canRead);
-    injectSecretMahjongEmotes($messageElement, canRead)
-  }
-})
+  window.chatMsgSocketTapFunctions.push(formatMJMessage)
+  window.chatMsgSocketTapFunctions.push(injectSecretMahjongEmotes)
+})();
 
-  $('#messagebuffer [class|="chat-msg"]').each(async (index, element) => {
-    const $jqElement = $(element); 
-    const $messageElement = $jqElement.children().last();  
-    formatMJMessage($messageElement)
-    toggleMJMessages(await canReadMJMessages());
-  })
-})()
+(async function insertMahjongModeIntoHoloPeek() {
+  if (!window.moduleRegistry.isReady("HoloPeek")) {
+    await window.moduleRegistry.waitForReady("HoloPeek")
+  } 
+
+  const container = $('#holoPeekItemsContainer');
+  await addItemToHoloPeek(
+    MahjongLurkHoloPeekItem, 
+    container,
+    true);
+
+  await addItemToHoloPeek(
+    MahjongModeHoloPeekItem,
+    container,
+    true);
+})();

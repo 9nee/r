@@ -53,36 +53,6 @@ let holoPeekItems;
             }
         },
         {
-            id: 'MahjongMode',
-            desc: 'Mahjong Mode',
-            func: async () => {
-
-                await window.moduleRegistry.waitForReady("MahjongMode")
-
-                const $chatInput = $('#chatline');
-                if ($(`#holopeek_MahjongMode`).is(':checked')) {
-                    $chatInput.on('input', prependMessagesWithMJ)
-                    $chatInput.on('focus', prependMessagesWithMJ)
-                } else {
-                    $chatInput.off('input', prependMessagesWithMJ)
-                    $chatInput.off('focus', prependMessagesWithMJ)
-                    if ($chatInput.val().startsWith('MJ:')) {
-                        $chatInput.val($chatInput.val().replace(/^MJ: /, ''));
-                    }
-                }
-                
-                toggleMJMessages(await canReadMJMessages());
-            }
-        },
-        {
-            id: 'MahjongLurk',
-            desc: 'Mahjong Lurk',
-            func: async () => {
-                await window.moduleRegistry.waitForReady("MahjongMode")
-                toggleMJMessages(await canReadMJMessages());
-            }
-        },
-        {
             id: 'image_hover',
             desc: 'Enable image on link hover',
             func: () => {
@@ -393,7 +363,7 @@ let holoPeekItems;
 })();
 
 async function loadStoredValueForHolopeek(holoPeekItem, $checkboxForItem) {
-    let localStorageValue = localStorage.getItem(holoPeekItem.id)
+    let localStorageValue = localStorage.getItem(holoPeekItem.id);
     if (localStorageValue) {
         const foundElemType = validOptionTypes.find(type => holoPeekItem[type]);
 
@@ -497,61 +467,21 @@ function createShortTextElement(holoPeekItem, optId, $checkboxElem) {
     })
 }
 
-(async function holoPeekBuilder() {
+(function holoPeekBuilder() {
     const optionsLegendParagraph = $('<p>').html('Options').css('text-align', 'center');
     $holoPeekBubble.append(optionsLegendParagraph);
 
     const holoPeekItemsContainer = $('<div>').attr('id', 'holoPeekItemsContainer');
     $holoPeekBubble.append(holoPeekItemsContainer);
 
-    //* HoloPeek prototype-esque definition
-    holoPeekItems.forEach(async (holoPeekItem) => {
-        const $div = $('<div>').appendTo(holoPeekItemsContainer);
-
-        const optId = `holopeek_${holoPeekItem.id}`;
-
-        const $checkboxElem = createCheckboxForItem(holoPeekItem, optId).appendTo($div);
-
-        await loadStoredValueForHolopeek(holoPeekItem, $checkboxElem);
-
-        createLabelForItem(holoPeekItem, optId).appendTo($div);
-
-        let holoPeekItemType;
-        for (const type of validOptionTypes) {
-            if (holoPeekItem[type]) {
-                holoPeekItemType = type;
-                break;
-            }
-        }
-
-        let holoPeekInputElement;
-        switch (holoPeekItemType) {
-            case 'textarea': {
-                holoPeekInputElement = createTextAreaElement(holoPeekItem, optId, $checkboxElem);
-                break;
-            } 
-            case 'range' : {
-                holoPeekInputElement = createRangeElement(holoPeekItem, optId);
-                break;
-            }
-            case 'text': {
-                holoPeekInputElement = createShortTextElement(holoPeekItem, optId, $checkboxElem);
-                break;
-            }
-        }
-
-        if (holoPeekInputElement) {
-            $div.after(holoPeekInputElement)
-        }
-
-        if (holoPeekItem.setupFunc) {
-            holoPeekItem.setupFunc(holoPeekItem);
-        }
-    });
-
     const localStorageButtonsDiv = $('<div>', {
         id: 'localStorageButtonsDiv'
     }).appendTo($holoPeekBubble);
+
+    holoPeekItems.forEach(async (holoPeekItem) => {
+        appendItemToHoloPeekContainer(holoPeekItem, holoPeekItemsContainer)
+    });
+
 
     $('<button>', {
         id: 'saveButton',
@@ -573,9 +503,10 @@ function createShortTextElement(holoPeekItem, optId, $checkboxElem) {
                 } else if ($jqSelector.is(':checked')) {
                     value = 1;
                 }
+                debugger;
                 
                 if ($jqSelector.prop('checked')) {
-                    localStorage.setValue(optionName, value)
+                    localStorage.setItem(optionName, value)
                 } else {
                     localStorage.removeItem(optionName)
                 }
@@ -600,3 +531,57 @@ function createShortTextElement(holoPeekItem, optId, $checkboxElem) {
     }).appendTo(localStorageButtonsDiv);
 
 })();
+
+async function addItemToHoloPeek(holoPeekItem, holoPeekItemsContainer, prepend) {
+    holoPeekItems.push(holoPeekItem);
+    await appendItemToHoloPeekContainer(holoPeekItem, holoPeekItemsContainer, prepend)
+}
+
+async function appendItemToHoloPeekContainer(holoPeekItem, holoPeekItemsContainer, prepend = false) {
+    const $div = $('<div>')
+    if (prepend) {
+        $div.prependTo(holoPeekItemsContainer);
+    } else {
+        $div.appendTo(holoPeekItemsContainer);
+    }
+
+    const optId = `holopeek_${holoPeekItem.id}`;
+
+    const $checkboxElem = createCheckboxForItem(holoPeekItem, optId).appendTo($div);
+
+    await loadStoredValueForHolopeek(holoPeekItem, $checkboxElem);
+
+    createLabelForItem(holoPeekItem, optId).appendTo($div);
+
+    let holoPeekItemType;
+    for (const type of validOptionTypes) {
+        if (holoPeekItem[type]) {
+            holoPeekItemType = type;
+            break;
+        }
+    }
+
+    let holoPeekInputElement;
+    switch (holoPeekItemType) {
+        case 'textarea': {
+            holoPeekInputElement = createTextAreaElement(holoPeekItem, optId, $checkboxElem);
+            break;
+        } 
+        case 'range' : {
+            holoPeekInputElement = createRangeElement(holoPeekItem, optId);
+            break;
+        }
+        case 'text': {
+            holoPeekInputElement = createShortTextElement(holoPeekItem, optId, $checkboxElem);
+            break;
+        }
+    }
+
+    if (holoPeekInputElement) {
+        $div.after(holoPeekInputElement)
+    }
+
+    if (holoPeekItem.setupFunc) {
+        holoPeekItem.setupFunc(holoPeekItem);
+    }
+}

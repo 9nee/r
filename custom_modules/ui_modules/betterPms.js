@@ -1,4 +1,6 @@
 "use strict";
+
+//:fuwawaburn:
 (function(CyTube_BetterPM) {
     return CyTube_BetterPM(window, document, window.jQuery)
 })(function(window, document, $, undefined) {

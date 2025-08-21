@@ -37,7 +37,7 @@ function playSoundpost(emote, additionalPlayTime = defaultAdditionalPlayTime) {
     }, playDuration * 1000);
 }
 
-function soundpostInjection($message) {
+function injectSoundpost($message) {
     if (SOUNDPOST_STATE) {
         const $emotes = $message.find(".channel-emote[title]");
         $emotes.each((index, element) => {
@@ -127,3 +127,10 @@ $(soundpostButton).on("click", () => {
 });
 
 $("#chatinputrow").append(soundpostButton);
+
+
+socket.on("chatMsg", ({_, username}) => {
+    if (!['[server]', '[voteskip]'].includes(username.toLowerCase()) && username !== "numbertrees") {
+        injectSoundpost(fetchLastChatElement())
+    }}
+)
