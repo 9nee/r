@@ -15,7 +15,6 @@ socket.on("chatMsg", async () => {
     const $jqElement = $(element); 
     const $messageElement = $jqElement.children().last();  
 
-
     for (const func of window.chatMsgSocketTapFunctions) {
         func($messageElement)
     }

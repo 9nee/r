@@ -96,7 +96,6 @@ const MahjongLurkHoloPeekItem = {
 };
 
 (async () => {
-
   if (!window.moduleRegistry.isReady("ChatMessageProcessor")) {
     await window.moduleRegistry.waitForReady("ChatMessageProcessor")
   }

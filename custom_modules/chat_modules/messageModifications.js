@@ -7,23 +7,23 @@ function surroundTextSelection($textField, leftSurroundString, rightSurroundStri
     if (textFieldDOM === document.activeElement) {
         if (caretPositionStart === caretPositionEnd) {
             $textField.val(
-                textValue.substring(0, caretPositionStart) + 
-                leftSurroundString + 
-                textValue.substring(caretPositionStart, caretPositionEnd) + 
-                rightSurroundString + 
+                textValue.substring(0, caretPositionStart) +
+                leftSurroundString +
+                textValue.substring(caretPositionStart, caretPositionEnd) +
+                rightSurroundString +
                 textValue.substring(caretPositionEnd, textValue.length));
             textFieldDOM.setSelectionRange(
                 caretPositionStart + leftSurroundString.length,
                 caretPositionStart + leftSurroundString.length);
         } else if (caretPositionStart < caretPositionEnd) {
             $textField.val(
-                textValue.substring(0, caretPositionStart) + 
-                leftSurroundString + 
-                textValue.substring(caretPositionStart, caretPositionEnd) + 
-                rightSurroundString + 
+                textValue.substring(0, caretPositionStart) +
+                leftSurroundString +
+                textValue.substring(caretPositionStart, caretPositionEnd) +
+                rightSurroundString +
                 textValue.substring(caretPositionEnd, textValue.length));
             textFieldDOM.setSelectionRange(
-                caretPositionEnd + (leftSurroundString.length + rightSurroundString.length), 
+                caretPositionEnd + (leftSurroundString.length + rightSurroundString.length),
                 caretPositionEnd + (leftSurroundString.length + rightSurroundString.length));
         }
     }
@@ -35,25 +35,25 @@ $(window).on('keydown', (event) => {
 
     if (event.ctrlKey && !event.shiftKey) {
         switch (event.key) {
-            case 'a': 
+            case 'a':
                 if ($chatBox.val().length) {
                     chatBoxDOM.focus();
                     chatBoxDOM.setSelectionRange(0, $chatBox.val().length);
                 }
                 break;
-            case 's':   
+            case 's':
                 event.preventDefault();
                 event.stopPropagation(event);
                 surroundTextSelection($chatBox, "[sp]", "[/sp]")
                 break;
-            case 'r': 
-            if (document.activeElement === chatBoxDOM) {
-                event.preventDefault();
-                event.stopPropagation(event);
-                event.returnValue = false;
-                surroundTextSelection($chatBox, "[r]", "[/r]");
-                break;
-            }
+            case 'r':
+                if (document.activeElement === chatBoxDOM) {
+                    event.preventDefault();
+                    event.stopPropagation(event);
+                    event.returnValue = false;
+                    surroundTextSelection($chatBox, "[r]", "[/r]");
+                    break;
+                }
         }
     }
 });
@@ -87,7 +87,7 @@ function runescape($message) {
 }
 
 function yayConfetti($message) {
-    
+
     const $text = $message.text().replace('/yay', '');
     $message.text($text);
 
@@ -140,6 +140,10 @@ function yayConfetti($message) {
 
 function formatCommandMessage($messageElement) {
     let $text = $messageElement.text();
+    if (!$text.startsWith('/')) {
+        return
+    }
+
     if ($text.startsWith('/runescape')) {
         runescape($messageElement);
     } else if ($text.startsWith('/yay')) {
@@ -166,10 +170,11 @@ function playBooSound() {
     }
 }
 
-socket.on("chatMsg", () => {
-    let $message = fetchLastChatElement();
-    if ($message.text().startsWith('/')) {
-        formatCommandMessage($message);
+(async () => {
+    if (!window.moduleRegistry.isReady("ChatMessageProcessor")) {
+        await window.moduleRegistry.waitForReady("ChatMessageProcessor")
     }
-})
+
+    window.chatMsgSocketTapFunctions.push(formatCommandMessage)
+})();
 
