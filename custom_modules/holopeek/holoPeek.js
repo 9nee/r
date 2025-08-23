@@ -1,8 +1,14 @@
-const validOptionTypes = ['textarea', 'range', 'text', 'dropdown'];
+const validOptionTypes = Object.freeze({
+    TEXTAREA: 'textarea',
+    RANGE: 'range', 
+    TEXT: 'text', 
+    DROPDOWN: 'dropdown'
+});
 let $holoPeekBubble;
 let $holoPeekBubbleTail;
 let $holoPeekButton;
-let holoPeekItems; 
+let holoPeekItems = [];
+const $holoPeekItemsContainer = $('<div>').attr('id', 'holoPeekItemsContainer');
 
 function setupOnClickForHoloPeek($holoPeekButton, $holoPeekBubble, $holoPeekBubbleTail) {
     $holoPeekButton.on('click', (event) => {
@@ -24,7 +30,19 @@ function setupOnClickForHoloPeek($holoPeekButton, $holoPeekBubble, $holoPeekBubb
     });
 }
 
-(async function createHoloPeekDOMElements() {
+function loadStoredValueForHolopeek(holoPeekItem) {
+    let localStorageValue = localStorage.getItem(holoPeekItem.id);
+    if (localStorageValue) {
+        if (holoPeekItem.inputElement) {
+            holoPeekItem.value = localStorageValue;
+        }
+
+        holoPeekItem.checkbox.prop('checked', true);
+        holoPeekItem.checkbox.triggerHandler('click');
+    }
+}
+
+(async function createHoloPeekMenuItems() {
     $holoPeekButton = $('<button>', {
         id: 'holopeek',
         class: 'holoAnim' });
@@ -44,463 +62,17 @@ function setupOnClickForHoloPeek($holoPeekButton, $holoPeekBubble, $holoPeekBubb
     $($holoPeekBubble).append($holoPeekBubbleTail);
 
     setupOnClickForHoloPeek($holoPeekButton, $holoPeekBubble, $holoPeekBubbleTail);
-
-    holoPeekItems = [
-        {
-            id: 'background',
-            desc: 'Change Background',
-            func: self => {
-                const $checkboxElem = $(`#holopeek_${self.id}`);
-                const $textElem = $(`#holopeek_${self.id}_text`);
-
-                if ($checkboxElem.is(':checked')) {
-                    self.css = `body { background-image: url(${$textElem.val()}); }`
-                } else {
-                    self.css = null; 
-                }
-                
-            },
-            text: {
-                value: `https://raw.githubusercontent.com/${CURRENT_BRANCH}/r/emotes/custom_modules/holopeek/black.png`,
-                inputEvent: self => {
-                    $(`#holopeek_${self.id}`).is(':checked') = false;
-                    self.text.value = $(`holopeek_${self.id}_text`).value;
-                }
-            }
-        },
-        {
-            id: 'image_hover',
-            desc: 'Enable image on link hover',
-            func: () => {
-                $('#holopeek_image_hover').prop('checked', false)
-            }
-        },
-        {
-            id: 'reveal_spoilers',
-            desc: 'Reveal spoilers',
-            css: `.spoiler { color: #ff8; }`
-        },
-        {
-            id: 'chat_video_ratio',
-            desc: '>chat:video ratio',
-            func: self => {
-                const $checkboxElem = $(`#holopeek_${self.id}`);
-                checkAndDestroyDuplicateStyles(`${self.id}_style` );
-                if ($checkboxElem.is(':checked')) {
-                    self.css = 
-                        `#videowrap { width: ${100 - self.range.value}% !important; }
-                        #videowrap-header { display: none; }
-                        #chatwrap { width: ${self.range.value}% !important; }}` 
-                } else {
-                    self.css = null;
-                }
-            },
-            range: {
-                value: 50,
-                min: 0,
-                max: 100,
-                step: 1,
-                inputEvent: self => {}
-            }
-        },
-        {
-            id: 'chat_transparency',
-            desc: 'Chat Transparency',
-            func: self => {
-                const $checkboxElem = $(`#holopeek_${self.id}`);
-                checkAndDestroyDuplicateStyles(`${self.id}_style` );
-                if ($checkboxElem.is(':checked')) {
-                    const alpha = 1 - self.range.value;
-                    const bgColor = `rgba(0, 0, 0, ${alpha})`;
-                    if ($checkboxElem.is(':checked')) {
-                        self.css = `#userlist, #messagebuffer { background-color: ${bgColor} !important; }
-                                    .linewrap { background-color: ${bgColor}; }`
-                    } else {
-                        self.css = null;
-                    }
-                }
-            },
-            range: {
-                value: 0.5,
-                min: 0,
-                max: 1,
-                step: 0.05,
-                inputEvent: self => {}
-            }
-        },
-        {
-            id: 'chat_video_only',
-            desc: 'Chat & video only, no bullshit',
-            setupFunc: () => {
-                const lunaButton = document.createElement('button');
-                lunaButton.id = 'lunaButton';
-                lunaButton.onclick = () => {
-                    const chatwrap = $('chatwrap');
-                    chatwrap.style.pointerEvents = chatwrap.style.pointerEvents === 'none' ? 'all' : 'none';
-                    chatwrap.style.opacity = chatwrap.style.pointerEvents === 'none' ? 0.25 : 1;
-                };
-                document.body.append(lunaButton);
-
-
-                const css = `
-            #lunaButton {
-                width: 46px;
-                height: 100px;
-                background: url('https://raw.githubusercontent.com/${CURRENT_BRANCH}/r/emotes/custom_modules/holopeek/lunapeek.png');
-                position: absolute;
-                right: 0;
-                top: 0;
-                padding: 0;
-                z-index: 2147483647;
-                border: none;
-                outline: none;
-                display: none;
-                opacity: 0;
-                transition: .25s;
-            }
-            #lunaButton:hover {
-                opacity: 1;
-                transition: .25s;
-            }
-            `;
-                const style = document.createElement('style');
-                style.appendChild(document.createTextNode(css));
-                document.head.appendChild(style);
-            },
-            css: `
-            #mainpage { padding-top: 0 !important; background: #000 !important; }
-            ::-webkit-scrollbar { width: 0 !important; } *{ scrollbar-width: none !important; }
-            #chatheader, #userlist, #videowrap-header, #vidchatcontrols, #pollwrap, #MainTabContainer, .timestamp, nav.navbar { display: none !important; }
-            #chatwrap { position: fixed; width: 100%; }
-            #videowrap {
-            width: 100vw;
-            height: 56.25vw;
-            max-height: 100vh;
-            max-width: 177.78vh;
-            position: absolute;
-            margin: 0 0 0 auto !important;
-            padding: 0 !important;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            }
-            #emotelistbtn {
-            background-size: cover;
-            background-position: initial;
-            outline: none;
-            }
-            #chatinputrow button {
-            background-position-y: -12px;
-            height: 20px;
-            background-color: transparent;
-            border: none;
-            border-radius: 0 8px 0 0;
-            }
-            form input#chatline { padding: 8px; background: none; }
-            #emotebtndiv + form { background: none; image-rendering: pixelated; }
-            #chatinputrow { flex-direction: row; }
-            #messagebuffer div.nick-hover .username { color: #84f !important; }
-            #messagebuffer div.nick-highlight .username { color: #f8f !important; }
-            #messagebuffer div.nick-highlight.nick-hover .username { color: #fff !important; }
-            #messagebuffer div {
-            background-color: #0000 !important;
-            box-shadow: none !important;
-            }
-            .linewrap {
-            background-color: #0000 !important;
-            box-shadow: none !important;
-            text-shadow:
-                1px 0 #000, 0 1px #000, -1px 0 #000, 0 -1px #000,
-                2px 0 2px #000, 0 2px 2px #000, -2px 0 2px #000, 0 -2px 2px #000,
-                1px 1px #000, 1px -1px #000, -1px 1px #000, -1px -1px #000 !important;
-            }
-            .username {
-            text-shadow:
-                1px 0 #000, 0 1px #000, -1px 0 #000, 0 -1px #000,
-                2px 0 2px #000, 0 2px 2px #000, -2px 0 2px #000, 0 -2px 2px #000,
-                1px 1px #000, 1px -1px #000, -1px 1px #000, -1px -1px #000 !important;
-            }
-            form { background: none !important; }
-            #chatline {
-            box-shadow: none !important;
-            height: 20px;
-            background-size: 44px !important;
-            background-position: 0 -8px !important;
-            }
-            input.form-control[type=text] {
-            color: #fff;
-            height: 20px;
-            text-shadow:
-                1px 0 #000, 0 1px #000, -1px 0 #000, 0 -1px #000,
-                2px 0 2px #000, 0 2px 2px #000, -2px 0 2px #000, 0 -2px 2px #000,
-                1px 1px #000, 1px -1px #000, -1px 1px #000, -1px -1px #000 !important;
-            }
-            #main { height: 100% !important; }
-            input.form-control[type=text]::placeholder { color: #ccc !important; }
-            :focus::-webkit-input-placeholder { color: #ccc !important; }
-            .embed-responsive { max-height: 100% !important; }
-            #lunaButton { display: block; }
-        `
-        },
-        {
-            id: 'invert_chat_position',
-            desc: 'Invert chat position',
-            func: self => {
-                const $checkboxElem = $(`#holopeek_${self.id}`);
-                if ($checkboxElem.is(':checked')) {
-                    self.css = `#main { flex-direction: row-reverse !important; }`
-                } else {
-                    self.css = null;
-                }
-            }
-        },
-        {
-            id: 'hide_playlist',
-            desc: 'Hide playlist',
-            css: `#MainTabContainer { display: none; }`
-        },
-        {
-            id: 'hide_navbar',
-            desc: 'Hide navbar',
-            css: `
-            #mainpage { padding-top: 0 !important; }
-            nav.navbar { display: none !important; }
-        `
-        },
-        {
-            id: 'hide_scrollbar',
-            desc: 'Hide scrollbar',
-            css: `
-            ::-webkit-scrollbar { width: 0 !important; }
-            * { scrollbar-width: none !important; }
-        `
-        },
-        {
-            id: 'custom_CSS',
-            desc: 'Custom CSS',
-            func: self => {
-                const $checkboxElem = $(`holopeek_${self.id}`);
-                const $textAreaElem = $(`holopeek_${self.id}_textarea`);
-                if ($checkboxElem.is(':checked') && $textAreaElem) {
-                    self.css = $textAreaElem.value;
-                } else {
-                    self.css = null;
-                }
-            },
-            dropdown: {
-                value: "",
-                inputEvent: self => {
-                    $(`holopeek_${self.id}`).checked = false;
-                    self.textarea.value = $(`holopeek_${self.id}_textarea`).value;
-                }
-            }
-        },
-        {
-            id: 'Potato',
-            desc: 'SmartFridgeOwner',
-            func: self => {
-                const checkboxElem = $(`holopeek_${self.id}`);
-                if (checkboxElem && checkboxElem.checked) {
-                    self.css = `
-                .videolist { background: none !important; }
-                a.navbar-brand { background: none !important; }
-                form input#chatline { background: none; }
-                #emotelistbtn { background: none; }
-                #emotebtndiv + form {
-                    animation: none;
-                    background-image: none;
-                }
-                #chatinputrow button {
-                    animation: none !important;
-                    background: none !important;
-                }
-                body { background: black !important; }
-                .timestamp {
-                    background-image: none !important;
-                    color: white !important;
-                }
-                `;
-                } else {
-                    self.css = null;
-                }
-            }
-        },
-        {
-            id: 'vertical_layout',
-            desc: 'Vertical layout',
-            css: `
-            .navbar, #videowrap-header { display: none; }
-            #mainpage {
-                padding: 0;
-                height: auto !important;
-            }
-            #main { flex-direction: column-reverse !important; }
-            #videowrap, #chatwrap {
-                width: 100%;
-                margin: 0;
-                padding: 0;
-            }
-            `
-        },
-        {
-            id: 'vertical_layout2',
-            desc: 'Vertical layout 2',
-            css: `
-            #chatwrap {
-                position: fixed;
-                width: 100%;
-                height: auto;
-                top: 60vw;
-                bottom: 0;
-            }
-            #videowrap {
-                width: 100vw;
-                height: 56.25vw;
-                max-height: 100vh;
-                max-width: 177.78vh;
-                position: absolute;
-                margin: 0 0 0 auto !important;
-                padding: 0 !important;
-                top: 32px;
-                bottom: 0;
-                left: 0;
-                right: 0;
-            }
-            #main { height: 100% !important; }
-            .linewrap {
-                background-color: #0000 !important;
-                box-shadow: none !important;
-            }
-            #videowrap-header { display: none !important; }
-            `
-        }
-    ];
 })();
 
-function checkAndDestroyDuplicateStyles(holoPeekItemName) {
-    //holoPeekItemName should be something like holopeek_x_y_z_style
-    if ($(`#${holoPeekItemName}`).length > 0) {
-        $(`#${holoPeekItemName}`).remove();
-    }
-}
-
-function loadStoredValueForHolopeek(holoPeekItem, $checkboxForItem) {
-    let localStorageValue = localStorage.getItem(holoPeekItem.id);
-    if (localStorageValue) {
-        const foundElemType = validOptionTypes.find(type => holoPeekItem[type]);
-
-        if (foundElemType) {
-            holoPeekItem[foundElemType].value = localStorageValue;
-        }
-
-        $checkboxForItem.prop('checked', true);
-        $checkboxForItem.triggerHandler('click');
-    }
-}
-
-function createCheckboxForItem(holoPeekItem, optId) {
-    return $('<input>', {
-            id: optId,
-            type: 'checkbox',
-            click: function() {
-                checkAndDestroyDuplicateStyles(`holopeek_${holoPeekItem.id}_style` );
-                if (holoPeekItem.func) {
-                    holoPeekItem.func(holoPeekItem);
-                } 
-                if (holoPeekItem.css && $(this).prop('checked')) {
-                    $('<style>', {
-                        id: `${optId}_style`,
-                        text: holoPeekItem.css
-                    }).appendTo('head');
-                }
-            }
-        })
-}
-
-function createLabelForItem(holoPeekItem, optId) {
-    return $('<label>', {
-            id: `${optId}_label`,
-            text: holoPeekItem.desc,
-            title: holoPeekItem.id,
-            for: optId
-        })
-}
-
-function createTextAreaElement(holoPeekItem, optId, $checkboxElem) {
-    return $('<textarea>', 
-    {
-        id: `${optId}_textarea`,
-        val: holoPeekItem.textarea.value,
-        on: {
-            input: () => {
-                $checkboxElem.prop('checked', false);
-                holoPeekItem.textarea.value = textareaElem.val();
-            }
-        }
-    })
-}
-
-function createRangeElement(holoPeekItem, optId) {
-    return $('<input>', 
-    {
-        id: `${optId}_range`,
-        type: 'range',
-        css: { display: 'inline-block' },
-        min: holoPeekItem.range.min,
-        max: holoPeekItem.range.max,
-        step: holoPeekItem.range.step,
-        val: holoPeekItem.range.value,
-        on: {
-            input: function(event) {
-                    //It's important to keep the object (holopeek) 
-                    // and the object (input) values synchronized
-                    holoPeekItem.range.value = event.currentTarget.value;
-
-                    const styleId = `${optId}_style` 
-                    checkAndDestroyDuplicateStyles(styleId);
-                    if (holoPeekItem.func) {
-                        holoPeekItem.func(holoPeekItem);
-                    }
-                    $('<style>', {
-                        id: styleId,
-                        text: holoPeekItem.css
-                    }).appendTo('head');            
-                }
-            }
-    })
-}
-
-function createShortTextElement(holoPeekItem, optId, $checkboxElem) {
-    return $('<input>', {
-        id: `${optId}_text`,
-        type: 'text',
-        val: holoPeekItem.text.value,
-        on: {
-            input: () => {
-                $(`style[id="${optId}_style"]`).remove()
-                $checkboxElem.prop('checked', false);
-                holoPeekItem.text.value = textElem.val();
-            }
-        }
-    })
-}
-
-(function holoPeekBuilder() {
+(async function holoPeekBuilder() {
     const optionsLegendParagraph = $('<p>').html('Options').css('text-align', 'center');
     $holoPeekBubble.append(optionsLegendParagraph);
 
-    const holoPeekItemsContainer = $('<div>').attr('id', 'holoPeekItemsContainer');
-    $holoPeekBubble.append(holoPeekItemsContainer);
+    $holoPeekBubble.append($holoPeekItemsContainer);
 
     const localStorageButtonsDiv = $('<div>', {
         id: 'localStorageButtonsDiv'
     }).appendTo($holoPeekBubble);
-
-    holoPeekItems.forEach((holoPeekItem) => {
-        appendItemToHoloPeekContainer(holoPeekItem, holoPeekItemsContainer)
-    });
-
 
     $('<button>', {
         id: 'saveButton',
@@ -508,20 +80,10 @@ function createShortTextElement(holoPeekItem, optId, $checkboxElem) {
         click: () => {
             holoPeekItems.forEach(holoPeekItem => {
                 const optionName = holoPeekItem.id;
-                const $jqSelector = $(`#holopeek_${optionName}`)
-                if ($jqSelector.prop('checked')) {
-                    let valueElem = null;
-                    for (const type of validOptionTypes) {
-                        if (holoPeekItem[type]) {
-                            valueElem = type;
-                            break;
-                        }
-                    }
-                    let value = 0;
-                    if (valueElem) {
-                        value = holoPeekItem[valueElem].value
-                    } else if ($jqSelector.is(':checked')) {
-                        value = 1;
+                if (holoPeekItem.checkbox.prop('checked')) {
+                    let value = 1;
+                    if (holoPeekItem.value) {
+                        value = holoPeekItem.value
                     }
                     localStorage.setItem(optionName, value)
                 } else {
@@ -538,9 +100,7 @@ function createShortTextElement(holoPeekItem, optId, $checkboxElem) {
             if (confirm("Are you sure you want to reset all the options to their defaults? THIS WILL RELOAD THE PAGE")) {
                 holoPeekItems.forEach(holoPeekItem => {
                     const optionName = holoPeekItem.id;
-                    const $jqSelector = $(`#holopeek_${optionName}`)
                     localStorage.removeItem(optionName)
-                    $jqSelector.prop('checked', false);
                     location.reload();
                 });
             }
@@ -549,57 +109,163 @@ function createShortTextElement(holoPeekItem, optId, $checkboxElem) {
 
 })();
 
-function addItemToHoloPeek(holoPeekItem, holoPeekItemsContainer, prepend) {
-    holoPeekItems.push(holoPeekItem);
-    appendItemToHoloPeekContainer(holoPeekItem, holoPeekItemsContainer, prepend)
-}
+function createHoloPeekItem({optionName,
+                            optionDescription,
+                            optionFunc = null,
+                            type = null,
+                            defaultValue = null}) {
+    let holoPeekItem = {}
+    holoPeekItem.id             = optionName;
+    holoPeekItem.description    = optionDescription;
+    holoPeekItem.func           = optionFunc;
+    holoPeekItem.checkbox       = createCheckboxForItem(holoPeekItem);
+    holoPeekItem.label          = createLabelForItem(holoPeekItem);
+    holoPeekItem.cssData        = null;
+    holoPeekItem.value          = defaultValue;
 
-function appendItemToHoloPeekContainer(holoPeekItem, holoPeekItemsContainer, prepend = false) {
-    const $div = $('<div>')
-    if (prepend) {
-        $div.prependTo(holoPeekItemsContainer);
-    } else {
-        $div.appendTo(holoPeekItemsContainer);
-    }
-
-    const optId = `holopeek_${holoPeekItem.id}`;
-
-    const $checkboxElem = createCheckboxForItem(holoPeekItem, optId).appendTo($div);
-
-    loadStoredValueForHolopeek(holoPeekItem, $checkboxElem);
-
-    createLabelForItem(holoPeekItem, optId).appendTo($div);
-
-    let holoPeekItemType;
-    for (const type of validOptionTypes) {
-        if (holoPeekItem[type]) {
-            holoPeekItemType = type;
-            break;
-        }
-    }
-
-    let holoPeekInputElement;
-    switch (holoPeekItemType) {
-        case 'textarea': {
-            holoPeekInputElement = createTextAreaElement(holoPeekItem, optId, $checkboxElem);
+    let $holoPeekInputElement;
+    switch (type) {
+        case validOptionTypes.TEXTAREA: {
+            $holoPeekInputElement = createTextAreaElement(holoPeekItem, holoPeekItem.id, $checkboxElem);
             break;
         } 
-        case 'range' : {
-            holoPeekInputElement = createRangeElement(holoPeekItem, optId);
+        case validOptionTypes.RANGE: {
+            $holoPeekInputElement = createRangeElement(holoPeekItem);
             break;
         }
-        case 'text': {
-            holoPeekInputElement = createShortTextElement(holoPeekItem, optId, $checkboxElem);
+        case validOptionTypes.TEXT: {
+            $holoPeekInputElement = createShortTextElement(holoPeekItem);
             break;
         }
     }
 
-    if (holoPeekInputElement) {
-        $div.after(holoPeekInputElement)
-    }
+    holoPeekItem.inputElement   = $holoPeekInputElement;
 
-    if (holoPeekItem.setupFunc) {
-        holoPeekItem.setupFunc(holoPeekItem);
-    }
-
+    return holoPeekItem;
 }
+
+function createStyleForItem(holoPeekItem) {
+    return $('<style>', {
+        id: `${holoPeekItem.id}_style`,
+        text: holoPeekItem.cssData
+    })
+}
+
+function createCheckboxForItem(holoPeekItem) {
+    return $('<input>', {
+        id: holoPeekItem.id,
+        type: 'checkbox',
+        click: (() => holoPeekCheckboxTrigger(holoPeekItem))
+    })
+}
+
+//Uncle Bob would be proud. I'm unsure if that's a good thing.
+function removeDuplicateStyles(holoPeekItem) {
+    if (holoPeekItem.style) {
+        holoPeekItem.style.remove();
+    }
+}
+
+function holoPeekCheckboxTrigger(holoPeekItem) {
+    if (holoPeekItem.checkbox.prop('checked')) {
+        if (holoPeekItem.func) {
+            holoPeekItem.func(holoPeekItem);
+        }
+        if (holoPeekItem.cssData) {
+            removeDuplicateStyles(holoPeekItem);
+            holoPeekItem.style = createStyleForItem(holoPeekItem)
+            holoPeekItem.style.appendTo('head');
+        }
+    } else {
+        holoPeekItem.cssData = null;
+        removeDuplicateStyles(holoPeekItem);
+    }
+}
+
+function createLabelForItem(holoPeekItem) {
+    return $('<label>', {
+            id: `${holoPeekItem.id}_label`,
+            text: holoPeekItem.description,
+            title: holoPeekItem.id,
+            //what the helly is this
+            for: holoPeekItem.id
+        })
+}
+
+function createShortTextElement(holoPeekItem) {
+    return $('<input>', {
+        id: `${holoPeekItem.id}_text`,
+        type: 'text',
+        val: holoPeekItem.value,
+        on: {
+            input: (event) => {
+                holoPeekItem.checkbox.prop('checked', false);
+                holoPeekItem.checkbox.triggerHandler('click');
+                holoPeekItem.value = event.target.value;
+            }
+        }
+    })
+}
+
+function createTextAreaElement(holoPeekItem, optId, $checkboxElem) {
+    return $('<textarea>', 
+    {
+        id: `${optId}_textarea`,
+        val: holoPeekItem.textarea.value,
+        on: {
+            input: () => {
+                $checkboxElem.prop('checked', false);
+                holoPeekItem.textarea.value = textareaElem.val();
+            }
+        }
+    })
+}
+
+
+function createRangeElement(holoPeekItem) {
+    return $('<input>', 
+    {
+        id: `${holoPeekItem.id}_range`,
+        type: 'range',
+        css: { display: 'inline-block' },
+        on: {
+            input: function(event) {
+                holoPeekItem.value = event.currentTarget.value;
+                holoPeekCheckboxTrigger(holoPeekItem);
+                }
+            }
+    })
+}
+
+function appendItemToHoloPeekContainer(holoPeekItem, prepend = false) {
+
+    if (holoPeekItems.includes(holoPeekItem)) {
+        return;
+    }
+
+    holoPeekItems.push(holoPeekItem);
+
+    const $div = $('<div>')
+    if (prepend) {
+        $div.prependTo($holoPeekItemsContainer);
+    } else {
+        $div.appendTo($holoPeekItemsContainer);
+    }
+
+    holoPeekItem.checkbox.appendTo($div);
+
+    holoPeekItem.label.appendTo($div);
+
+    loadStoredValueForHolopeek(holoPeekItem);
+
+    $div.after(holoPeekItem.inputElement)
+}
+
+let defaultItemsURL = `${MODULES_FOLDER}holopeek/holoPeekItems.js`
+import(makeLiveCDNLink(defaultItemsURL)).then((data) => {
+    for (const item of data.holoPeekObjects) {
+        let newItem = createHoloPeekItem(item)
+        appendItemToHoloPeekContainer(newItem);
+    }
+})
+

@@ -128,5 +128,8 @@ $(soundpostButton).on("click", () => {
 
 $("#chatinputrow").append(soundpostButton);
 
-window.chatMsgSocketTapFunctions.push(injectSoundpost)
+(async () => {
+    await window.waitForModule("ChatMessageProcessor", "chatMsgSocketTapFunctions")
 
+    window.chatMsgSocketTapFunctions.push(injectSoundpost);
+})();

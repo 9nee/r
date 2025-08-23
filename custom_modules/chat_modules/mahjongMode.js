@@ -92,6 +92,7 @@ const MahjongLurkHoloPeekItem = {
   }
 };
 
+
 (async () => {
   await window.waitForModule("ChatMessageProcessor", "chatMsgSocketTapFunctions")
 
@@ -101,16 +102,13 @@ const MahjongLurkHoloPeekItem = {
 
 (async function insertMahjongModeIntoHoloPeek() {
 
-  await window.waitForModule("HoloPeek", "addItemToHoloPeek")
+  await window.waitForModule("HoloPeek", "addToHoloPeekItems")
 
-  const container = $('#holoPeekItemsContainer');
-  window.addItemToHoloPeek(
-    MahjongLurkHoloPeekItem, 
-    container,
-    true);
+  // window.addToHoloPeekItems(
+  //   MahjongLurkHoloPeekItem, 
+  //   true);
 
-  window.addItemToHoloPeek(
-    MahjongModeHoloPeekItem,
-    container,
-    true);
+  // window.addToHoloPeekItems(
+  //   MahjongModeHoloPeekItem,
+  //   true);
 })();

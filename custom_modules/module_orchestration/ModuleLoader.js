@@ -64,22 +64,6 @@ class ModuleLoader {
         this.allModulesLoaded = this.#sequencerLoader();
     }
 
-    //This makes loading a bit slower, but ensures that the modules are loaded without having to add a promise to every single module.
-    async #getScript(moduleUrl) {
-        return new Promise((resolve) => {
-            $.getScript({
-                url: moduleUrl,
-                cache: false,
-                success: function(data) {
-                    resolve(data);
-                },
-                error: function(_, textStatus, errorThrown) {
-                    console.error(`Failed to load module registry: ${textStatus} - ${errorThrown}`);
-                }
-            });
-        });
-    }
-
     async #preloadRegistry() {
         return new Promise((resolve, reject) => {
             $.getScript({
@@ -103,7 +87,7 @@ class ModuleLoader {
         return moduleConfig.active && moduleConfig.rank <= this.#clientRank;
     }
 
-    async #sequencerLoader() {
+    #sequencerLoader() {
         const moduleLoadPromises = [];
         this.#state.pos = 0;
         this.#state.prev = "";
@@ -119,7 +103,12 @@ class ModuleLoader {
                 this.#state.prev = moduleName;
                 this.#state.pos++;
 
-                const moduleImport = await this.#getScript(moduleObject.url).then(() => {
+                const moduleImport = import(moduleObject.url).then((importedModule) => {
+                    for (const exportName in importedModule) {
+                        if (Object.hasOwn(importedModule, exportName)) {
+                            window[exportName] = importedModule[exportName];
+                        }
+                    }
                     window.moduleRegistry.markReady(moduleName);
                 })
                 moduleLoadPromises.push(moduleImport);
