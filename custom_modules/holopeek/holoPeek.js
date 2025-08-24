@@ -109,15 +109,17 @@ function loadStoredValueForHolopeek(holoPeekItem) {
 
 })();
 
-function createHoloPeekItem({optionName,
+export function createHoloPeekItem({optionName,
                             optionDescription,
                             optionFunc = null,
                             type = null,
-                            defaultValue = null}) {
+                            defaultValue = null,
+                            cleanupFunc = null}) {
     let holoPeekItem = {}
     holoPeekItem.id             = optionName;
     holoPeekItem.description    = optionDescription;
     holoPeekItem.func           = optionFunc;
+    holoPeekItem.cleanupFunc    = cleanupFunc
     holoPeekItem.checkbox       = createCheckboxForItem(holoPeekItem);
     holoPeekItem.label          = createLabelForItem(holoPeekItem);
     holoPeekItem.cssData        = null;
@@ -177,6 +179,9 @@ function holoPeekCheckboxTrigger(holoPeekItem) {
             holoPeekItem.style.appendTo('head');
         }
     } else {
+        if (holoPeekItem.cleanupFunc) {
+            holoPeekItem.cleanupFunc(holoPeekItem)
+        }
         holoPeekItem.cssData = null;
         removeDuplicateStyles(holoPeekItem);
     }
@@ -221,7 +226,6 @@ function createTextAreaElement(holoPeekItem, optId, $checkboxElem) {
     })
 }
 
-
 function createRangeElement(holoPeekItem) {
     return $('<input>', 
     {
@@ -237,7 +241,7 @@ function createRangeElement(holoPeekItem) {
     })
 }
 
-function appendItemToHoloPeekContainer(holoPeekItem, prepend = false) {
+export function addToHoloPeekContainer(holoPeekItem, prepend = false) {
 
     if (holoPeekItems.includes(holoPeekItem)) {
         return;
@@ -265,7 +269,7 @@ let defaultItemsURL = `${MODULES_FOLDER}holopeek/holoPeekItems.js`
 import(makeLiveCDNLink(defaultItemsURL)).then((data) => {
     for (const item of data.holoPeekObjects) {
         let newItem = createHoloPeekItem(item)
-        appendItemToHoloPeekContainer(newItem);
+        addToHoloPeekContainer(newItem);
     }
 })
 

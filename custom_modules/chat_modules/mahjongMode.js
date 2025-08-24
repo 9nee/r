@@ -1,3 +1,5 @@
+const $textInputBox = $('#chatline');
+
 function formatMJMessage($messageElement) {
   if (!$messageElement.text().startsWith('MJ:')) {
     return
@@ -25,16 +27,10 @@ function injectSecretMahjongEmotes($messageElement) {
   $messageElement.html(messageHtml);
   }
 
-function prependMessagesWithMJ() {
-  const chatInput = $('#chatline');
-  if (chatInput.val() && !chatInput.val().startsWith('MJ: ')) {
-      chatInput.val('MJ: ' + chatInput.val());
+function prependMessagesWithMJ(textInputBox) {
+  if (textInputBox.val() && !textInputBox.val().startsWith('MJ: ')) {
+      textInputBox.val('MJ: ' + textInputBox.val());
   }
-}
-
-function canReadMJMessages() {
-  return  $('#holopeek_MahjongMode').is(':checked') ||
-          $('#holopeek_MahjongLurk').is(':checked');
 }
 
 function toggleSingleMJMessage($messageElement, canRead) {
@@ -45,8 +41,8 @@ function toggleSingleMJMessage($messageElement, canRead) {
   }
 }
 
-function toggleMJMessages() {
-  let canRead = canReadMJMessages();
+function toggleMJMessages(self) {
+  let canRead = self.checkbox.prop('checked');
   $('#messagebuffer [class|="MahjongMessage"]').each((_, element) => {
     let $jqElement = $(element)
     toggleSingleMJMessage($jqElement, canRead);
@@ -64,51 +60,54 @@ const secretMJEmotes = {
     ":nyaggerfish:": "https://raw.githubusercontent.com/puchigire/r/emotes/emotes/nyaggerfish.png"
 };
 
-const MahjongModeHoloPeekItem = {
-  id: 'MahjongMode',
-  desc: 'Mahjong Mode',
-  func: () => {
-      const $chatInput = $('#chatline');
-      if ($(`#holopeek_MahjongMode`).is(':checked')) {
-          $chatInput.on('input', prependMessagesWithMJ)
-          $chatInput.on('focus', prependMessagesWithMJ)
-      } else {
-          $chatInput.off('input', prependMessagesWithMJ)
-          $chatInput.off('focus', prependMessagesWithMJ)
-          if ($chatInput.val().startsWith('MJ:')) {
-              $chatInput.val($chatInput.val().replace(/^MJ: /, ''));
-          }
-      }
-      //This will ensure that this gets pressed if needed as they get executed on load
-      toggleMJMessages();
+function prependMahjongMode(self) {
+  $textInputBox.on('input.prependMJ focus.prependMJ', 
+    () => prependMessagesWithMJ($textInputBox));
+  toggleMJMessages(self);
+}
+
+function removeMahjongMode(self) {
+  $textInputBox.off('input.prependMJ focus.prependMJ')
+  $textInputBox.val($textInputBox.val().replace(/^MJ: /, ''));
+  toggleMJMessages(self);
+}
+
+
+let MahjongModeHoloPeekItem = 
+  {
+    optionName: "MahjongMode", 
+    optionDescription: "Mahjong Mode", 
+    optionFunc: prependMahjongMode,
+    cleanupFunc: removeMahjongMode
   }
+
+let MahjongLurkHoloPeekItem = {
+  optionName: 'MahjongLurk',
+  optionDescription: 'Mahjong Lurk',
+  optionFunc: toggleMJMessages,
+  cleanupFunc: toggleMJMessages
 };
 
-const MahjongLurkHoloPeekItem = {
-  id: 'MahjongLurk',
-  desc: 'Mahjong Lurk',
-  func: () => {
-      toggleMJMessages();
-  }
-};
+function canReadMJMessages() {
+  return MahjongLurkHoloPeekItem.checkbox.prop('checked') ||
+         MahjongModeHoloPeekItem.checkbox.prop('checked')
+}
 
-
-(async () => {
-  await window.waitForModule("ChatMessageProcessor", "chatMsgSocketTapFunctions")
-
-  window.chatMsgSocketTapFunctions.push(formatMJMessage)
-  window.chatMsgSocketTapFunctions.push(injectSecretMahjongEmotes)
-})();
 
 (async function insertMahjongModeIntoHoloPeek() {
 
-  await window.waitForModule("HoloPeek", "addToHoloPeekItems")
+  await window.waitForModule("HoloPeek", "createHoloPeekItem");
+  await window.waitForModule("HoloPeek", "addToHoloPeekContainer");
 
-  // window.addToHoloPeekItems(
-  //   MahjongLurkHoloPeekItem, 
-  //   true);
+  MahjongLurkHoloPeekItem = window.createHoloPeekItem(MahjongLurkHoloPeekItem);
+  MahjongModeHoloPeekItem = window.createHoloPeekItem(MahjongModeHoloPeekItem);
 
-  // window.addToHoloPeekItems(
-  //   MahjongModeHoloPeekItem,
-  //   true);
+  window.addToHoloPeekContainer(MahjongLurkHoloPeekItem, true);
+  window.addToHoloPeekContainer(MahjongModeHoloPeekItem, true);
+
+  await window.waitForModule("ChatMessageProcessor", "chatMsgSocketTapFunctions")
+
+  window.chatMsgSocketTapFunctions.push(formatMJMessage);
+  window.chatMsgSocketTapFunctions.push(injectSecretMahjongEmotes);
+  
 })();
