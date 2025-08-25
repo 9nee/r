@@ -3,9 +3,9 @@ function doesMessageContainALink($messageElement) {
   return $messageElement.children().last().attr('href')
 }
 
-function createHoverImage($messageElement, 
-                          imgUrl = null, 
-                          xOffset = 20, 
+function createHoverImage($messageElement,
+                          imgUrl = null,
+                          xOffset = 20,
                           yOffset = 20) {
   let $parentElement = $messageElement.parent();
   $parentElement.on("mouseenter", (event) => {
@@ -24,7 +24,7 @@ function createHoverImage($messageElement,
       'position': 'absolute',
       'z-index': '9999',
       'display': 'block',
-      'top': event.pageY + yOffset,
+      'top': event.pageY - yOffset,
       'left': event.pageX + xOffset
     });
     $('body').append(newImg);
@@ -42,8 +42,8 @@ function createHoverImage($messageElement,
 
   $parentElement.on("mouseleave", () => {
     const imageElement = $parentElement.data('imageInstance');
-    if (imageElement) { 
-      $(imageElement).fadeOut(200, () => {
+    if (imageElement) {
+      $(imageElement).slideUp(200, () => {
         $parentElement.removeData('imageInstance')
         imageElement.remove();
       });
