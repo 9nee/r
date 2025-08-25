@@ -18,7 +18,7 @@ const LOCAL_CDN_URL = "https://immergrok.mikobotecdn.win/immergrok-cytube-fork";
 
 //For live jsdelivr usage
 const JSDELIVR_CDN_URL = "https://cdn.jsdelivr.net/gh/9nee/r@"
-const CURRENT_COMMIT = "bf18eedc71e6d7dc319de6cccccbf044af5fa59f"
+const CURRENT_COMMIT = "41a167cc138b48ae1640aef3a6196697bb6553a6"
 const CURRENT_BRANCH = "immergrok" //Change to om3tcw when live
 
 //CHANGE TO JSDELIVR_CDN_URL WHEN LIVE
