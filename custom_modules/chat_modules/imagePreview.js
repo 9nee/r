@@ -3,23 +3,18 @@ function doesMessageContainALink($messageElement) {
   return $messageElement.children().last().attr('href')
 }
 
-function createHoverImage($messageElement,
-                          imgUrl = null,
+function createHoverImage($linkElement,
                           xOffset = 20,
                           yOffset = 20) {
-  let $parentElement = $messageElement.parent();
-  $parentElement.on("mouseenter", (event) => {
-    if ($parentElement.data('imageInstance')) {
+  $linkElement.on("mouseenter", (event) => {
+    if ($linkElement.data('imageInstance')) {
       return;
     }
     let newImg = new Image();
     newImg.style.display = "block";
     newImg.referrerPolicy = "no-referrer";
-    if (!imgUrl) {
-      imgUrl = $messageElement.children().last().attr('href');
-    }
-    newImg.src = imgUrl;
-    $parentElement.data('imageInstance', newImg)
+    newImg.src = $linkElement.attr("href");
+    $linkElement.data('imageInstance', newImg)
     $(newImg).css({
       'position': 'absolute',
       'z-index': '9999',
@@ -30,8 +25,8 @@ function createHoverImage($messageElement,
     $('body').append(newImg);
   })
 
-  $parentElement.on("mousemove", (event) => {
-    const imageElement = $parentElement.data('imageInstance');
+  $linkElement.on("mousemove", (event) => {
+    const imageElement = $linkElement.data('imageInstance');
     if (imageElement) {
       $(imageElement).css({
         'top': event.pageY + yOffset,
@@ -40,11 +35,11 @@ function createHoverImage($messageElement,
     }
   });
 
-  $parentElement.on("mouseleave", () => {
-    const imageElement = $parentElement.data('imageInstance');
+  $linkElement.on("mouseleave", () => {
+    const imageElement = $linkElement.data('imageInstance');
     if (imageElement) {
       $(imageElement).slideUp(200, () => {
-        $parentElement.removeData('imageInstance')
+        $linkElement.removeData('imageInstance')
         imageElement.remove();
       });
     }
@@ -55,6 +50,6 @@ const linkRegex = /href="(.*?)"/;
 socket.on("chatMsg", async (msgObject)=> {
   const match = linkRegex.test(msgObject.msg)
   if (match) {
-    createHoverImage(fetchLastChatElement())
+    fetchLastChatElement().find("a").each((k, v) => createHoverImage($(v)));
   }
 })
