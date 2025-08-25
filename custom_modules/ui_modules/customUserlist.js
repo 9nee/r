@@ -20,7 +20,6 @@ function userlist(justList) {
 (function (CyTube_Userlist) {
   return CyTube_Userlist(window, document, window.jQuery, String);
 })(function (window, document, $, String, undefined) {
-  console.info("[XaeTube: Userlist]", "Loading Module.");
   const options = Object.assign(
     {},
     {

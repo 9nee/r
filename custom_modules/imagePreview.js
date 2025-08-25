@@ -23,18 +23,58 @@ function createHoverImage(jqChatMessage) {
     });
 }
 
+let makeStyle() {
+    let css = ```
+    img.imageHoverPreview2 {
+        max-height: 200px;
+        max-width: 100%;
+    };
+
+    img.imageHoverLoaded {
+        height : 0;
+        opacity: 0;
+        transition-property: height, opacity;
+        transition-duration: 0.15s, 0.3s;
+    };
+
+    img.imageHoverShown {
+        height : auto;
+        opacity: 0;
+        transition-property: height, opacity;
+        transition-duration: 0.15s, 0.3s;
+    };
+    ```;
+    let el = document.createElement("style");
+    style.appendChild(document.createTextNode(css));
+    document.head.appendChild(style);
+}
+
+function setPosition(element, x, y) {
+    let offset = 30;
+    const img = element;
+    if (img.clientWidth + x + offset > window.innerWidth) {
+        x -= (img.clientWidth + offset * 2.0);
+    }
+    if (img.clientHeight + y + offset > window.innerHeight) {
+        y -= img.clientHeight + offset * 2.0;
+    }
+    img.style.top  = `${y+ offset}px`;
+    img.style.left = `${x+ offset}px`;
+}
+
 function createHoverImage2(jqChatMessage) {
     jqChatMessage
     .querySelectorAll("a")
     .forEach(a =>{
-        a.addEventListener("mouseenter", ({target}) => {
+        a.addEventListener("mouseenter", ({target, clientX, clientY}) => {
             let msgElement = target.parentElement.parentElement;
             var img = msgElement.querySelector(":scope > img")
             if (!img) {
                 img = new Image();
                 img.style.position = "fixed";
+                this.classList.add("imageHoverPreview");
                 img.onload = function () {
-                    this.classList.add("imageHoverPreview", "imageLoaded");
+                    this.classList.add("imageLoaded", "imageHoverShown");
                 };
                 img.referrerPolicy = "no-referrer";
 
@@ -48,24 +88,17 @@ function createHoverImage2(jqChatMessage) {
                 }
                 msgElement.appendChild(img);
             }
+            setPosition(img, clientX, clientY)
             img.style.display = "";
         });
 
         a.addEventListener("mouseout", ({target}) =>{
-            target.parentElement.parentElement.querySelector(":scope > img").style.display = "none";
+            target.parentElement.parentElement.querySelector(":scope > img").classList.remove("imageHoverShown");
         });
 
         a.addEventListener("mousemove", ({target, clientX, clientY}) =>{
-            let offset = 30;
             let img = target.parentElement.parentElement.querySelector(":scope > img");
-            if (img.clientWidth + clientX + offset > window.innerWidth) {
-                clientX -= (img.clientWidth + offset * 2.0);
-            }
-            if (img.clientHeight + clientY + offset > window.innerHeight) {
-                clientY -= img.clientHeight + offset * 2.0;
-            }
-            img.style.top  = `${clientY + offset}px`;
-            img.style.left = `${clientX + offset}px`;
+            setPosition(img, clientX, clientY);
         });
     });
 }

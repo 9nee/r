@@ -1,17 +1,18 @@
 (function injectHoloPeekStyle() {
     const cssHoloPeek = `
         #holopeek {
-            width: 57px;
+        /* I guess this is the w/h of future holopeeks too */
+            width: 60px;
             height: 60px;
             z-index: 2147483647;
             position: fixed;
             padding: 0;
             bottom: 0;
-            right: 42px;
+            right: 2.2vw;
             border: none;
             outline: none;
             background: none;
-            background-image: url('https:///raw.githubusercontent.com/${CURRENT_REPO}/r/emotes/custom_modules/holopeek/polkapeek.png');
+            background-image: url('https:///raw.githubusercontent.com/${CURRENT_BRANCH}/r/emotes/custom_modules/holopeek/polkapeek.png');
             background-repeat: no-repeat;
             image-rendering: crisp-edges;
         }
@@ -30,64 +31,68 @@
             to { background-position: 0px 60px; }
         }
         #holoPeekBubble {
-            flex-grow: 0;
-            flex-direction: column;
-            padding: 12px 16px;
-            z-index: 2147483647;
+            padding: 1.1vh 12px;
+            z-index: 4000;
             position: fixed;
-            bottom: 48px;
-            right: 90px;
+            bottom: 6.5vh;
+            right: 6.5vw;
             background: #fff;
             border-radius: 8px;
             height: 50%;
         }
+        #holoPeekBubbleTail {
+            width: 7vw;
+            height: 9vh;
+            z-index: 2147483647;
+            position: fixed;
+            bottom: 6vh;
+            right: 9.5vw;
+            background: #fff;
+            transform: skew(15deg, 15deg);
+            z-index: 5;
+        }
         #holoPeekBubble button {
             color: #000;
+            z-index: 50;
         }
         #holoPeekBubble textarea {
-            width: 100%;
             min-height: 128px;
-            margin-bottom: 5px;
-            resize: both;
         }
         #holoPeekBubble label {
+            position: relative;
+            z-index: 50;
             color: #888;
+        }
+        #holoPeekBubble input:not([type="checkbox"]) {
+            display: block;
+            margin-bottom: 5px;
+            width: 95%
         }
         #holoPeekBubble input[type=checkbox] {
             margin-right: 8px;
+            margin-left: 5px
         }
-        #holoPeekBubble input[type=range] {
-            display: inline-block;
-            margin-bottom: 5px;
-        }
-        #holoPeekBubbleTail {
-            width: 50px;
-            height: 25px;
-            z-index: 2147483647;
-            position: fixed;
-            bottom: 42px;
-            right: 122px;
-            background: #fff;
-            transform: skew(15deg, 15deg);
-        }
-        #saveAndResetCookieButtonsDiv {
+        #localStorageButtonsDiv {
             margin-top: 12px;
             display: flex;
         }
-        #saveAndResetCookieButtonsDiv button {
+        #localStorageButtonsDiv button {
+            position: relative;
             width: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
         }
-        #saveAndResetCookieButtonsDiv button img {
+        #localStorageButtonsDiv button img {
             margin-left: 4px;
         }
-        #holoPeekOptionsContainer {
+        #holoPeekItemsContainer {
+            align-items: flex-start;
             overflow-y: scroll;
-            display: flex;
+            display: inline-flex;
             flex-direction: column;
-            max-height: 75%;
+            height: 80%;
+            max-height: 83%;
         }
         #resetButton {
             margin-left: 16px;

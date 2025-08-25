@@ -8,17 +8,24 @@
 - "live reaction"
 - ctrl + e opens up emotes
 - [HIGH PRIO] dropdown for styles
-- make holopeek bigger?
 - low-bandwidth mode (gifs unload or don't load)
-- you shouldn't have to make the constant for the module and then add the module, it should be a single update and maybe a function that parametrizes it
 
 ```js
 if (!['[server]', '[voteskip]'].includes(username.toLowerCase()) && username !== "softbanneduser")
 ```
 
 - this piece of code is repeated and should be exported to something readable and reusable
+- CI/CD/a method to remove all cookies on live deployment
+  - mostly because it's good resume CV fluff.
+- handle errors when fetching a script that isn't found in the getscript part of xaemodules
 
-- MOVE THE IIFE FROM THE PROMISES TO THE XAEMODULE LOAD ROUTINE ITSELF
+- You can turn a discord external CDN image into the original source
+- <https://images-ext-1.discordapp.net/external/1EaJOBLrzSlcPgd5UaEtPplZ6cZRIGCotFchDrYWFPE/%3Fformat%3Djpg%26name%3Dsmall/https/pbs.twimg.com/media/GyifgfgXsAA0iPx?format=webp&width=745&height=672> finding "https/pbs.twimg" turns it into <https://pbs.twimg.com/media/GyifgfgXsAA0iPx> which then when you add ?format=jpg&name=small turns into a visible image
 
-- [HIGH PRIO] CI/CD/a method to remove all cookies on live deployment
-  - mostly because it's good cv fluff.
+- decouple mahjong mode from polkapeek
+
+idea for folders:
+
+- loading (moduleloader, moduleRegistry)
+- chat (soundpost, mahjongmode, imagepreview, enhancedemotes)
+- layout (moreLayouts, better-whatever (mostly xaemodules))

@@ -1,4 +1,6 @@
 "use strict";
+
+//:fuwawaburn:
 (function(CyTube_BetterPM) {
     return CyTube_BetterPM(window, document, window.jQuery)
 })(function(window, document, $, undefined) {
@@ -8,11 +10,6 @@
     } else if (typeof CLIENT.name === "undefined") {
         console.error("[XaeTube: Better PMs]", "Client is an anonymous user. Aborting load.");
         return
-    } else {
-        console.info("[XaeTube: Better PMs]", "Loading Module.")
-    }
-    if (!window[CHANNEL.name]) {
-        window[CHANNEL.name] = {}
     }
     class BetterPrivateMessages {
         constructor() {
