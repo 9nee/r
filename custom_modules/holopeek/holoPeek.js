@@ -11,7 +11,7 @@ let holoPeekItems = [];
 const $holoPeekItemsContainer = $('<div>').attr('id', 'holoPeekItemsContainer');
 
 function setupOnClickForHoloPeek($holoPeekButton, $holoPeekBubble, $holoPeekBubbleTail) {
-    $holoPeekButton.on('click', (event) => {
+    $holoPeekButton.on('click.holoPeek', (event) => {
         if ($(event.target).is($holoPeekButton)) {
             $(this).toggleClass('holoAnim');
             $holoPeekBubble.toggle();
@@ -35,6 +35,7 @@ function loadStoredValueForHolopeek(holoPeekItem) {
     if (localStorageValue) {
         if (holoPeekItem.inputElement) {
             holoPeekItem.value = localStorageValue;
+            holoPeekItem.inputElement.val(holoPeekItem.value);
         }
 
         holoPeekItem.checkbox.prop('checked', true);

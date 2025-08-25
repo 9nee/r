@@ -57,7 +57,7 @@ function makeLiveCDNLink(fileName) {
 
 //candidate to move to util.js
 function fetchLastChatElement() {
-    return $('#messagebuffer').children().last().children().last();
+    return $(messagebuffer).children().last().children().last();
 }
 
 const ModuleLoaderPromise = (async () => {
@@ -81,120 +81,96 @@ window.allModulesReady = new Promise((resolve, reject) => {
 
 })();
 
-//TODO: move to the other ready function?  
-$(document).ready(function () {
-    const watermark = 'om3tcw is cuter than usual';
-    $('#chatwrap').attr('placeholder', watermark);
-
-    $('#nav-collapsible ul:first-child').append("<li class='dropdown'><a target='_blank' href='https://holodex.net/home'>HoloDex</a></li>");
-    $('#nav-collapsible ul:first-child').append("<li class='dropdown'><a target='_blank' href='https://docs.google.com/forms/d/e/1FAIpQLScmTUBfSR1bgRjQskGCMhnNpV_wZTIyQ17oMAZA1FoD5LY7LA/viewform?usp=sharing&ouid=112222705232140937762'><img src='https://twemoji.maxcdn.com/v/latest/72x72/1f1ec-1f1e7.png' alt='UK Flag' style='width: 1em; vertical-align: middle; margin-right: 0.25em;'>UK Age Verification Form</a></li>");
-
-});
-
 // UI Enhancements
+//This fucking website has every fucking element as a global scope variable I swear to fukcvkigfn
 (() => {
-    'use strict';
+
+    const $chatwrap = $(chatwrap);
+    const watermark = 'om3tcw is cuter than usual';
+    $chatwrap.attr('placeholder', watermark);
 
     // Move controls around
-    $('#videowrap').append("<span id='vidchatcontrols' style='float:right'>");
-    $('#emotelistbtn').detach().insertBefore('#chatwrap>form').wrap('<div id="emotebtndiv"></div>').text('Emotes').attr('title', 'Emote List');
-    $('#leftcontrols').remove();
+    const $formElementsUnderChatWrap = $chatwrap.children('form')
+    const $videowrap = $(videowrap);
+    $videowrap.append("<span id='vidchatcontrols' style='float:right'>");
 
-    $('.navbar-brand').attr('href', 'https://files.catbox.moe/om3tcw.webm');
+    const $emotelistbtn = $(emotelistbtn)
+    $emotelistbtn.detach().insertBefore($formElementsUnderChatWrap)
+    
+    //Sure
+    $(leftcontrols).remove();
 
-    $("#togglemotd").html("X").click(() => $("#motdwrap").hide());
+    const $navBar = $(".nav.navbar-nav");
+    const $audioOnly = $('<li><a id="audio-only" href="javascript:void(0)">A/O</a></li>');
+    const $holoDex = $("<li class='dropdown'><a target='_blank' href='https://holodex.net/home'>HoloDex</a></li>");
+    const $kusasNewStupidAssBitForAugust = $("<li class='dropdown'><a target='_blank' href='https://docs.google.com/forms/d/e/1FAIpQLScmTUBfSR1bgRjQskGCMhnNpV_wZTIyQ17oMAZA1FoD5LY7LA/viewform?usp=sharing&ouid=112222705232140937762'><img src='https://twemoji.maxcdn.com/v/latest/72x72/1f1ec-1f1e7.png' alt='UK Flag' style='width: 1em; vertical-align: middle; margin-right: 0.25em;'>UK Age Verification Form</a></li>");
+    
+    $navBar.append($holoDex);
+    $navBar.append($kusasNewStupidAssBitForAugust)
+    $navBar.append($audioOnly);
 
-    // Existing Code for Toggles
-    $(".nav.navbar-nav").append('<li><a id="videotoggylogg" href="javascript:void(0)">A/O</a></li>');
-    $("#videotoggylogg").click(() => {
-        if ($("#videowrap:visible").length) {
-            $("#videowrap").hide();
-            $("#chatwrap").removeClass("col-lg-5 col-md-5").addClass("col-lg-12 col-md-12");
-        } else {
-            $("#videowrap").show();
-            $("#chatwrap").removeClass("col-lg-12 col-md-12").addClass("col-lg-5 col-md-5");
-        }
+    $($audioOnly).click(() => {
+        $videowrap.toggle();
     });
 
-    $(".nav.navbar-nav").append('<li><a id="togglemotd" href="javascript:void(0)">MOTD</a></li>');
-    $("#togglemotd").click(() => {
-        if ($("#motdwrap:visible").length) {
-            $("#motdwrap").hide();
-        } else {
-            $("#motdwrap").show();
-            $("#motd").show();
-        }
-    });
+    const $togglemotd = $('<li><a id="togglemotd" href="javascript:void(0)">MOTD</a></li>');
+    const $motdwrap = $(motdwrap);
+    $motdwrap.on('click', () => $motdwrap.hide())
+    $togglemotd.appendTo($navBar);
+    $togglemotd.on('click', () => { 
+        $motdwrap.toggle()
+        $(motd).toggle();
+    })
 
-    //:fuwawaburn:
-    $("#main").addClass("flex").children().first().children().first().after('<div id="chatdisplayrow" class="row"></div>').next().append($("#userlist,#messagebuffer").removeAttr("style")).after('<div id="chatinputrow" class="row"></div>').next().append($("#emotebtndiv,#chatwrap>form"));
+    const $userlist = $(userlist);
+    const $messagebuffer = $(messagebuffer);
+    const $chatheader = $(chatheader);
+    const $main = $(main);
+
+    $userlist.removeAttr('style');
+    $messagebuffer.removeAttr('style');
+    //This rebuilds the DOM and makes it fullscreen. neat.
+    
+    $main.addClass("flex");
+    $chatheader.after('<div id="chatdisplayrow" class="row"></div>')
+                .next().append($userlist, $messagebuffer)
+                .after('<div id="chatinputrow" class="row"></div>')
+                .next().append($emotelistbtn, $formElementsUnderChatWrap);
 
     // Mikoboat
     const mikoDing = new Audio('https://cdn.jsdelivr.net/gh/om3tcw/r@emotes/soundposts/sounds/om3tcw.ogg');
     mikoDing.loop = true;
     mikoDing.volume = 0.1;
-    $('.navbar-brand').on('mouseenter', () => mikoDing.play());
-    $('.navbar-brand').on('mouseleave', () => mikoDing.pause());
 
-    // Emote button
+    const $navBarBrand = $('.navbar-brand');
+    $navBarBrand.attr('href', 'https://files.catbox.moe/om3tcw.webm');
+    $navBarBrand.on('mouseenter', () => mikoDing.play());
+    $navBarBrand.on('mouseleave', () => mikoDing.pause());
+
+
+    const githubEmoteFolder = "https://raw.githubusercontent.com/om3tcw/r/emotes/emotes/";
+    // Emote metatag update when?
     const randomEmotePool = [
-        "https://raw.githubusercontent.com/om3tcw/r/emotes/emotes/anyascone.png",
-        "https://raw.githubusercontent.com/om3tcw/r/emotes/emotes/anyascone.png"
-        , "https://raw.githubusercontent.com/om3tcw/r/emotes/emotes/anyasip.png"
-        , "https://raw.githubusercontent.com/om3tcw/r/emotes/emotes/anyachicken.png"
-        , "https://raw.githubusercontent.com/om3tcw/r/emotes/emotes/anyatoast.png"
-        , "https://raw.githubusercontent.com/om3tcw/r/emotes/emotes/anyachocoshroom.png"
-        , "https://raw.githubusercontent.com/om3tcw/r/emotes/emotes/anyasourdough.png"
-        , "https://raw.githubusercontent.com/om3tcw/r/emotes/emotes/anyaminecraft.png"
-        , "https://raw.githubusercontent.com/om3tcw/r/emotes/emotes/anyaclif.png"
-        , "https://raw.githubusercontent.com/om3tcw/r/emotes/emotes/anyasalman.png"
-        , "https://raw.githubusercontent.com/om3tcw/r/emotes/emotes/anyaeggsandwich.png"
-        , "https://raw.githubusercontent.com/om3tcw/r/emotes/emotes/anyashitpost.png"
-        , "https://raw.githubusercontent.com/om3tcw/r/emotes/emotes/anyacereal.png"
-        , "https://raw.githubusercontent.com/om3tcw/r/emotes/emotes/anyatect.png"
-        , "https://raw.githubusercontent.com/om3tcw/r/emotes/emotes/anyasteak.png"
-        , "https://raw.githubusercontent.com/om3tcw/r/emotes/emotes/anyanoodle.png"
-        , "https://raw.githubusercontent.com/om3tcw/r/emotes/emotes/anyagogurt.png"
-        , "https://raw.githubusercontent.com/om3tcw/r/emotes/emotes/anyawrappedburger.png"
-        , "https://raw.githubusercontent.com/om3tcw/r/emotes/emotes/anyapolitan.png"
-        , "https://raw.githubusercontent.com/om3tcw/r/emotes/emotes/anyagraph.png"
-        , "https://raw.githubusercontent.com/om3tcw/r/emotes/emotes/anyaoreoshake.png"
-        , "https://raw.githubusercontent.com/om3tcw/r/emotes/emotes/anyataco.png"
-        , "https://raw.githubusercontent.com/om3tcw/r/emotes/emotes/anyacorndog.png"
-        , "https://raw.githubusercontent.com/om3tcw/r/emotes/emotes/anyaparfait.png"
-        , "https://raw.githubusercontent.com/om3tcw/r/emotes/emotes/anyasandwich.png"
-        , "https://raw.githubusercontent.com/om3tcw/r/emotes/emotes/anyasandwich2.png"
-        , "https://raw.githubusercontent.com/om3tcw/r/emotes/emotes/anyamage.png"
-        , "https://raw.githubusercontent.com/om3tcw/r/emotes/emotes/anyapirouette.png"
-        , "https://raw.githubusercontent.com/om3tcw/r/emotes/emotes/anyafry.png"
-        , "https://raw.githubusercontent.com/om3tcw/r/emotes/emotes/anyadonut.png"
-        , "https://raw.githubusercontent.com/om3tcw/r/emotes/emotes/anyamelonsoda.png"
-        , "https://raw.githubusercontent.com/om3tcw/r/emotes/emotes/anyaknife.png"
-        , "https://raw.githubusercontent.com/om3tcw/r/emotes/emotes/anyaahituna.png"
-        , "https://raw.githubusercontent.com/om3tcw/r/emotes/emotes/anyapumpkinpie.png"
-        , "https://raw.githubusercontent.com/om3tcw/r/emotes/emotes/anyaseesyourhotpocket.png"
-        , "https://raw.githubusercontent.com/om3tcw/r/emotes/emotes/anyart.png"
-        , "https://raw.githubusercontent.com/om3tcw/r/emotes/emotes/anyamouth.png"
-        , "https://raw.githubusercontent.com/om3tcw/r/emotes/emotes/anyawithagun.png"
-        , "https://raw.githubusercontent.com/om3tcw/r/emotes/emotes/anyan.png"
-        , "https://raw.githubusercontent.com/om3tcw/r/emotes/emotes/anyachurro.png"
-        , "https://raw.githubusercontent.com/om3tcw/r/emotes/emotes/anyasugarcookie.png"
-        , "https://raw.githubusercontent.com/om3tcw/r/emotes/emotes/anyainahair.png"
-        , "https://raw.githubusercontent.com/om3tcw/r/emotes/emotes/anyagoslings.png"
-        , "https://raw.githubusercontent.com/om3tcw/r/emotes/emotes/anyacube.png"
-        , "https://raw.githubusercontent.com/om3tcw/r/emotes/emotes/anyamami.png"
-        , "https://raw.githubusercontent.com/om3tcw/r/emotes/emotes/anyablink.png"
-        , "https://raw.githubusercontent.com/om3tcw/r/emotes/emotes/anyawarp.png"
-        , "https://raw.githubusercontent.com/om3tcw/r/emotes/emotes/aranya.png"
-        , "https://raw.githubusercontent.com/om3tcw/r/emotes/emotes/anyapizza.png"
-        , "https://raw.githubusercontent.com/om3tcw/r/emotes/emotes/anyamail.png"
-        , "https://raw.githubusercontent.com/om3tcw/r/emotes/emotes/anyatoast2.png"
+        "anyascone.png",    "anyasip.png",          "anyachicken.png",      "anyaseesyourhotpocket.png",
+        "anyatoast.png",    "anyachocoshroom.png",  "anyasourdough.png",    "anyaminecraft.png", 
+        "anyaclif.png",     "anyasalman.png",       "anyaeggsandwich.png",  "anyashitpost.png", 
+        "anyacereal.png",   "anyatect.png",         "anyasteak.png",        "anyanoodle.png", 
+        "anyagogurt.png",   "anyapolitan.png",      "anyagraph.png",        "anyaoreoshake.png", 
+        "anyataco.png",     "anyacorndog.png",      "anyaparfait.png",      "anyasandwich.png", 
+        "anyamage.png",     "anyapirouette.png",    "anyafry.png",          "anyadonut.png", 
+        "anyaknife.png",    "anyaahituna.png",      "anyapumpkinpie.png",   "anyasandwich2.png", 
+        "anyart.png",       "anyamouth.png",        "anyawithagun.png",     "anyan.png", 
+        "anyainahair.png",  "anyagoslings.png",     "anyacube.png",         "anyamelonsoda.png", 
+        "anyamami.png",     "anyablink.png",        "anyawarp.png",         "aranya.png",  
+        "anyamail.png",     "anyatoast2.png",       "anyawrappedburger.png","anyasugarcookie.png", 
+        "anyachurro.png",   "anyapizza.png",        "anyateef.png",         "anyabread.png",
+        "anyavampire.png",
     ];
 
     const drawRandomEmote = () => randomEmotePool[Math.floor(Math.random() * randomEmotePool.length)];
 
-    $("#emotelistbtn").click(function () {
-        $(this).css("background-image", "url(" + drawRandomEmote() + ")");
+    $emotelistbtn.click(function () {
+        $(this).css("background-image", `url("${githubEmoteFolder}`+ drawRandomEmote() + ")");
     }).html("");
 
 })();
