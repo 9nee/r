@@ -22,7 +22,7 @@ const CURRENT_COMMIT = "e03fbfd3be517bc910507dfe69c8c56284fe1491"
 const CURRENT_BRANCH = "immergrok" //Change to om3tcw when live
 
 //CHANGE TO JSDELIVR_CDN_URL WHEN LIVE
-const CURRENT_CDN = LOCAL_CDN_URL;
+const CURRENT_CDN = JSDELIVR_CDN_URL;
 
 const MODULES_FOLDER = "custom_modules/";
 const MODULE_REGISTRY = `${MODULES_FOLDER}module_orchestration/moduleRegistry.js`
