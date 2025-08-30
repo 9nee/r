@@ -15,25 +15,25 @@ $("#cs-emotes-export").on('click', () => {
 //** Click on emote code
 let currentChatboxCaret = 0;
 
-$('#chatline').on('click keydown', (event) => {
+$(chatline).on('click.caretUpdate keydown.caretUpdate', (event) => {
     setTimeout(function () {
         currentChatboxCaret = event.target.selectionStart;
     }, 0);
 })
 
-$('#messagebuffer').click(event => {
+$(messagebuffer).click(event => {
     let target = event.target;
     if (event.button != 0) { 
         return;
     }
     if (target.className == 'channel-emote') {
-        let curChatVal = $('#chatline').val();
+        let curChatVal = $(chatline).val();
         let emoteName = event.target.title;
         let firstHalf = curChatVal.substring(0, currentChatboxCaret);
         let secondHalf = curChatVal.substring(currentChatboxCaret);
         let newChatVal = firstHalf + emoteName + " ";
         currentChatboxCaret = newChatVal.length;
         newChatVal = newChatVal + secondHalf;
-        $('#chatline').val(newChatVal).focus()[0].setSelectionRange(currentChatboxCaret, currentChatboxCaret);
+        $(chatline).val(newChatVal).focus()[0].setSelectionRange(currentChatboxCaret, currentChatboxCaret);
     }
 });

@@ -51,14 +51,21 @@ const $main = $(main);
 $userlist.removeAttr('style');
 $messagebuffer.removeAttr('style');
 
-//This rebuilds the DOM and makes it fullscreen. neat.
 $main.addClass("flex");
-$chatheader.after('<div id="chatdisplayrow" class="row"></div>')
-            .next().append($userlist, $messagebuffer)
-            .after('<div id="chatinputrow" class="row"></div>')
-            .next().append($emotelistbtn, $formElementsUnderChatWrap);
 
-// Mikoboat
+let resolvePromise
+export const DOMrebuiltPromise = new Promise((resolve) => {
+    resolvePromise = resolve
+});
+//This rebuilds the DOM and makes it fullscreen. neat.
+(() => {
+    $chatheader.after('<div id="chatdisplayrow" class="row"></div>')
+        .next().append($userlist, $messagebuffer)
+        .after('<div id="chatinputrow" class="row"></div>')
+        .next().append($emotelistbtn, $formElementsUnderChatWrap);
+    resolvePromise();
+})();
+
 const mikoDing = new Audio('https://cdn.jsdelivr.net/gh/om3tcw/r@emotes/soundposts/sounds/om3tcw.ogg');
 mikoDing.loop = true;
 mikoDing.volume = 0.1;

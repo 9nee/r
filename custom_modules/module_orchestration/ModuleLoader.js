@@ -58,29 +58,8 @@ class ModuleLoader {
         CLIENT.modules = this.#moduleObjects;
         window[CHANNEL.name].modulesOptions = this.#options;
         
-        await this.#preloadRegistry();
-
         this.#turnPathsIntoModuleObjects(this.#modulePaths)
         this.allModulesLoaded = this.#sequencerLoader();
-    }
-
-    async #preloadRegistry() {
-        return new Promise((resolve, reject) => {
-            $.getScript({
-                url: makeLiveCDNLink(MODULE_REGISTRY),
-                cache: false,
-                success: function(data) {
-                    if (window.moduleRegistry) {
-                        resolve(window.moduleRegistry);
-                    } else {
-                        reject(new Error("Module registry script loaded but window.moduleRegistry was not found."));
-                    }
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    console.error(`Failed to load module registry: ${textStatus} - ${errorThrown}`);
-                }
-            });
-        });
     }
 
     #isModuleEligibleForLoading(moduleConfig) {
@@ -109,7 +88,6 @@ class ModuleLoader {
                             window[exportName] = importedModule[exportName];
                         }
                     }
-                    window.moduleRegistry.markReady(moduleName);
                 })
                 moduleLoadPromises.push(moduleImport);
             }
@@ -118,4 +96,14 @@ class ModuleLoader {
     }
 }
 
+window.waitForFunc = async (functionalityWanted) => {
+    if (functionalityWanted) {
+        while (typeof window[functionalityWanted] === "undefined") {
+            await new Promise((resolve) => setTimeout(resolve, 5));
+        }
+    }
+};
+
+
 export default ModuleLoader;
+

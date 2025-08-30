@@ -5,17 +5,18 @@ const validOptionTypes = Object.freeze({
     DROPDOWN: 'dropdown'
 });
 let $holoPeekBubble;
-let $holoPeekBubbleTail;
 let $holoPeekButton;
+let $holoPeekImage;
 let holoPeekItems = [];
 const $holoPeekItemsContainer = $('<div>').attr('id', 'holoPeekItemsContainer');
+let holoPeekSizePx = 60;
+let holoPeekImgUrl = 'https://mikobotecdn.win/emotes/baepeek.png';
 
-function setupOnClickForHoloPeek($holoPeekButton, $holoPeekBubble, $holoPeekBubbleTail) {
+function setupOnClickForHoloPeek($holoPeekButton, $holoPeekBubble) {
     $holoPeekButton.on('click.holoPeek', (event) => {
         if ($(event.target).is($holoPeekButton)) {
             $(this).toggleClass('holoAnim');
             $holoPeekBubble.toggle();
-            $holoPeekBubbleTail.toggle();
             $(document).off('click.holoPeekRemove');
         } 
 
@@ -24,7 +25,6 @@ function setupOnClickForHoloPeek($holoPeekButton, $holoPeekBubble, $holoPeekBubb
         $(document).one('click.holoPeekRemove', (event) => {
             if ($(event.target).not($holoPeekButton)) {
                 $holoPeekBubble.hide();
-                $holoPeekBubbleTail.hide();
             }
         })
     });
@@ -43,12 +43,43 @@ function loadStoredValueForHolopeek(holoPeekItem) {
     }
 }
 
-(async function createHoloPeekMenuItems() {
+//Candidate for util.js
+export function setupAnimationForHoloPeekImg(imageUrl) {
+    const imgObj = new Image();
+    imgObj.src = imageUrl;
+    imgObj.decode().then(() => {
+        let scaledHeight = scaledHeightForImageConstraint(holoPeekSizePx, imgObj.width, imgObj.height)
+        const root = document.documentElement;
+        root.style.setProperty('--holoPeek-img-y-offset', `${scaledHeight}px`);
+    });  
+}
+
+function scaledHeightForImageConstraint(constraintSquareSize, imageWidth, imageHeight) {
+    let imageRatio = imageWidth/imageHeight;
+    let newHeight = constraintSquareSize/imageRatio;
+    return newHeight;
+}
+
+function appendHoloPeekToDOM() {
     $holoPeekButton = $('<button>', {
-        id: 'holopeek',
-        class: 'holoAnim' });
+        id: 'holopeek', 
+        css: {
+            "width": `${holoPeekSizePx}px`,
+            "height": `${holoPeekSizePx}px`
+        }
+    });
+
+    setupAnimationForHoloPeekImg(holoPeekImgUrl)
+
+    $holoPeekImage = $('<div>', {
+        id: 'holopeek_img',
+        css: {
+            'background-image': `url(${holoPeekImgUrl})`
+        }
+    });
 
     $('body').append($holoPeekButton);
+    $holoPeekButton.append($holoPeekImage);
 
     $holoPeekBubble = $('<div>', {
         id: "holoPeekBubble"
@@ -56,16 +87,10 @@ function loadStoredValueForHolopeek(holoPeekItem) {
     $holoPeekBubble.hide();
     $($holoPeekButton).append($holoPeekBubble);
 
-    $holoPeekBubbleTail = $('<div>', {
-        id: "holoPeekBubbleTail" 
-    });
-    $holoPeekBubbleTail.hide();
-    $($holoPeekBubble).append($holoPeekBubbleTail);
+    setupOnClickForHoloPeek($holoPeekButton, $holoPeekBubble);
+}
 
-    setupOnClickForHoloPeek($holoPeekButton, $holoPeekBubble, $holoPeekBubbleTail);
-})();
-
-(async function holoPeekBuilder() {
+function buildHoloPeekFrame() {
     const optionsLegendParagraph = $('<p>').html('Options').css('text-align', 'center');
     $holoPeekBubble.append(optionsLegendParagraph);
 
@@ -108,7 +133,7 @@ function loadStoredValueForHolopeek(holoPeekItem) {
         }
     }).appendTo(localStorageButtonsDiv);
 
-})();
+}
 
 export function createHoloPeekItem({optionName,
                             optionDescription,
@@ -119,7 +144,7 @@ export function createHoloPeekItem({optionName,
     let holoPeekItem = {}
     holoPeekItem.id             = optionName;
     holoPeekItem.description    = optionDescription;
-    holoPeekItem.func           = optionFunc;
+    holoPeekItem.optionFunc     = optionFunc;
     holoPeekItem.cleanupFunc    = cleanupFunc
     holoPeekItem.checkbox       = createCheckboxForItem(holoPeekItem);
     holoPeekItem.label          = createLabelForItem(holoPeekItem);
@@ -129,7 +154,7 @@ export function createHoloPeekItem({optionName,
     let $holoPeekInputElement;
     switch (type) {
         case validOptionTypes.TEXTAREA: {
-            $holoPeekInputElement = createTextAreaElement(holoPeekItem, holoPeekItem.id, $checkboxElem);
+            $holoPeekInputElement = createTextAreaElement(holoPeekItem);
             break;
         } 
         case validOptionTypes.RANGE: {
@@ -171,8 +196,8 @@ function removeDuplicateStyles(holoPeekItem) {
 
 function holoPeekCheckboxTrigger(holoPeekItem) {
     if (holoPeekItem.checkbox.prop('checked')) {
-        if (holoPeekItem.func) {
-            holoPeekItem.func(holoPeekItem);
+        if (holoPeekItem.optionFunc) {
+            holoPeekItem.optionFunc(holoPeekItem);
         }
         if (holoPeekItem.cssData) {
             removeDuplicateStyles(holoPeekItem);
@@ -213,15 +238,15 @@ function createShortTextElement(holoPeekItem) {
     })
 }
 
-function createTextAreaElement(holoPeekItem, optId, $checkboxElem) {
-    return $('<textarea>', 
-    {
-        id: `${optId}_textarea`,
-        val: holoPeekItem.textarea.value,
+function createTextAreaElement(holoPeekItem) {
+    return $('<textarea>', {
+        id: `${holoPeekItem.id}_textarea`,
+        val: holoPeekItem.value,
         on: {
-            input: () => {
-                $checkboxElem.prop('checked', false);
-                holoPeekItem.textarea.value = textareaElem.val();
+            input: (event) => {
+                holoPeekItem.checkbox.prop('checked', false);
+                holoPeekItem.checkbox.triggerHandler('click');
+                holoPeekItem.value = event.target.value;
             }
         }
     })
@@ -266,11 +291,17 @@ export function addToHoloPeekContainer(holoPeekItem, prepend = false) {
     $div.after(holoPeekItem.inputElement)
 }
 
-let defaultItemsURL = `${MODULES_FOLDER}holopeek/holoPeekItems.js`
-import(makeLiveCDNLink(defaultItemsURL)).then((data) => {
-    for (const item of data.holoPeekObjects) {
-        let newItem = createHoloPeekItem(item)
-        addToHoloPeekContainer(newItem);
-    }
-})
+(async () => {
+    appendHoloPeekToDOM();
+    buildHoloPeekFrame();
+    let defaultItemsURL = `${MODULES_FOLDER}holopeek/holoPeekItems.js`
+    import(makeLiveCDNLink(defaultItemsURL)).then((data) => {
+        for (const item of data.holoPeekObjects) {
+            let newItem = createHoloPeekItem(item)
+            addToHoloPeekContainer(newItem);
+        }
+    })
+})();
+
+
 

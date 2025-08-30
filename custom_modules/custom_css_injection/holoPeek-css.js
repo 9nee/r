@@ -1,35 +1,48 @@
 (function injectHoloPeekStyle() {
     const cssHoloPeek = `
         #holopeek {
-        /* I guess this is the w/h of future holopeeks too */
-            width: 60px;
-            height: 60px;
-            z-index: 2147483647;
+            z-index: 40000;
             position: fixed;
             padding: 0;
-            bottom: 0;
-            right: 2.2vw;
+            bottom: 0px;
+            right: calc(100px + 5vw);
             border: none;
             outline: none;
             background: none;
-            background-image: url('https:///raw.githubusercontent.com/${CURRENT_BRANCH}/r/emotes/custom_modules/holopeek/polkapeek.png');
-            background-repeat: no-repeat;
-            image-rendering: crisp-edges;
         }
-        .holoAnim {
+
+        #holopeek_img {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            bottom: 0px;
+            background-size: contain;
+            z-index: -39999;
+            background-repeat: no-repeat;
+            pointer-events: none;
+            background-position: bottom;
+        }
+
+        #holopeek > #holopeek_img {
+            background-position: bottom;
             animation: peek-out ease-in 0.2s both;
         }
-        .holoAnim:hover {
+
+        #holopeek:hover > #holopeek_img {
             animation: peek-in ease-out 0.2s both;
         }
+
+
         @keyframes peek-in {
-            from { background-position: 0px 60px; }
-            to { background-position: 0px 0; }
+        from { background-position-y: calc(100% + var(--holoPeek-img-y-offset)); }
+        to { background-position-y: bottom; }
         }
+
         @keyframes peek-out {
-            from { background-position: 0px 0; }
-            to { background-position: 0px 60px; }
+        from { background-position-y: bottom; }
+        to { background-position-y: calc(100% + var(--holoPeek-img-y-offset)); }
         }
+
         #holoPeekBubble {
             padding: 1.1vh 12px;
             z-index: 4000;
@@ -56,6 +69,7 @@
             z-index: 50;
         }
         #holoPeekBubble textarea {
+            width: 95%;
             min-height: 128px;
         }
         #holoPeekBubble label {
@@ -73,7 +87,8 @@
             margin-left: 5px
         }
         #localStorageButtonsDiv {
-            margin-top: 12px;
+            padding-top: 1vh;
+            margin-top: 1px;
             display: flex;
         }
         #localStorageButtonsDiv button {

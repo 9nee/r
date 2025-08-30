@@ -96,8 +96,8 @@ function canReadMJMessages() {
 
 (async function insertMahjongModeIntoHoloPeek() {
 
-  await window.waitForModule("HoloPeek", "createHoloPeekItem");
-  await window.waitForModule("HoloPeek", "addToHoloPeekContainer");
+  await window.waitForFunc("createHoloPeekItem");
+  await window.waitForFunc("addToHoloPeekContainer");
 
   MahjongLurkHoloPeekItem = window.createHoloPeekItem(MahjongLurkHoloPeekItem);
   MahjongModeHoloPeekItem = window.createHoloPeekItem(MahjongModeHoloPeekItem);
@@ -105,7 +105,7 @@ function canReadMJMessages() {
   window.addToHoloPeekContainer(MahjongLurkHoloPeekItem, true);
   window.addToHoloPeekContainer(MahjongModeHoloPeekItem, true);
 
-  await window.waitForModule("ChatMessageProcessor", "chatMsgSocketTapFunctions")
+  await window.waitForFunc("chatMsgSocketTapFunctions")
 
   window.chatMsgSocketTapFunctions.push(formatMJMessage);
   window.chatMsgSocketTapFunctions.push(injectSecretMahjongEmotes);
