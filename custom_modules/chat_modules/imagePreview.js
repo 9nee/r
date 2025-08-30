@@ -82,17 +82,9 @@ function createHoverImage($linkElement) {
   })
 }
 
-//Refer to Socket.on additions in technical documentation
-const linkRegex = /href="(.*?)"/;
-socket.on("chatMsg", async (msgObject)=> {
-  const match = linkRegex.test(msgObject.msg)
-  if (match) {
-  }
-})
-
 (async () => {
     await window.waitForFunc("chatMsgSocketTapFunctions")
     window.chatMsgSocketTapFunctions.push(($message) => {
       $message.find("a").each(createHoverImage);
     });
-})()
+})();
