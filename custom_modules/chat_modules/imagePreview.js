@@ -53,12 +53,13 @@ function createHoverImage($linkElement) {
     $('body').append(newImg);
   })
 
-  $parentElement.on("mousemove", (event) => {
-    const imageElement = $parentElement.data('imageInstance');
+  $linkElement.on("mousemove", (event) => {
+    const imageElement = $linkElement.data('imageInstance');
     if (imageElement) {
-      fixPosition($(imageElement), event.pageX, event.pageY);
+       fixPosition($(imageElement), event.pageX, event.pageY);
     }
   });
+
 
   $linkElement.on("mouseleave", () => {
     const imageElement = $linkElement.data('imageInstance');
