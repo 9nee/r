@@ -82,9 +82,10 @@ function createHoverImage($linkElement) {
   })
 }
 
+
 (async () => {
     await window.waitForFunc("chatMsgSocketTapFunctions")
     window.chatMsgSocketTapFunctions.push(($message) => {
-      $message.find("a").each(createHoverImage);
+      $message.find("a").each((k, v) => createHoverImage(v));
     });
 })();
