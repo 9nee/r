@@ -39,6 +39,7 @@ const ModulePaths = [
     { MessageModifications: `chat_modules/messageModifications.js`},
     { EnhancedEmotes: `chat_modules/enhancedEmotes.js` },
     { ImagePreview: `chat_modules/imagePreview.js` },
+    { VideoTitlePreview : `chat_modules/videoLinkTitlePreview.js` },
     { Soundposts: `chat_modules/soundpostModule.js` },
     { NNDChatModule: `chat_modules/nndChatModule.js`, isActive: 0, rank: -1}
 ]
