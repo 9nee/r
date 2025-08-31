@@ -17,7 +17,7 @@ if (![CHANNEL.name].favicon) {
 
 // https://cdn.jsdelivr.net/gh/9nee/r@038848b8469a43b2c08ca032917ebc5e54c1b6e1/main.js
 const LOCAL_CDN_URL = "https://immergrok.mikobotecdn.win/immergrok-cytube-fork";
-const ONLINE_CDN = "https://cdn.jsdelivr.net/gh/9nee/r@720e980d0a6b5bb237fe96bc8f2131b7b1fdaacd"
+const ONLINE_CDN = "https://cdn.jsdelivr.net/gh/9nee/r@a8410bda891641ece450910ef04dcef2c3efcdae"
 //CHANGE WHEN DEVELOPING/LIVE
 const CURRENT_CDN = ONLINE_CDN;
 
