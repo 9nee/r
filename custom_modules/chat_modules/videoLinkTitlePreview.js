@@ -34,11 +34,13 @@ function replaceLink(element) {
     });
 }
 
+function doVideoTitlePreview($message) {
+    $message.find("a").each((k, v) => {
+        replaceLink(v)
+    });
+}
+
 (async () => {
     await window.waitForFunc("chatMsgSocketTapFunctions")
-    window.chatMsgSocketTapFunctions.push(($message) => {
-        $message.find("a").each((k, v) => {
-            replaceLink(v)
-        });
-    });
+    window.chatMsgSocketTapFunctions.push(doVideoTitlePreview);
 })();

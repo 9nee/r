@@ -83,10 +83,14 @@ function createHoverImage($linkElement) {
   })
 }
 
+function addImagePreview($message) {
+  $message
+   .find("a")
+   .filter((k, v) => isUrlAValidImage(v.href))
+   .each((k, v) => createHoverImage($(v)));
+}
 
 (async () => {
     await window.waitForFunc("chatMsgSocketTapFunctions")
-    window.chatMsgSocketTapFunctions.push(($message) => {
-      $message.find("a").each((k, v) => createHoverImage($(v)));
-    });
+    window.chatMsgSocketTapFunctions.push(addImagePreview);
 })();
