@@ -20,14 +20,17 @@ function replaceLink(element) {
     if (!request) { return; }
 
     fetch(request, {headers: {'Content-Type': 'text/json'}}).then(response => {
+
         if (!response.ok) { return; }
-        const json = response.json();
-        // If the message was sent in a filter, the text is modified and the element
-        // passed to us is no longer in the DOM. Find it again.
-        const a = parent.querySelector(`a[href="${element.href}"]`);
-        if (a) {
-            a.innerText = `[${site}] ${json.title}`;
-        }
+
+        response.json().then((json) => {
+            // If the message was sent in a filter, the text is modified and the element
+            // passed to us is no longer in the DOM. Find it again.
+            const a = parent.querySelector(`a[href="${element.href}"]`);
+            if (a) {
+                a.innerText = `[${site}] ${json.title}`;
+            }
+        });
     });
 }
 
